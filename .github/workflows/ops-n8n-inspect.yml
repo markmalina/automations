@@ -1,0 +1,86 @@
+name: n8n fixed project scope inspection
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: read
+
+concurrency:
+  group: n8n-upload-readonly
+  cancel-in-progress: false
+
+jobs:
+  admission:
+    if: >-
+      ${{
+        github.run_attempt == 1 &&
+        github.ref == 'refs/heads/main' &&
+        github.repository == 'markmalina/automations' &&
+        github.repository_id == '1448151721' &&
+        github.actor_id == '23397294' &&
+        github.event.comment.user.id == 23397294 &&
+        github.event.issue.number == 1 &&
+        !github.event.issue.pull_request &&
+        github.event.comment.body == '/n8n-ops inspect'
+      }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    outputs:
+      allowed: ${{ steps.admit.outputs.allowed }}
+    steps:
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.19.0
+          check-latest: false
+          package-manager-cache: false
+      - id: admit
+        env:
+          N8N_SCOPE_MODE: admit
+        run: node tools/n8n-github-upload/verify-scope-source.mjs
+      - name: Save admission receipt
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: n8n-scope-admission-${{ github.run_id }}
+          path: n8n-scope-receipt.json
+          if-no-files-found: error
+          overwrite: false
+          retention-days: 7
+
+  inspect:
+    needs: admission
+    if: ${{ needs.admission.outputs.allowed == 'true' }}
+    environment: n8n-upload-readonly
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.19.0
+          check-latest: false
+          package-manager-cache: false
+      - name: Observe exact project and service only
+        env:
+          N8N_SCOPE_MODE: collect
+          N8N_UPLOAD_RAILWAY_PROJECT_TOKEN: ${{ secrets.N8N_UPLOAD_RAILWAY_PROJECT_TOKEN }}
+        run: node tools/n8n-github-upload/verify-scope-source.mjs
+      - name: Save redacted scope receipt
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: n8n-scope-observation-${{ github.run_id }}
+          path: n8n-scope-receipt.json
+          if-no-files-found: error
+          overwrite: false
+          retention-days: 7
