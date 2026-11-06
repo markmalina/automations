@@ -1,0 +1,1854 @@
+{
+  "schema": 1,
+  "fixture": {
+    "algorithm": "xorshift32 byte stream, seed = (202611061621 XOR imul(fileIndex+1, 0x9e3779b1)) unsigned32; each next byte applies x ^= x<<13; x ^= x>>>17; x ^= x<<5; byte=x&255",
+    "salt": 202611061621,
+    "fileCount": 100,
+    "fileBytes": 300000,
+    "totalBytes": 30000000,
+    "gitBlobHashesMatch": true,
+    "sha256": [
+      {
+        "path": "Раздел 1/вложенная папка/Файл 001.bin",
+        "sha256": "065b02fcf41db00951f3f4e05595798e1f329c92dc94335a651b26e6ce379c26"
+      },
+      {
+        "path": "Раздел 1/вложенная папка/Файл 002.bin",
+        "sha256": "fabc3ee6a303cccef535b143958e74ba2a50a0ca56ecb7119fdc5fb9ff548dea"
+      },
+      {
+        "path": "Раздел 1/вложенная папка/Файл 003.bin",
+        "sha256": "132a1764ace24ef525018773c6aca49d97142134b535f6f5f6305cde08258ef9"
+      },
+      {
+        "path": "Раздел 1/вложенная папка/Файл 004.bin",
+        "sha256": "f25db15191864465a533a4c73199d86b905c451c7ca674538e23aeea094af312"
+      },
+      {
+        "path": "Раздел 1/вложенная папка/Файл 005.bin",
+        "sha256": "482da1b0ec1d605c5397f3ca6f442f0088fe38f4010f465848c8ce0402c34c3f"
+      },
+      {
+        "path": "Раздел 1/вложенная папка/Файл 006.bin",
+        "sha256": "8027d41416695611e3c2e6ebb2f5b7069405e0d4b8b21653582a37995f7530f4"
+      },
+      {
+        "path": "Раздел 1/вложенная папка/Файл 007.bin",
+        "sha256": "288985acc69f9926e70cfee2fc8ea468342d95ff64892cd3b123687f2cd36bf4"
+      },
+      {
+        "path": "Раздел 1/вложенная папка/Файл 008.bin",
+        "sha256": "ecb683fab858ebeb7affefae5e2697bc8258c61ac89a3726ee135e2236dda3b0"
+      },
+      {
+        "path": "Раздел 1/вложенная папка/Файл 009.bin",
+        "sha256": "c322f173a791b2ca09bcde2cbd04a1bd374ed687197baf66c7b773bf84f2809a"
+      },
+      {
+        "path": "Раздел 1/вложенная папка/Файл 010.bin",
+        "sha256": "b5223782b58ebde63a6e56250178c4dc10aa5041e87e57709d8bba4c6e69b533"
+      },
+      {
+        "path": "Раздел 1/вложенная папка/Файл 011.bin",
+        "sha256": "2c08491850437b3b6658dedf2706c5f0911a1628b595605b88cd1fafb9a091b0"
+      },
+      {
+        "path": "Раздел 1/вложенная папка/Файл 012.bin",
+        "sha256": "91324d3c9399e4ac71bb47518049843d96b8d1a7822a2a9c523d55eb562f1a37"
+      },
+      {
+        "path": "Раздел 1/вложенная папка/Файл 013.bin",
+        "sha256": "02bb25083c51dd1d197c9ede887f97c53a85278b1ea7a40e17bc8d5be4344b46"
+      },
+      {
+        "path": "Раздел 1/вложенная папка/Файл 014.bin",
+        "sha256": "539d8162f738db45b399bc2a5e38d1e4eceff5dc90d26b03ffc0bc1fcf689b6e"
+      },
+      {
+        "path": "Раздел 1/вложенная папка/Файл 015.bin",
+        "sha256": "3962a6446cb8d2040d96ffa3b13b57cd63ea4e0a5a5dd32462f06daf10b97a3b"
+      },
+      {
+        "path": "Раздел 1/вложенная папка/Файл 016.bin",
+        "sha256": "34710a016fffd88f28cc8eddd75a1047af7face68255360b85af7f7433bac5a6"
+      },
+      {
+        "path": "Раздел 1/вложенная папка/Файл 017.bin",
+        "sha256": "4f3a5c12f6c514a458368844865b3f5e8dc17a4eb84d0671db4d7c6f74a159b4"
+      },
+      {
+        "path": "Раздел 1/вложенная папка/Файл 018.bin",
+        "sha256": "42f25d06b89bc7b0bde01ce1a45f564c26d928cd6878e0ad9fb0d0a0f751a951"
+      },
+      {
+        "path": "Раздел 1/вложенная папка/Файл 019.bin",
+        "sha256": "8b14581a1f54eef3747193ffda9616d828a3c621617039fb42cd8c5047f673aa"
+      },
+      {
+        "path": "Раздел 1/вложенная папка/Файл 020.bin",
+        "sha256": "7ed8f0daf7ed3eb2b0434723d91bab951903693780af3827713854354b1c2600"
+      },
+      {
+        "path": "Раздел 2/вложенная папка/Файл 021.bin",
+        "sha256": "7e8c22ac6f6e1357583cecd121bb987575934171dc8cc2e370f52318afbb4230"
+      },
+      {
+        "path": "Раздел 2/вложенная папка/Файл 022.bin",
+        "sha256": "029d4c9b495fb915e44affdf1e086857a95c4755f8ea6bbde8eeb8e1ccc64ac6"
+      },
+      {
+        "path": "Раздел 2/вложенная папка/Файл 023.bin",
+        "sha256": "35a5257e9a7674c2a85342e9ec26af7e141463eebe5fb9ab91a1054d94e640b1"
+      },
+      {
+        "path": "Раздел 2/вложенная папка/Файл 024.bin",
+        "sha256": "b621e00e6b8e423e5bd0556f9dccb9d21524bfb0a0e499f2a119a7c9d3f495ee"
+      },
+      {
+        "path": "Раздел 2/вложенная папка/Файл 025.bin",
+        "sha256": "05004648e3dd2b8ea3d48fb620d4ddd753722bd7a973cef2086b56906b17458a"
+      },
+      {
+        "path": "Раздел 2/вложенная папка/Файл 026.bin",
+        "sha256": "b2795cbe2177739348322998693bd67203f7fcc703f0ac25b959c28251a6902c"
+      },
+      {
+        "path": "Раздел 2/вложенная папка/Файл 027.bin",
+        "sha256": "39714d1f9fbe080d2a765ac4f9ce3eae1fadb9524d02ed08fcf320b809de66e8"
+      },
+      {
+        "path": "Раздел 2/вложенная папка/Файл 028.bin",
+        "sha256": "6ca341003b29d8eab8b318d10d5b09c1bdc246edd4e315e965c10bc609506625"
+      },
+      {
+        "path": "Раздел 2/вложенная папка/Файл 029.bin",
+        "sha256": "4d4a5c8090bc02cb58a86b85e0ae6df66e7e040b28c7f14a1667bc65b798dd64"
+      },
+      {
+        "path": "Раздел 2/вложенная папка/Файл 030.bin",
+        "sha256": "c55ed28f81e4fac41d32869d98cf0ffadb3d5d1708d5f3c8347a54beafe9ab1b"
+      },
+      {
+        "path": "Раздел 2/вложенная папка/Файл 031.bin",
+        "sha256": "9186ef304f8a9ab14eba7e41128039e156805135a6465aecb0cee1bef9ad1d2a"
+      },
+      {
+        "path": "Раздел 2/вложенная папка/Файл 032.bin",
+        "sha256": "b7fbfa3022fd277632148a4f5d04c18e58c87803bacfe518ff56455d67aea9af"
+      },
+      {
+        "path": "Раздел 2/вложенная папка/Файл 033.bin",
+        "sha256": "936be88ec63319f1a0a027362317e0024bd6f2642f770ee2d912d72bcd26ec3b"
+      },
+      {
+        "path": "Раздел 2/вложенная папка/Файл 034.bin",
+        "sha256": "fd3ea9d82d17c7d6711d58a956335f8c0ccf653c447a96ecf8e93fdd9cdc51ab"
+      },
+      {
+        "path": "Раздел 2/вложенная папка/Файл 035.bin",
+        "sha256": "0507ac11ee808b1fc83225c563655b0ef002ba50b2909ad0b528f7681c2f4002"
+      },
+      {
+        "path": "Раздел 2/вложенная папка/Файл 036.bin",
+        "sha256": "9cf09eea316827e3d301039e91a8a5550fcbcab8d159aaae6265777d894da4c2"
+      },
+      {
+        "path": "Раздел 2/вложенная папка/Файл 037.bin",
+        "sha256": "33e4b5b191bcc679d5e78d6b495f4f7f80fcc568d99df338a6f234b4ac98c7bf"
+      },
+      {
+        "path": "Раздел 2/вложенная папка/Файл 038.bin",
+        "sha256": "0e3f05f3381f01b866a06317290abd56d27f4893823d67a71cef03e2d77a40cc"
+      },
+      {
+        "path": "Раздел 2/вложенная папка/Файл 039.bin",
+        "sha256": "e3a354a753bab3eec8919444b0ba1fcd4822bb60b60f99a01ddf00029c40c16b"
+      },
+      {
+        "path": "Раздел 2/вложенная папка/Файл 040.bin",
+        "sha256": "5c6535c05123e42463c1d04aa8d7cb860d70480d7ceb038f673e65bcb4509c8b"
+      },
+      {
+        "path": "Раздел 3/вложенная папка/Файл 041.bin",
+        "sha256": "180de41cc5d186db8e002055ebd7c41ecfb48577f5e13614d33c301b65d8e79b"
+      },
+      {
+        "path": "Раздел 3/вложенная папка/Файл 042.bin",
+        "sha256": "152b880cb556cfdfa87fbe2a9483106f7d0f3984005865796b75693a1ff81c3c"
+      },
+      {
+        "path": "Раздел 3/вложенная папка/Файл 043.bin",
+        "sha256": "90dd2f4f93433500b810f75274234c828847cd92e415c097e2e183301190f2ed"
+      },
+      {
+        "path": "Раздел 3/вложенная папка/Файл 044.bin",
+        "sha256": "4c6400b91d9fb183809ab930949c9cebac6fcbf385d1d7fe84de31078f7b38f5"
+      },
+      {
+        "path": "Раздел 3/вложенная папка/Файл 045.bin",
+        "sha256": "ad8d09e09f8a841be772aa6aa02943576daa0262d6b91327569303d267937549"
+      },
+      {
+        "path": "Раздел 3/вложенная папка/Файл 046.bin",
+        "sha256": "2307aa706afad7ff384c1f052cec2c9e72d372d5cd57e0aa4953a09227b5312b"
+      },
+      {
+        "path": "Раздел 3/вложенная папка/Файл 047.bin",
+        "sha256": "92d351915a8f2c6fee96654dc5ac9884542699727b2db0d3a9ec3f49eccab6cc"
+      },
+      {
+        "path": "Раздел 3/вложенная папка/Файл 048.bin",
+        "sha256": "55933d21a89c2f13de792758061522748083377244ab36b7d12a29d773a5d438"
+      },
+      {
+        "path": "Раздел 3/вложенная папка/Файл 049.bin",
+        "sha256": "110f7cc10fc4ede49931e388c5fbb21d09d891b2d2968f54773ddb6500e314db"
+      },
+      {
+        "path": "Раздел 3/вложенная папка/Файл 050.bin",
+        "sha256": "52eaea1855e51927cdeccb78f6b73d5a632b9b7ac2f5e8dfea96e5a1fb063ac3"
+      },
+      {
+        "path": "Раздел 3/вложенная папка/Файл 051.bin",
+        "sha256": "ea4ed863a986cb42ce314edc695a947f5916ed75482e8eaadabcbc8080057b5a"
+      },
+      {
+        "path": "Раздел 3/вложенная папка/Файл 052.bin",
+        "sha256": "ad7b9fe2ee6892cc15c1021334f7dd16f0679c61fd1a3b63dea89f96f83fe70f"
+      },
+      {
+        "path": "Раздел 3/вложенная папка/Файл 053.bin",
+        "sha256": "af2f8ce178ca4610cab9bb33ba4170956e477b947fad7f8d2468fe0ba40f2a36"
+      },
+      {
+        "path": "Раздел 3/вложенная папка/Файл 054.bin",
+        "sha256": "a9263ca72503fd2faf69b8d1c7a8fc11cb5d573a2b92fe73deec96d2735eef01"
+      },
+      {
+        "path": "Раздел 3/вложенная папка/Файл 055.bin",
+        "sha256": "70ee8c1b93d48e4359a7299921945cece0dedb00136f56f671878954b863e934"
+      },
+      {
+        "path": "Раздел 3/вложенная папка/Файл 056.bin",
+        "sha256": "79389ac2f3633b4a814e87e437df07578e3f6558ab6a46b3c12f69e07bb91961"
+      },
+      {
+        "path": "Раздел 3/вложенная папка/Файл 057.bin",
+        "sha256": "a401fcbef53c67bc348a06c39546ddd694d89768c1a71b89de1142afbbb5adb5"
+      },
+      {
+        "path": "Раздел 3/вложенная папка/Файл 058.bin",
+        "sha256": "8953d6ed682f2762756c692144d23fd69d4ca4caf8e7e70044d49ba2ff106726"
+      },
+      {
+        "path": "Раздел 3/вложенная папка/Файл 059.bin",
+        "sha256": "44dbc77a7a8f6f71be18c8ce5ec8dee8f72b0d4a0ee2abb8214bcabb4fea9c8c"
+      },
+      {
+        "path": "Раздел 3/вложенная папка/Файл 060.bin",
+        "sha256": "a74ebdfc33fefd7e5ffdf75cbf580b3f6053d7d845345226308b6a68376e95db"
+      },
+      {
+        "path": "Раздел 4/вложенная папка/Файл 061.bin",
+        "sha256": "8f7b6cb13238f97e93b5ff43e423eb3d0ff0d6eda454c9ce8a92f015fe685531"
+      },
+      {
+        "path": "Раздел 4/вложенная папка/Файл 062.bin",
+        "sha256": "6a126123426e84d23af6cdabe671f6c1110ab766a5582d8d663acd48b5ce956e"
+      },
+      {
+        "path": "Раздел 4/вложенная папка/Файл 063.bin",
+        "sha256": "b33311832d040c4dd14e3262b78837a71bd841b2c6fe0e4fc622be00ec9caa6d"
+      },
+      {
+        "path": "Раздел 4/вложенная папка/Файл 064.bin",
+        "sha256": "b3fdfe3566f5c2978511351ba30c6153ccf6064fceed3a95a8151626ee288f1d"
+      },
+      {
+        "path": "Раздел 4/вложенная папка/Файл 065.bin",
+        "sha256": "8edf4801d3d75b45fea5647b340594996c04cf4ee376dedd2ecb1d69d15b7cc3"
+      },
+      {
+        "path": "Раздел 4/вложенная папка/Файл 066.bin",
+        "sha256": "dad30c68e6473d4160fa948df1a8a74435c8b7c3c7b2165eccccdd6ca0717c3c"
+      },
+      {
+        "path": "Раздел 4/вложенная папка/Файл 067.bin",
+        "sha256": "4c757fa3af5e3a823c12f2cf852a8bba7861586b1258eef6e669ea45aa260aec"
+      },
+      {
+        "path": "Раздел 4/вложенная папка/Файл 068.bin",
+        "sha256": "2a1f6d1c170e943b359b9c53fa5305bca2823107988cd0ba44582da5c6aff558"
+      },
+      {
+        "path": "Раздел 4/вложенная папка/Файл 069.bin",
+        "sha256": "ddf305e8de4972bfc099c6a9d987ee05ef95db409d285bdf2f571e535e56c746"
+      },
+      {
+        "path": "Раздел 4/вложенная папка/Файл 070.bin",
+        "sha256": "79ddd588f09143ae6ad1ffc96625eb3a0fd95e85b9acafed547522617090e93c"
+      },
+      {
+        "path": "Раздел 4/вложенная папка/Файл 071.bin",
+        "sha256": "28cb5b3441cf67371bc8a00e663a2027e7ef392d36c01fc7f19c1a31c890fe16"
+      },
+      {
+        "path": "Раздел 4/вложенная папка/Файл 072.bin",
+        "sha256": "7cb9cf6860f6cffd40b9bd30db02a9f8bf8e5f318d7bc83c31b4b2b768de7f3d"
+      },
+      {
+        "path": "Раздел 4/вложенная папка/Файл 073.bin",
+        "sha256": "33d4c4c08caa82be13dd1860c5bb5e594bbe82c039cc0f1417681220e35b1254"
+      },
+      {
+        "path": "Раздел 4/вложенная папка/Файл 074.bin",
+        "sha256": "9bd6452952f2ef0ee148e09013cf59dbc4f340596fb811d546962e1bfdbb6539"
+      },
+      {
+        "path": "Раздел 4/вложенная папка/Файл 075.bin",
+        "sha256": "9ed64cb764e0ac5080ba7e5e098e1339c88c9e81d89f5e6144e1efab1deaf96e"
+      },
+      {
+        "path": "Раздел 4/вложенная папка/Файл 076.bin",
+        "sha256": "fbe72716f6102a9887bd7b7be814896475e499d0ae24ec2236483a425a70324a"
+      },
+      {
+        "path": "Раздел 4/вложенная папка/Файл 077.bin",
+        "sha256": "b608e13c2efb3002a162f6397cdb1f31fac240b0a43698bdd19c5058c1c12bda"
+      },
+      {
+        "path": "Раздел 4/вложенная папка/Файл 078.bin",
+        "sha256": "dd53ddc59c5da0145ec335147cbe9f850543ad82c8185b079a1e9e5e89dffd0e"
+      },
+      {
+        "path": "Раздел 4/вложенная папка/Файл 079.bin",
+        "sha256": "748fc161006217c3f79977bccbde6467c86e9b3cce0754705ab08a759886def8"
+      },
+      {
+        "path": "Раздел 4/вложенная папка/Файл 080.bin",
+        "sha256": "c46f17b48baee06ad152af1d374c498c3b143d220bb6fc799cea1afff11b6413"
+      },
+      {
+        "path": "Раздел 5/вложенная папка/Файл 081.bin",
+        "sha256": "96ef374cd83bb688a1b8a96e7a140eb70f08a2cbb134d8a3fcaebdd111b6da7d"
+      },
+      {
+        "path": "Раздел 5/вложенная папка/Файл 082.bin",
+        "sha256": "7c6fd9ef75a754bcc9f99326715d7b3decd3188dc360716fd30864e0eab58e1e"
+      },
+      {
+        "path": "Раздел 5/вложенная папка/Файл 083.bin",
+        "sha256": "b49589918f0fbb979e926e78bc33143c7a3b78062842724a87518fcb1f549fe1"
+      },
+      {
+        "path": "Раздел 5/вложенная папка/Файл 084.bin",
+        "sha256": "6fe1d48c572ee76d4c3d32226e9bfe63ad02293ed9d7168509e07063db38625c"
+      },
+      {
+        "path": "Раздел 5/вложенная папка/Файл 085.bin",
+        "sha256": "ffa1f0dda90f1c726abb4154da866b9d5f87143031501ce678506ea3c3b10bd3"
+      },
+      {
+        "path": "Раздел 5/вложенная папка/Файл 086.bin",
+        "sha256": "402315bb0d83d2e22dc5403eb67e3b696d4c0e5c0cf2b1d80375950e61f37288"
+      },
+      {
+        "path": "Раздел 5/вложенная папка/Файл 087.bin",
+        "sha256": "3d0776fdeef6b8e412b268d4b9d1b63b2d5dec84f81292ead226f658bf1d8dec"
+      },
+      {
+        "path": "Раздел 5/вложенная папка/Файл 088.bin",
+        "sha256": "3555692af595bd78d0cb5263b8429f18b01919f4cf72829fa85953eb85c717d9"
+      },
+      {
+        "path": "Раздел 5/вложенная папка/Файл 089.bin",
+        "sha256": "819041cd98a8f80d6fd60df120b6d71785f928fe6def2b729818ab240d863f55"
+      },
+      {
+        "path": "Раздел 5/вложенная папка/Файл 090.bin",
+        "sha256": "1afa2d9c5d89124dd49ef72fcb959131a7424a00393a8ec94afc2aa91458767b"
+      },
+      {
+        "path": "Раздел 5/вложенная папка/Файл 091.bin",
+        "sha256": "66f342f299866eb659b3b88e9b66c8b4a1b6646abb8c4539caaf782f08889345"
+      },
+      {
+        "path": "Раздел 5/вложенная папка/Файл 092.bin",
+        "sha256": "0264dc0c11e35a71b499803446742cc74f77819a1fa9d22933866be0a62cda27"
+      },
+      {
+        "path": "Раздел 5/вложенная папка/Файл 093.bin",
+        "sha256": "841f9d447d8cb0c70e31a2dbb5292700b069d2e8d4c5c1aa8d6239e78d8a4e9e"
+      },
+      {
+        "path": "Раздел 5/вложенная папка/Файл 094.bin",
+        "sha256": "767bdd95be87edcc7d98c81ade9b81226317b712c9da5cf981d5707da4428dfb"
+      },
+      {
+        "path": "Раздел 5/вложенная папка/Файл 095.bin",
+        "sha256": "229a7cba4e86a82e58983fedcf86f9dd17c521b6339a1c8d8b388921c35ffce9"
+      },
+      {
+        "path": "Раздел 5/вложенная папка/Файл 096.bin",
+        "sha256": "28cc05212997d9a20ed1dd59d1f3ffea4e022924e8d5531aea77c828298d596f"
+      },
+      {
+        "path": "Раздел 5/вложенная папка/Файл 097.bin",
+        "sha256": "bf47173ba7211368def8d5fed2aed7b55eaf1965d3d06d7d77a3c27af3c67003"
+      },
+      {
+        "path": "Раздел 5/вложенная папка/Файл 098.bin",
+        "sha256": "bccc99649d092251b97543ae09d0fbe131d513a781eb542117f50dab158fca4a"
+      },
+      {
+        "path": "Раздел 5/вложенная папка/Файл 099.bin",
+        "sha256": "82ace6ecfde6d30453e3cd7ee87b1d2a218d572f394ba3f5001a270880613d2c"
+      },
+      {
+        "path": "Раздел 5/вложенная папка/Файл 100.bin",
+        "sha256": "3f52cee1d66e831370c32f60340f88739fdccbe761e037403058c31cf5f4fd0b"
+      }
+    ]
+  },
+  "repository": "markmalina/freelance",
+  "branch": "test/connector-benchmark-20261106",
+  "baseCommit": "9f22ef7013e288c26449cd59cd1fbf8e24b0a330",
+  "baseTree": "b8a6fdc883bbe1e946f9b9478a695847a41f4b2d",
+  "concurrency": 4,
+  "mode": "one commit via blobs/tree/commit/ref",
+  "status": "push_confirmed",
+  "n8nCurrentWork": {
+    "status": "blocked",
+    "reason": "HeaderAuth credential unavailable in this Work; Railway OAuth returns names only; concurrent new deployment observed 2026-11-06T13:17:31.596Z"
+  },
+  "startedAt": "2026-11-06T13:21:31.681Z",
+  "startedMs": 1793971250216,
+  "prefix": "benchmarks/connector-20261106-1621",
+  "preflight": {
+    "fileBytes": 300000,
+    "createBlobMs": 1184,
+    "excludedFromTimedRun": true
+  },
+  "blobs": [
+    {
+      "index": 0,
+      "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 001.bin",
+      "sha": "74a0f26f100a2d3cc561b6f57bf6d1b6830541f1",
+      "bytes": 300000,
+      "ms": 1308
+    },
+    {
+      "index": 1,
+      "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 002.bin",
+      "sha": "70bd81d20a9f63825d8237ad20123acf236baf81",
+      "bytes": 300000,
+      "ms": 2332
+    },
+    {
+      "index": 2,
+      "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 003.bin",
+      "sha": "d5d38c769a0a07731cab5475394ebc937add157f",
+      "bytes": 300000,
+      "ms": 3435
+    },
+    {
+      "index": 3,
+      "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 004.bin",
+      "sha": "32ad3d519309a02d41210d64bf52f68faedf8d76",
+      "bytes": 300000,
+      "ms": 4438
+    },
+    {
+      "index": 4,
+      "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 005.bin",
+      "sha": "35754a94c2c4bac34afa2bbc93f67128339a2f03",
+      "bytes": 300000,
+      "ms": 951
+    },
+    {
+      "index": 5,
+      "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 006.bin",
+      "sha": "2c6777668d096a5e9a0ae64a5adb0ec6588cebba",
+      "bytes": 300000,
+      "ms": 1644
+    },
+    {
+      "index": 6,
+      "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 007.bin",
+      "sha": "f6fc9b343af74fd72797865ec57d2bfab8203cdf",
+      "bytes": 300000,
+      "ms": 2584
+    },
+    {
+      "index": 7,
+      "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 008.bin",
+      "sha": "f42c7bbf60a39b8b523c4ade4f991392daab36f6",
+      "bytes": 300000,
+      "ms": 2517
+    },
+    {
+      "index": 8,
+      "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 009.bin",
+      "sha": "65dcdd7106d83b6da6f84e5a80239e7ce337764c",
+      "bytes": 300000,
+      "ms": 2989
+    },
+    {
+      "index": 9,
+      "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 010.bin",
+      "sha": "94bc0030905f8a89250a9264cea380a36256e13a",
+      "bytes": 300000,
+      "ms": 3359
+    },
+    {
+      "index": 10,
+      "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 011.bin",
+      "sha": "58e0ac3c047c058c6f72867c1442e32711864c0d",
+      "bytes": 300000,
+      "ms": 1092
+    },
+    {
+      "index": 11,
+      "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 012.bin",
+      "sha": "9fae840f46c07afa3f56c12cb6f2835a1537e956",
+      "bytes": 300000,
+      "ms": 1142
+    },
+    {
+      "index": 12,
+      "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 013.bin",
+      "sha": "a627d10217acbf49289545069c66e766e35fb66f",
+      "bytes": 300000,
+      "ms": 2661
+    },
+    {
+      "index": 13,
+      "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 014.bin",
+      "sha": "f754656ac4aa62aaa046862db8276f9cdcf0a050",
+      "bytes": 300000,
+      "ms": 2705
+    },
+    {
+      "index": 14,
+      "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 015.bin",
+      "sha": "09accaff8d7fcd846e98140efa23cb59919bf2d7",
+      "bytes": 300000,
+      "ms": 3558
+    },
+    {
+      "index": 15,
+      "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 016.bin",
+      "sha": "cfc8a566d75167734cbe421786207803bd110ca8",
+      "bytes": 300000,
+      "ms": 3995
+    },
+    {
+      "index": 16,
+      "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 017.bin",
+      "sha": "afe8e99b38a5780ac4634ad237401a8c9ab5de8c",
+      "bytes": 300000,
+      "ms": 4246
+    },
+    {
+      "index": 17,
+      "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 018.bin",
+      "sha": "6d78b2846d23f3bd797c573f09e84e6e19561187",
+      "bytes": 300000,
+      "ms": 723
+    },
+    {
+      "index": 18,
+      "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 019.bin",
+      "sha": "f6b3f0696fcdde7cdd8d98746c88f8ce5afa2ef7",
+      "bytes": 300000,
+      "ms": 1052
+    },
+    {
+      "index": 19,
+      "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 020.bin",
+      "sha": "fceba2d09e02988886e5147cf3966fe8adcfe083",
+      "bytes": 300000,
+      "ms": 1708
+    },
+    {
+      "index": 20,
+      "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 021.bin",
+      "sha": "83f3fd584cb735103c3fffbad573a0611f45ad5f",
+      "bytes": 300000,
+      "ms": 2201
+    },
+    {
+      "index": 21,
+      "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 022.bin",
+      "sha": "24c30c7dce1b310c958599b34b4e06bf2da4131b",
+      "bytes": 300000,
+      "ms": 2822
+    },
+    {
+      "index": 22,
+      "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 023.bin",
+      "sha": "923a045b9466d6c9a2dbb8f22d7f0453ee186d3f",
+      "bytes": 300000,
+      "ms": 3238
+    },
+    {
+      "index": 23,
+      "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 024.bin",
+      "sha": "0a5f3100b192bfe65e5d452e8d763f4481b2d1bc",
+      "bytes": 300000,
+      "ms": 3660
+    },
+    {
+      "index": 24,
+      "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 025.bin",
+      "sha": "e27d14a2100683f6d7b144888248bfd548b89c3f",
+      "bytes": 300000,
+      "ms": 1109
+    },
+    {
+      "index": 25,
+      "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 026.bin",
+      "sha": "c1c121cf331078927b26818327e99ccff5fbe082",
+      "bytes": 300000,
+      "ms": 1110
+    },
+    {
+      "index": 26,
+      "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 027.bin",
+      "sha": "9e8fc12a0819ed982b200d595ee039acc2561655",
+      "bytes": 300000,
+      "ms": 2012
+    },
+    {
+      "index": 27,
+      "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 028.bin",
+      "sha": "4e42a20d7d5a5e6b1abb9f0f71d055c3c9d4cf93",
+      "bytes": 300000,
+      "ms": 2234
+    },
+    {
+      "index": 28,
+      "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 029.bin",
+      "sha": "acd7ef2a36126f07f7b951f2dfdf6331a24d5885",
+      "bytes": 300000,
+      "ms": 3096
+    },
+    {
+      "index": 29,
+      "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 030.bin",
+      "sha": "1205efbd9ac66d0b794caeb33e3eaa23ad1fdbcf",
+      "bytes": 300000,
+      "ms": 3173
+    },
+    {
+      "index": 30,
+      "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 031.bin",
+      "sha": "1dcba5111baab2bc4cb1a084dc666721285e79f6",
+      "bytes": 300000,
+      "ms": 4067
+    },
+    {
+      "index": 31,
+      "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 032.bin",
+      "sha": "6f7ce231489f8b2c7ca65302246d42093f4442bf",
+      "bytes": 300000,
+      "ms": 3905
+    },
+    {
+      "index": 32,
+      "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 033.bin",
+      "sha": "8fd8d1660d3e70051510875e6e1f3fff3fca643b",
+      "bytes": 300000,
+      "ms": 3971
+    },
+    {
+      "index": 33,
+      "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 034.bin",
+      "sha": "ff9eed0eccede6c0cdf70d119c2f6421007d4ebb",
+      "bytes": 300000,
+      "ms": 3981
+    },
+    {
+      "index": 34,
+      "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 035.bin",
+      "sha": "298740cadc215f1eff352120658f7df5710f49e5",
+      "bytes": 300000,
+      "ms": 3875
+    },
+    {
+      "index": 35,
+      "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 036.bin",
+      "sha": "eeaea5898a97bc00f8b8204978e987b0ae11e8d4",
+      "bytes": 300000,
+      "ms": 3874
+    },
+    {
+      "index": 36,
+      "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 037.bin",
+      "sha": "c1f47185bf35d5af321741cb4f47ddce5e8b06d8",
+      "bytes": 300000,
+      "ms": 3943
+    },
+    {
+      "index": 37,
+      "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 038.bin",
+      "sha": "4206195d5303a3010a5247177777c0dd42a8e9c3",
+      "bytes": 300000,
+      "ms": 4032
+    },
+    {
+      "index": 38,
+      "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 039.bin",
+      "sha": "46f26482615b28481760a88eb98849712aedba20",
+      "bytes": 300000,
+      "ms": 4100
+    },
+    {
+      "index": 39,
+      "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 040.bin",
+      "sha": "5e0d9075e039ee90c317beb72ce39bccb2ddb774",
+      "bytes": 300000,
+      "ms": 4179
+    },
+    {
+      "index": 40,
+      "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 041.bin",
+      "sha": "195e90d40ffe3861a069f2ec6d69d3bc64acb377",
+      "bytes": 300000,
+      "ms": 1012
+    },
+    {
+      "index": 41,
+      "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 042.bin",
+      "sha": "06359209493ff9037d89bb37d0205951ce450933",
+      "bytes": 300000,
+      "ms": 1106
+    },
+    {
+      "index": 42,
+      "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 043.bin",
+      "sha": "c3a8e65e8052686ff0842e3e863b45b054731f0c",
+      "bytes": 300000,
+      "ms": 2059
+    },
+    {
+      "index": 43,
+      "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 044.bin",
+      "sha": "649dca03e778b39d16ff62c9112b9ff6cdd1b82f",
+      "bytes": 300000,
+      "ms": 2204
+    },
+    {
+      "index": 44,
+      "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 045.bin",
+      "sha": "d03becb0e4f2d5bfe623d90e9898be173765d063",
+      "bytes": 300000,
+      "ms": 3170
+    },
+    {
+      "index": 45,
+      "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 046.bin",
+      "sha": "06189fede2496845a42f664889b9e171a12baeaa",
+      "bytes": 300000,
+      "ms": 3128
+    },
+    {
+      "index": 46,
+      "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 047.bin",
+      "sha": "9e5df01f5e3fd9b772af13e942b92a6b9d59a45b",
+      "bytes": 300000,
+      "ms": 3990
+    },
+    {
+      "index": 47,
+      "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 048.bin",
+      "sha": "20d7b901eafad3bf3c621e33c7e07326b46ec9db",
+      "bytes": 300000,
+      "ms": 3844
+    },
+    {
+      "index": 48,
+      "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 049.bin",
+      "sha": "42e4a1e51d71f0bef4051275b2fffaee60e74604",
+      "bytes": 300000,
+      "ms": 3741
+    },
+    {
+      "index": 49,
+      "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 050.bin",
+      "sha": "852d5d7c1e33c86cb6e8c3775ec7440f06611483",
+      "bytes": 300000,
+      "ms": 3757
+    },
+    {
+      "index": 50,
+      "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 051.bin",
+      "sha": "bd1b461f5db40bf556703b1803aaea92e6eabba8",
+      "bytes": 300000,
+      "ms": 3816
+    },
+    {
+      "index": 51,
+      "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 052.bin",
+      "sha": "96a7347b8447e42551343ad719bcd9fa0fac8c38",
+      "bytes": 300000,
+      "ms": 3862
+    },
+    {
+      "index": 52,
+      "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 053.bin",
+      "sha": "0f66aa4cd97e522ae8adc0ef5c1be1e7f2ab2961",
+      "bytes": 300000,
+      "ms": 3786
+    },
+    {
+      "index": 53,
+      "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 054.bin",
+      "sha": "96a8f9a0ba03b81a5bb259d6ee2f224d764ceb90",
+      "bytes": 300000,
+      "ms": 4049
+    },
+    {
+      "index": 54,
+      "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 055.bin",
+      "sha": "98269af5a5972839daba3cbc8009e7b6e90e401e",
+      "bytes": 300000,
+      "ms": 4187
+    },
+    {
+      "index": 55,
+      "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 056.bin",
+      "sha": "2f9a9026e2d5f69493796a59f05cc8648977ef4e",
+      "bytes": 300000,
+      "ms": 4202
+    },
+    {
+      "index": 56,
+      "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 057.bin",
+      "sha": "8d5cef9c647645b17fc0448447470513c1056023",
+      "bytes": 300000,
+      "ms": 4374
+    },
+    {
+      "index": 57,
+      "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 058.bin",
+      "sha": "5de186cd5ab57f9a4fb1d9244f4e30569c106749",
+      "bytes": 300000,
+      "ms": 4247
+    },
+    {
+      "index": 58,
+      "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 059.bin",
+      "sha": "eddb383b6a77474f3a2cf201e63ccda31be83bbb",
+      "bytes": 300000,
+      "ms": 4257
+    },
+    {
+      "index": 59,
+      "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 060.bin",
+      "sha": "13047a29b3d6f6d77109d710c5266cafc04553a7",
+      "bytes": 300000,
+      "ms": 4834
+    },
+    {
+      "index": 60,
+      "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 061.bin",
+      "sha": "f08c6a9df497eaf603e0b67e2f27f17afec76846",
+      "bytes": 300000,
+      "ms": 4611
+    },
+    {
+      "index": 61,
+      "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 062.bin",
+      "sha": "c6cde66af368e5e6e35d60ed2ebfd3b0daea2ce8",
+      "bytes": 300000,
+      "ms": 4568
+    },
+    {
+      "index": 62,
+      "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 063.bin",
+      "sha": "5b637228637670de00ecfb18cf5a5ebff3234efb",
+      "bytes": 300000,
+      "ms": 920
+    },
+    {
+      "index": 63,
+      "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 064.bin",
+      "sha": "2177e8b577bcbe620a0e29251f842f0565253992",
+      "bytes": 300000,
+      "ms": 1057
+    },
+    {
+      "index": 64,
+      "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 065.bin",
+      "sha": "4e0f9d3ffc4c7bf8431af9eff17084bf91e62c84",
+      "bytes": 300000,
+      "ms": 1322
+    },
+    {
+      "index": 65,
+      "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 066.bin",
+      "sha": "e4f99416082556c94a8a02fdb0975e8a4cd142c0",
+      "bytes": 300000,
+      "ms": 1932
+    },
+    {
+      "index": 66,
+      "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 067.bin",
+      "sha": "ba08df6804f6f34f4a8a1d7e61d3439860ecc7fb",
+      "bytes": 300000,
+      "ms": 2284
+    },
+    {
+      "index": 67,
+      "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 068.bin",
+      "sha": "b64583e54828ff0b56e4200915af841295f7e618",
+      "bytes": 300000,
+      "ms": 2861
+    },
+    {
+      "index": 68,
+      "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 069.bin",
+      "sha": "0118765e36b015e7709486ff33a4ae47bac4bb36",
+      "bytes": 300000,
+      "ms": 3341
+    },
+    {
+      "index": 69,
+      "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 070.bin",
+      "sha": "906876e116aa5f83f809df1b1f70b0e4980edb3d",
+      "bytes": 300000,
+      "ms": 4048
+    },
+    {
+      "index": 70,
+      "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 071.bin",
+      "sha": "6cf2233bd191ed3f126ab4cc48849430ae07c42f",
+      "bytes": 300000,
+      "ms": 4241
+    },
+    {
+      "index": 71,
+      "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 072.bin",
+      "sha": "84ca020cfa0c13461acb061291e763fc70fc2cee",
+      "bytes": 300000,
+      "ms": 4323
+    },
+    {
+      "index": 72,
+      "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 073.bin",
+      "sha": "5a25223ebf3aee79bf437fc7c4bb99702cfbddb1",
+      "bytes": 300000,
+      "ms": 4409
+    },
+    {
+      "index": 73,
+      "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 074.bin",
+      "sha": "ea64467b9e51a083fe70a78cae500f6b402724f8",
+      "bytes": 300000,
+      "ms": 4281
+    },
+    {
+      "index": 74,
+      "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 075.bin",
+      "sha": "13fbf017c9ee8127cb0d8dac2cd8716a80750531",
+      "bytes": 300000,
+      "ms": 4363
+    },
+    {
+      "index": 75,
+      "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 076.bin",
+      "sha": "8d2ac51f987b6d6f50894f0a6f02ca19fb09ff16",
+      "bytes": 300000,
+      "ms": 4372
+    },
+    {
+      "index": 76,
+      "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 077.bin",
+      "sha": "48a76e8482e808a6a6df5fcd31339661d74c10d7",
+      "bytes": 300000,
+      "ms": 4423
+    },
+    {
+      "index": 77,
+      "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 078.bin",
+      "sha": "ddc1b025925b59045b8fde3db242b4e83acaf86b",
+      "bytes": 300000,
+      "ms": 4434
+    },
+    {
+      "index": 78,
+      "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 079.bin",
+      "sha": "15150707cd6c55ac5bdedcce650743325eff7494",
+      "bytes": 300000,
+      "ms": 4313
+    },
+    {
+      "index": 79,
+      "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 080.bin",
+      "sha": "ab32d46b3a1993ff9a5f49399b8e1b9e935a9b72",
+      "bytes": 300000,
+      "ms": 4387
+    },
+    {
+      "index": 80,
+      "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 081.bin",
+      "sha": "117bdf4b3ae4e4540fc74ef548bcafb6e8afbc19",
+      "bytes": 300000,
+      "ms": 4360
+    },
+    {
+      "index": 81,
+      "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 082.bin",
+      "sha": "9eb85462e51cb8d9e7618d566745d1e139d7f82c",
+      "bytes": 300000,
+      "ms": 934
+    },
+    {
+      "index": 82,
+      "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 083.bin",
+      "sha": "b6d87aaffee4cae74e7ca76b27d8b448d936d3db",
+      "bytes": 300000,
+      "ms": 1362
+    },
+    {
+      "index": 83,
+      "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 084.bin",
+      "sha": "88aef7f4bb3a0be7a7b7e4ff193d8b0e898ae602",
+      "bytes": 300000,
+      "ms": 2334
+    },
+    {
+      "index": 84,
+      "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 085.bin",
+      "sha": "ef102e69a70ad2df4718cd32fece43be4ee9b306",
+      "bytes": 300000,
+      "ms": 2155
+    },
+    {
+      "index": 85,
+      "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 086.bin",
+      "sha": "6a9a0afede4146aa5ff328b8c0daa5c8db242aae",
+      "bytes": 300000,
+      "ms": 3057
+    },
+    {
+      "index": 86,
+      "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 087.bin",
+      "sha": "c65186a0553fe4b406fab45f875338a7ed1201fd",
+      "bytes": 300000,
+      "ms": 3654
+    },
+    {
+      "index": 87,
+      "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 088.bin",
+      "sha": "ecbdfaf32c0c9a1b2bda50b94a9018e611353731",
+      "bytes": 300000,
+      "ms": 4606
+    },
+    {
+      "index": 88,
+      "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 089.bin",
+      "sha": "81d491690c25cc0782393946fa4a2022f2badace",
+      "bytes": 300000,
+      "ms": 4826
+    },
+    {
+      "index": 89,
+      "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 090.bin",
+      "sha": "e2855c7beaaffa3c1691e204a68cd9eb0a4f3c84",
+      "bytes": 300000,
+      "ms": 4812
+    },
+    {
+      "index": 90,
+      "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 091.bin",
+      "sha": "8a4c50d1dc0c0db4c3ea38968a47d2d560d16709",
+      "bytes": 300000,
+      "ms": 4516
+    },
+    {
+      "index": 91,
+      "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 092.bin",
+      "sha": "9e8db907fe8fae047c5a6faacfdc07ae3330d1e5",
+      "bytes": 300000,
+      "ms": 4323
+    },
+    {
+      "index": 92,
+      "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 093.bin",
+      "sha": "d493f27473256ac36cc4e9011969d27c61e3c3d5",
+      "bytes": 300000,
+      "ms": 3901
+    },
+    {
+      "index": 93,
+      "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 094.bin",
+      "sha": "037980b6151b1256e51f512dcebc954d838b1a8a",
+      "bytes": 300000,
+      "ms": 3985
+    },
+    {
+      "index": 94,
+      "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 095.bin",
+      "sha": "c21ae47d97bf88d5974886fcc29c0c387eb29d5c",
+      "bytes": 300000,
+      "ms": 1360
+    },
+    {
+      "index": 95,
+      "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 096.bin",
+      "sha": "83fe3aab9d4b4b62048572f8abb61dad1a3a9a7f",
+      "bytes": 300000,
+      "ms": 1707
+    },
+    {
+      "index": 96,
+      "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 097.bin",
+      "sha": "3ca401269da018bf450ec2e1d01bd199600fe1d5",
+      "bytes": 300000,
+      "ms": 2180
+    },
+    {
+      "index": 97,
+      "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 098.bin",
+      "sha": "f2ec00c5030ac6330cc8400bef18a6ac2e54be2e",
+      "bytes": 300000,
+      "ms": 3121
+    },
+    {
+      "index": 98,
+      "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 099.bin",
+      "sha": "fcf26e918780d91b8bec5f5b0acdbb532c80a704",
+      "bytes": 300000,
+      "ms": 3215
+    },
+    {
+      "index": 99,
+      "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 100.bin",
+      "sha": "921aa850137fb2b0dfa70ba15128586c7eb7beb2",
+      "bytes": 300000,
+      "ms": 3796
+    }
+  ],
+  "blobUploadMs": 80690,
+  "treeMs": 3265,
+  "treeSha": "8db924e7487bb83e473d2c2b4433ef81de27e2ee",
+  "commitMs": 577,
+  "commitSha": "250f6ece3668bc811a3e5bc908b229f74f7eea9a",
+  "refUpdateMs": 1329,
+  "remoteConfirmMs": 529,
+  "remoteConfirmed": true,
+  "remoteConfirmedMs": 86392,
+  "finishedAt": "2026-11-06T13:22:58.073Z",
+  "url": "https://github.com/markmalina/freelance/commit/250f6ece3668bc811a3e5bc908b229f74f7eea9a",
+  "readback": {
+    "totalMs": 17864,
+    "concurrency": 4,
+    "count": 100,
+    "allMatch": true,
+    "results": [
+      {
+        "index": 0,
+        "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 001.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 1029
+      },
+      {
+        "index": 1,
+        "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 002.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 505
+      },
+      {
+        "index": 2,
+        "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 003.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 1026
+      },
+      {
+        "index": 3,
+        "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 004.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 574
+      },
+      {
+        "index": 4,
+        "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 005.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 476
+      },
+      {
+        "index": 5,
+        "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 006.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 1150
+      },
+      {
+        "index": 6,
+        "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 007.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 446
+      },
+      {
+        "index": 7,
+        "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 008.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 778
+      },
+      {
+        "index": 8,
+        "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 009.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 651
+      },
+      {
+        "index": 9,
+        "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 010.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 548
+      },
+      {
+        "index": 10,
+        "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 011.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 484
+      },
+      {
+        "index": 11,
+        "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 012.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 637
+      },
+      {
+        "index": 12,
+        "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 013.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 932
+      },
+      {
+        "index": 13,
+        "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 014.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 1040
+      },
+      {
+        "index": 14,
+        "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 015.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 545
+      },
+      {
+        "index": 15,
+        "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 016.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 528
+      },
+      {
+        "index": 16,
+        "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 017.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 859
+      },
+      {
+        "index": 17,
+        "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 018.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 622
+      },
+      {
+        "index": 18,
+        "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 019.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 458
+      },
+      {
+        "index": 19,
+        "path": "benchmarks/connector-20261106-1621/Раздел 1/вложенная папка/Файл 020.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 530
+      },
+      {
+        "index": 20,
+        "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 021.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 648
+      },
+      {
+        "index": 21,
+        "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 022.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 525
+      },
+      {
+        "index": 22,
+        "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 023.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 636
+      },
+      {
+        "index": 23,
+        "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 024.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 688
+      },
+      {
+        "index": 24,
+        "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 025.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 453
+      },
+      {
+        "index": 25,
+        "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 026.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 910
+      },
+      {
+        "index": 26,
+        "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 027.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 468
+      },
+      {
+        "index": 27,
+        "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 028.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 635
+      },
+      {
+        "index": 28,
+        "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 029.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 622
+      },
+      {
+        "index": 29,
+        "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 030.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 585
+      },
+      {
+        "index": 30,
+        "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 031.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 735
+      },
+      {
+        "index": 31,
+        "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 032.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 931
+      },
+      {
+        "index": 32,
+        "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 033.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 569
+      },
+      {
+        "index": 33,
+        "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 034.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 939
+      },
+      {
+        "index": 34,
+        "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 035.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 540
+      },
+      {
+        "index": 35,
+        "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 036.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 670
+      },
+      {
+        "index": 36,
+        "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 037.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 674
+      },
+      {
+        "index": 37,
+        "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 038.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 629
+      },
+      {
+        "index": 38,
+        "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 039.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 546
+      },
+      {
+        "index": 39,
+        "path": "benchmarks/connector-20261106-1621/Раздел 2/вложенная папка/Файл 040.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 900
+      },
+      {
+        "index": 40,
+        "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 041.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 553
+      },
+      {
+        "index": 41,
+        "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 042.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 497
+      },
+      {
+        "index": 42,
+        "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 043.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 588
+      },
+      {
+        "index": 43,
+        "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 044.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 888
+      },
+      {
+        "index": 44,
+        "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 045.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 462
+      },
+      {
+        "index": 45,
+        "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 046.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 656
+      },
+      {
+        "index": 46,
+        "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 047.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 436
+      },
+      {
+        "index": 47,
+        "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 048.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 1085
+      },
+      {
+        "index": 48,
+        "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 049.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 903
+      },
+      {
+        "index": 49,
+        "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 050.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 485
+      },
+      {
+        "index": 50,
+        "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 051.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 611
+      },
+      {
+        "index": 51,
+        "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 052.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 569
+      },
+      {
+        "index": 52,
+        "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 053.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 448
+      },
+      {
+        "index": 53,
+        "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 054.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 499
+      },
+      {
+        "index": 54,
+        "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 055.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 542
+      },
+      {
+        "index": 55,
+        "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 056.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 622
+      },
+      {
+        "index": 56,
+        "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 057.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 675
+      },
+      {
+        "index": 57,
+        "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 058.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 573
+      },
+      {
+        "index": 58,
+        "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 059.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 641
+      },
+      {
+        "index": 59,
+        "path": "benchmarks/connector-20261106-1621/Раздел 3/вложенная папка/Файл 060.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 475
+      },
+      {
+        "index": 60,
+        "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 061.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 726
+      },
+      {
+        "index": 61,
+        "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 062.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 831
+      },
+      {
+        "index": 62,
+        "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 063.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 552
+      },
+      {
+        "index": 63,
+        "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 064.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 509
+      },
+      {
+        "index": 64,
+        "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 065.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 792
+      },
+      {
+        "index": 65,
+        "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 066.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 627
+      },
+      {
+        "index": 66,
+        "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 067.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 494
+      },
+      {
+        "index": 67,
+        "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 068.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 560
+      },
+      {
+        "index": 68,
+        "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 069.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 514
+      },
+      {
+        "index": 69,
+        "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 070.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 1837
+      },
+      {
+        "index": 70,
+        "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 071.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 814
+      },
+      {
+        "index": 71,
+        "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 072.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 507
+      },
+      {
+        "index": 72,
+        "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 073.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 593
+      },
+      {
+        "index": 73,
+        "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 074.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 991
+      },
+      {
+        "index": 74,
+        "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 075.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 479
+      },
+      {
+        "index": 75,
+        "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 076.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 511
+      },
+      {
+        "index": 76,
+        "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 077.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 1016
+      },
+      {
+        "index": 77,
+        "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 078.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 530
+      },
+      {
+        "index": 78,
+        "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 079.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 649
+      },
+      {
+        "index": 79,
+        "path": "benchmarks/connector-20261106-1621/Раздел 4/вложенная папка/Файл 080.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 463
+      },
+      {
+        "index": 80,
+        "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 081.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 459
+      },
+      {
+        "index": 81,
+        "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 082.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 1130
+      },
+      {
+        "index": 82,
+        "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 083.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 1074
+      },
+      {
+        "index": 83,
+        "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 084.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 523
+      },
+      {
+        "index": 84,
+        "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 085.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 630
+      },
+      {
+        "index": 85,
+        "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 086.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 820
+      },
+      {
+        "index": 86,
+        "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 087.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 756
+      },
+      {
+        "index": 87,
+        "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 088.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 774
+      },
+      {
+        "index": 88,
+        "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 089.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 700
+      },
+      {
+        "index": 89,
+        "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 090.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 647
+      },
+      {
+        "index": 90,
+        "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 091.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 732
+      },
+      {
+        "index": 91,
+        "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 092.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 1072
+      },
+      {
+        "index": 92,
+        "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 093.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 871
+      },
+      {
+        "index": 93,
+        "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 094.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 515
+      },
+      {
+        "index": 94,
+        "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 095.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 567
+      },
+      {
+        "index": 95,
+        "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 096.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 1086
+      },
+      {
+        "index": 96,
+        "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 097.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 1100
+      },
+      {
+        "index": 97,
+        "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 098.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 904
+      },
+      {
+        "index": 98,
+        "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 099.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 989
+      },
+      {
+        "index": 99,
+        "path": "benchmarks/connector-20261106-1621/Раздел 5/вложенная папка/Файл 100.bin",
+        "match": true,
+        "shaMatches": true,
+        "ms": 854
+      }
+    ],
+    "errors": []
+  }
+}
