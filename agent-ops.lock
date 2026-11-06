@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "agent-ops.n8n-upload-lock/v1",
+  "centralRepository": "markmalina/ops",
+  "centralCommit": "46147d5b8b89fd8eb420c5a2b277e08992ab1e59",
+  "actionPath": "agent-ops/actions/n8n-upload-preflight",
+  "targetId": "n8n-upload-existing-service-v1",
+  "operation": "onboarding-preflight",
+  "candidatePath": "agent-ops/registry/candidates/n8n/upload-existing-service-v1.json",
+  "candidateSha256": "fc94e5afc848a98b161e1d0421f79eb2f10440083ac23701807857330e7c443b",
+  "projectSha256": "4bc4742f36ca6316e20abf42dc4d1119806c4e571fe445e5c4b445615972527f"
+}

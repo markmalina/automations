@@ -1,0 +1,8 @@
+{
+  "schemaVersion": "agent-ops.n8n-read-project/v1",
+  "ownerRepository": "markmalina/automations",
+  "targetId": "n8n-upload-existing-service-v1",
+  "operation": "read-capability",
+  "state": "REPOSITORY_CANDIDATE",
+  "mutationBudget": 0
+}

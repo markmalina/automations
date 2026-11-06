@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "agent-ops.n8n-upload-project-ref/v1",
+  "ownerRepository": "markmalina/automations",
+  "targetId": "n8n-upload-existing-service-v1",
+  "operation": "onboarding-preflight",
+  "state": "REPOSITORY_CANDIDATE",
+  "providerAccess": false,
+  "secretAccess": false,
+  "mutationBudget": 0
+}

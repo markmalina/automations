@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "agent-ops.n8n-read-lock/v1",
+  "centralRepository": "markmalina/ops",
+  "centralCommit": "46147d5b8b89fd8eb420c5a2b277e08992ab1e59",
+  "actionPath": "agent-ops/actions/n8n-upload-readiness",
+  "targetId": "n8n-upload-existing-service-v1",
+  "operation": "read-capability",
+  "projectSha256": "9c7f58a83a52efdf70576d99185d82952a4aef17420e05a3d61c256e9de38134",
+  "readReleaseSha256": "94878f912785cbc443f27239ad71f336bf809f45ddd81f93a7712729de50ed9b"
+}

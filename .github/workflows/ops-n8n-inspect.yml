@@ -1,0 +1,77 @@
+name: n8n protected read-only inspection candidate
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: read
+
+concurrency:
+  group: n8n-upload-readonly
+  cancel-in-progress: false
+
+jobs:
+  admission:
+    if: >-
+      ${{
+        github.run_attempt == 1 &&
+        github.ref == 'refs/heads/main' &&
+        github.repository == 'markmalina/automations' &&
+        github.repository_id == '1448151721' &&
+        github.actor_id == '23397294' &&
+        github.event.comment.user.id == 23397294 &&
+        github.event.issue.number == 1 &&
+        !github.event.issue.pull_request &&
+        github.event.comment.body == '/n8n-ops inspect'
+      }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    outputs:
+      allowed: ${{ steps.admission.outputs.allowed }}
+    steps:
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - id: admission
+        uses: markmalina/ops/agent-ops/actions/n8n-upload-readiness@46147d5b8b89fd8eb420c5a2b277e08992ab1e59
+        with:
+          mode: admit
+      - name: Save admission evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: n8n-read-admission-${{ github.run_id }}
+          path: n8n-ops-readiness.json
+          if-no-files-found: error
+          overwrite: false
+          retention-days: 7
+
+  collect:
+    needs: admission
+    if: ${{ needs.admission.outputs.allowed == 'true' }}
+    environment: n8n-upload-readonly
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Collect fixed-target read-only evidence
+        uses: markmalina/ops/agent-ops/actions/n8n-upload-readiness@46147d5b8b89fd8eb420c5a2b277e08992ab1e59
+        with:
+          mode: collect
+        env:
+          N8N_UPLOAD_RAILWAY_PROJECT_TOKEN: ${{ secrets.N8N_UPLOAD_RAILWAY_PROJECT_TOKEN }}
+      - name: Save redacted readiness evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: n8n-read-observation-${{ github.run_id }}
+          path: n8n-ops-readiness.json
+          if-no-files-found: error
+          overwrite: false
+          retention-days: 7
