@@ -1,0 +1,5 @@
+.env
+*.receipt.json
+__pycache__/
+source-inspection/
+.pilot-secrets.json

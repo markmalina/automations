@@ -1,0 +1,79 @@
+{
+  "status": "PROPOSED_NOT_APPLIED",
+  "billing_approval": "PENDING",
+  "workspace_id": "e4c7b70e-ba0f-4c79-8d84-c62debc3867d",
+  "workspace_name": "markmalina's Projects",
+  "placement": {
+    "proposed_project_name": "n8n-github-upload",
+    "project_id": null,
+    "service_name": "n8n-upload",
+    "environment_name": "pilot",
+    "is_public_project": false,
+    "pr_deploys": false,
+    "note": "Dedicated project within existing paid workspace proposed for separate cost attribution. No target created or existing project repurposed."
+  },
+  "source": {
+    "kind": "official_docker_image",
+    "image": "docker.n8n.io/n8nio/n8n:2.46.6",
+    "digest": null,
+    "note": "Image runtime/digest and security freshness must be checked before deployment; no floating stable tag."
+  },
+  "limits": {
+    "replicas": 1,
+    "memory_gb": 1,
+    "vcpus": 0.5,
+    "regular_mode": true
+  },
+  "volume": {
+    "mount_path": "/data",
+    "size_mb": 1024,
+    "paths": {
+      "n8n_database": "/data/.n8n",
+      "git": "/data/work/git",
+      "staging": "/data/work/uploads",
+      "receipts": "/data/work/receipts"
+    }
+  },
+  "configuration": {
+    "N8N_USER_FOLDER": "/data",
+    "DB_TYPE": "sqlite",
+    "N8N_DEFAULT_BINARY_DATA_MODE": "filesystem",
+    "N8N_RESTRICT_FILE_ACCESS_TO": "/data/work",
+    "N8N_PAYLOAD_SIZE_MAX": "64",
+    "N8N_FORMDATA_FILE_SIZE_MAX": "64",
+    "N8N_CONCURRENCY_PRODUCTION_LIMIT": "1",
+    "N8N_DIAGNOSTICS_ENABLED": "false",
+    "N8N_VERSION_NOTIFICATIONS_ENABLED": "false",
+    "N8N_TEMPLATES_ENABLED": "false",
+    "N8N_PROXY_HOPS": "1",
+    "EXECUTIONS_DATA_SAVE_ON_SUCCESS": "none",
+    "EXECUTIONS_DATA_SAVE_ON_ERROR": "none"
+  },
+  "secret_requirements": [
+    "Permanent n8n encryption key, generated without model/user-facing output and stored as service secret.",
+    "Owner account initialization before connecting GitHub credentials or enabling general use.",
+    "Header Auth credential for initial binary probe; never store actual value in this plan."
+  ],
+  "remaining_before_apply": [
+    "Owner approval of bounded pilot expense.",
+    "Confirm startup volume ownership and node user write access; do not broaden access to n8n database.",
+    "Resolve exact image digest and verify Git binary.",
+    "Configure bounded runtime and verify compute stops after pilot; do not change global workspace spending limits.",
+    "Create/pin actual Railway IDs after approval; generate HTTPS and configure URLs."
+  ],
+  "pilot": {
+    "maximum_compute_hours": 2,
+    "proposed_additional_budget_usd": 1,
+    "estimated_max_compute_usd": 0.06,
+    "estimate_assumptions": "2h at full 1GB RAM and 0.5vCPU, using dashboard rates; excludes transfer and disk.",
+    "retained_volume_cost_usd_per_month_upper_approx": 0.16,
+    "note": "Proposal for initial Work→n8n binary transport test, not approval for indefinite always-on runtime. A retained 1GB disk remains billable after compute stops. Long-term operation to be decided after measurements."
+  },
+  "acceptance": [
+    "Authenticated Work→real n8n binary roundtrip with SHA-256 match.",
+    "Unauthenticated and incorrect auth requests rejected.",
+    "Actual startup, used volume, CPU and memory measured.",
+    "No Railway Agent/LLM, Redis or separate database service.",
+    "Original full GitHub/batch/retry/restart/Android acceptance remains outstanding."
+  ]
+}

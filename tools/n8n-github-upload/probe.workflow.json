@@ -1,0 +1,61 @@
+{
+  "name": "Work binary transport probe — NOT GitHub upload",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "work-github-upload-probe-v1",
+        "authentication": "headerAuth",
+        "responseMode": "lastNode",
+        "responseData": "firstEntryBinary",
+        "responseBinaryPropertyName": "data",
+        "options": {
+          "binaryData": true,
+          "binaryPropertyName": "data"
+        }
+      },
+      "id": "5158a967-1b29-4714-b0e2-673cb40b3edc",
+      "name": "Authenticated binary webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "1c20dadc-d0f0-4995-a820-a75fb94e4ef7"
+    },
+    {
+      "parameters": {},
+      "id": "96460961-463f-4024-aeff-79a724a12edf",
+      "name": "Return bytes unchanged",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        240,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Authenticated binary webhook": {
+      "main": [
+        [
+          {
+            "node": "Return bytes unchanged",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "none",
+    "saveDataErrorExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
+  },
+  "pinData": {}
+}

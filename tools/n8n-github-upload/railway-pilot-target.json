@@ -1,0 +1,23 @@
+{
+  "project": {
+    "id": "69cc90c9-7ede-4a57-bc03-f3e63f01cca3",
+    "name": "n8n-github-upload"
+  },
+  "environment": {
+    "id": "369d5bb9-5107-4e39-89d8-668b9b59e230",
+    "name": "pilot"
+  },
+  "service": {
+    "id": "2425a11a-90bd-47fe-9c5b-03ad96ee7a74",
+    "name": "n8n-upload"
+  },
+  "volume": {
+    "id": "cdfc9da6-bc0d-4d5d-aa0d-fc5d26a95ea0",
+    "name": "n8n-pilot-data"
+  },
+  "deadline_utc": "2026-11-06T12:45:16.582Z",
+  "approved_additional_budget_usd": 1,
+  "github_repo": "markmalina/automations",
+  "github_issue": 1,
+  "github_branch": "infra/work-github-upload"
+}

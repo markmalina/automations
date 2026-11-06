@@ -1,0 +1,666 @@
+{
+  "observed_date": "2026-11-06",
+  "observed_window_msk": "13:31–13:37",
+  "read_only": true,
+  "workspace": {
+    "id": "e4c7b70e-ba0f-4c79-8d84-c62debc3867d",
+    "name": "markmalina's Projects",
+    "type": "personal",
+    "projectCount": 8
+  },
+  "projects": [
+    {
+      "id": "1d877786-b151-4a97-888f-8390d82c7af4",
+      "name": "gate781-s1-disposable",
+      "environments": [
+        {
+          "id": "9c3a7c2c-9656-48b7-ad1e-e3d5de2e9b46",
+          "name": "s1-disposable"
+        }
+      ],
+      "project_service_definitions": [
+        {
+          "id": "4dc1d83d-6750-4154-aa14-0baa86f1333f",
+          "name": "gate781-writer-e185354973bd4f21adb819520e420159"
+        },
+        {
+          "id": "3d5feaee-af9c-459c-90aa-c472fd1f61db",
+          "name": "gate781-pg-e185354973bd4f21adb819520e420159"
+        }
+      ],
+      "inspected_environment": {
+        "id": "9c3a7c2c-9656-48b7-ad1e-e3d5de2e9b46",
+        "name": "s1-disposable",
+        "services": [],
+        "volumes": [],
+        "buckets": [],
+        "pending_patch": null
+      }
+    },
+    {
+      "id": "5f2738d0-46a8-413c-bbda-142187ea60b8",
+      "name": "slovo",
+      "environments": [
+        {
+          "id": "c94cec69-6771-4822-b60f-4a973fde51b2",
+          "name": "production"
+        }
+      ],
+      "project_service_definitions": [
+        {
+          "id": "77809fb6-6bfc-4c67-bd0e-a3be38c04e02",
+          "name": "slovo"
+        }
+      ],
+      "inspected_environment": {
+        "id": "c94cec69-6771-4822-b60f-4a973fde51b2",
+        "name": "production",
+        "services": [
+          {
+            "id": "77809fb6-6bfc-4c67-bd0e-a3be38c04e02",
+            "name": "slovo",
+            "state": "live",
+            "source": {
+              "image": null,
+              "repo": "markmalina/slovo",
+              "branch": "codex/night-r1"
+            },
+            "latest_deployment_status": "SUCCESS",
+            "regions": [
+              "sfo"
+            ],
+            "volume_mounts": [
+              {
+                "volumeId": "d1ec149f-fc39-4896-a5b6-db944428a1ab",
+                "volumeName": "slovo-volume",
+                "mountPath": "/data"
+              }
+            ]
+          }
+        ],
+        "volumes": [
+          {
+            "id": "d1ec149f-fc39-4896-a5b6-db944428a1ab",
+            "name": "slovo-volume",
+            "state": "live",
+            "region": "sfo",
+            "sizeMB": 5000,
+            "mountedOn": {
+              "serviceId": "77809fb6-6bfc-4c67-bd0e-a3be38c04e02",
+              "serviceName": "slovo",
+              "mountPath": "/data"
+            },
+            "stagedChangeCount": 0
+          }
+        ],
+        "buckets": [],
+        "pending_patch": null
+      }
+    },
+    {
+      "id": "203d7b35-3c73-4c22-8578-e6f37c24162b",
+      "name": "third",
+      "environments": [
+        {
+          "id": "ae32f112-ae7a-4dcc-ad68-3daaa1b064bb",
+          "name": "production"
+        }
+      ],
+      "project_service_definitions": [
+        {
+          "id": "6054d3e8-4c9e-4ced-82bd-bc1d7c790c1d",
+          "name": "third-bot"
+        }
+      ],
+      "inspected_environment": {
+        "id": "ae32f112-ae7a-4dcc-ad68-3daaa1b064bb",
+        "name": "production",
+        "services": [
+          {
+            "id": "6054d3e8-4c9e-4ced-82bd-bc1d7c790c1d",
+            "name": "third-bot",
+            "state": "live",
+            "source": {
+              "image": null,
+              "repo": "markmalina/third",
+              "branch": "main"
+            },
+            "latest_deployment_status": null,
+            "regions": [
+              "sfo"
+            ],
+            "volume_mounts": [
+              {
+                "volumeId": "dedd221a-6fce-4381-945c-fa7b1721834d",
+                "volumeName": "third-bot-volume",
+                "mountPath": "/data"
+              }
+            ]
+          }
+        ],
+        "volumes": [
+          {
+            "id": "dedd221a-6fce-4381-945c-fa7b1721834d",
+            "name": "third-bot-volume",
+            "state": "live",
+            "region": "sfo",
+            "sizeMB": 5000,
+            "mountedOn": {
+              "serviceId": "6054d3e8-4c9e-4ced-82bd-bc1d7c790c1d",
+              "serviceName": "third-bot",
+              "mountPath": "/data"
+            },
+            "stagedChangeCount": 0
+          }
+        ],
+        "buckets": [],
+        "pending_patch": null
+      }
+    },
+    {
+      "id": "bae932c2-1f54-4d99-99ca-2512dd97a0b3",
+      "name": "ledger-mcp-production",
+      "environments": [
+        {
+          "id": "c2855d98-c02e-4f94-8d6f-c2a3939926e9",
+          "name": "production"
+        }
+      ],
+      "project_service_definitions": [],
+      "inspected_environment": {
+        "id": "c2855d98-c02e-4f94-8d6f-c2a3939926e9",
+        "name": "production",
+        "services": [],
+        "volumes": [],
+        "buckets": [],
+        "pending_patch": null
+      }
+    },
+    {
+      "id": "26b05334-1d54-455f-93fa-6019045451f8",
+      "name": "aqub-c1c-candidate",
+      "environments": [
+        {
+          "id": "e196b20d-3753-4aaa-ac1c-3bd324c50925",
+          "name": "staging"
+        },
+        {
+          "id": "0d2c9719-70c5-4f49-832c-52a285b630d5",
+          "name": "production"
+        }
+      ],
+      "project_service_definitions": [],
+      "inspected_environment": {
+        "id": "0d2c9719-70c5-4f49-832c-52a285b630d5",
+        "name": "production",
+        "services": [],
+        "volumes": [],
+        "buckets": [],
+        "pending_patch": null
+      }
+    },
+    {
+      "id": "b87a4874-391c-4903-8975-91f4999aed9a",
+      "name": "become-staging",
+      "environments": [
+        {
+          "id": "e7442fc6-a558-4b85-b523-30abdf362695",
+          "name": "staging"
+        }
+      ],
+      "project_service_definitions": [
+        {
+          "id": "ec070ac4-b08e-4aab-a969-f41316072df8",
+          "name": "take-i4"
+        },
+        {
+          "id": "ab9bb9e3-4f4a-498c-a679-5621ff346574",
+          "name": "gate-i4"
+        },
+        {
+          "id": "8fffb3bf-0cad-4971-b4f3-bd7dcb19df5f",
+          "name": "oko-i4"
+        },
+        {
+          "id": "d2f3394d-fead-4d42-bcfb-1a009513dc11",
+          "name": "mayaki-i4"
+        },
+        {
+          "id": "79a2c31d-605d-43da-aa41-360dbd0efaef",
+          "name": "relations-i4"
+        },
+        {
+          "id": "d91286e4-72ce-42c0-8fef-33f0cb9d4204",
+          "name": "become-i3-runtime"
+        },
+        {
+          "id": "3acd3008-c10b-461d-92c0-90ff068464ea",
+          "name": "Postgres"
+        }
+      ],
+      "inspected_environment": {
+        "id": "e7442fc6-a558-4b85-b523-30abdf362695",
+        "name": "staging",
+        "services": [
+          {
+            "id": "79a2c31d-605d-43da-aa41-360dbd0efaef",
+            "name": "relations-i4",
+            "state": "live",
+            "source": {
+              "image": null,
+              "repo": "markmalina/relations",
+              "branch": "agent/ac-i4-relations-service"
+            },
+            "latest_deployment_status": "SUCCESS",
+            "regions": [
+              "sfo"
+            ],
+            "volume_mounts": []
+          },
+          {
+            "id": "d91286e4-72ce-42c0-8fef-33f0cb9d4204",
+            "name": "become-i3-runtime",
+            "state": "live",
+            "source": {
+              "image": null,
+              "repo": "AlphaCenter/become",
+              "branch": "agent/ac-i4-cross-service-composition"
+            },
+            "latest_deployment_status": "SUCCESS",
+            "regions": [
+              "sfo"
+            ],
+            "volume_mounts": []
+          },
+          {
+            "id": "ec070ac4-b08e-4aab-a969-f41316072df8",
+            "name": "take-i4",
+            "state": "live",
+            "source": {
+              "image": null,
+              "repo": "AlphaCenter/take",
+              "branch": "agent/ac-i4-take-service"
+            },
+            "latest_deployment_status": "SUCCESS",
+            "regions": [
+              "sfo"
+            ],
+            "volume_mounts": []
+          },
+          {
+            "id": "8fffb3bf-0cad-4971-b4f3-bd7dcb19df5f",
+            "name": "oko-i4",
+            "state": "live",
+            "source": {
+              "image": null,
+              "repo": "AlphaCenter/oko",
+              "branch": "agent/ac-i4-learning-service"
+            },
+            "latest_deployment_status": "SUCCESS",
+            "regions": [
+              "sfo"
+            ],
+            "volume_mounts": []
+          },
+          {
+            "id": "ab9bb9e3-4f4a-498c-a679-5621ff346574",
+            "name": "gate-i4",
+            "state": "live",
+            "source": {
+              "image": null,
+              "repo": "markmalina/gate",
+              "branch": "agent/ac-i4-gate-service"
+            },
+            "latest_deployment_status": "SUCCESS",
+            "regions": [
+              "sfo"
+            ],
+            "volume_mounts": []
+          },
+          {
+            "id": "3acd3008-c10b-461d-92c0-90ff068464ea",
+            "name": "Postgres",
+            "state": "live",
+            "source": {
+              "image": "ghcr.io/railwayapp-templates/postgres-ssl:18",
+              "repo": null,
+              "branch": null
+            },
+            "latest_deployment_status": "SUCCESS",
+            "regions": [
+              "sfo"
+            ],
+            "volume_mounts": [
+              {
+                "volumeId": "396e183d-68f4-4bdd-ab85-1285980c1ac6",
+                "volumeName": "postgres-volume",
+                "mountPath": "/var/lib/postgresql/data"
+              }
+            ]
+          },
+          {
+            "id": "d2f3394d-fead-4d42-bcfb-1a009513dc11",
+            "name": "mayaki-i4",
+            "state": "live",
+            "source": {
+              "image": null,
+              "repo": "AlphaCenter/mayaki",
+              "branch": "agent/ac-i4-learning-service"
+            },
+            "latest_deployment_status": "SUCCESS",
+            "regions": [
+              "sfo"
+            ],
+            "volume_mounts": []
+          }
+        ],
+        "volumes": [
+          {
+            "id": "396e183d-68f4-4bdd-ab85-1285980c1ac6",
+            "name": "postgres-volume",
+            "state": "live",
+            "region": "sfo",
+            "sizeMB": 5000,
+            "mountedOn": {
+              "serviceId": "3acd3008-c10b-461d-92c0-90ff068464ea",
+              "serviceName": "Postgres",
+              "mountPath": "/var/lib/postgresql/data"
+            },
+            "stagedChangeCount": 0
+          }
+        ],
+        "buckets": [],
+        "pending_patch": null
+      }
+    },
+    {
+      "id": "972b6ab7-988a-421c-abfa-425451ad714f",
+      "name": "gate-backend",
+      "environments": [
+        {
+          "id": "3c1412a1-58c6-49c2-ad4f-1f50c3c9946f",
+          "name": "staging"
+        },
+        {
+          "id": "a148b138-44b3-4349-9d4b-292880503055",
+          "name": "production"
+        }
+      ],
+      "project_service_definitions": [
+        {
+          "id": "0e16e0f3-ec16-4e47-992a-4c7e14b77d51",
+          "name": "aqub"
+        },
+        {
+          "id": "b9867b43-80de-40da-b8cd-66c8fc73e523",
+          "name": "become-take-controlled"
+        },
+        {
+          "id": "124e1f44-8c5b-46c0-b382-55becb9e6ddb",
+          "name": "become-oko-controlled"
+        },
+        {
+          "id": "35df1378-ec07-49c4-8fd4-8213fd921eb7",
+          "name": "become-mayaki-controlled"
+        },
+        {
+          "id": "fc623faa-455e-4703-897f-4cc215307abc",
+          "name": "become-relations-controlled"
+        },
+        {
+          "id": "561d3da3-ddb5-4d3d-8fa2-c9454b0996bf",
+          "name": "Postgres"
+        },
+        {
+          "id": "099cbf8c-1d94-43fe-8714-90725bf93998",
+          "name": "gate"
+        }
+      ],
+      "inspected_environment": {
+        "id": "a148b138-44b3-4349-9d4b-292880503055",
+        "name": "production",
+        "services": [
+          {
+            "id": "099cbf8c-1d94-43fe-8714-90725bf93998",
+            "name": "gate",
+            "state": "live",
+            "source": {
+              "image": null,
+              "repo": "AlphaCenter/gate",
+              "branch": "main"
+            },
+            "latest_deployment_status": "SUCCESS",
+            "regions": [
+              "sfo"
+            ],
+            "volume_mounts": []
+          },
+          {
+            "id": "561d3da3-ddb5-4d3d-8fa2-c9454b0996bf",
+            "name": "Postgres",
+            "state": "live",
+            "source": {
+              "image": "ghcr.io/railwayapp-templates/postgres-ssl:18",
+              "repo": null,
+              "branch": null
+            },
+            "latest_deployment_status": "SUCCESS",
+            "regions": [
+              "sfo"
+            ],
+            "volume_mounts": [
+              {
+                "volumeId": "a33c2323-b98f-46b1-bd97-260bf34ab0bf",
+                "volumeName": "gate-postgres",
+                "mountPath": "/var/lib/postgresql/data"
+              }
+            ]
+          },
+          {
+            "id": "fc623faa-455e-4703-897f-4cc215307abc",
+            "name": "become-relations-controlled",
+            "state": "live",
+            "source": {
+              "image": null,
+              "repo": "markmalina/relations",
+              "branch": "main"
+            },
+            "latest_deployment_status": "SUCCESS",
+            "regions": [
+              "sfo"
+            ],
+            "volume_mounts": []
+          },
+          {
+            "id": "0e16e0f3-ec16-4e47-992a-4c7e14b77d51",
+            "name": "aqub",
+            "state": "live",
+            "source": {
+              "image": null,
+              "repo": "AlphaCenter/aqub",
+              "branch": "main"
+            },
+            "latest_deployment_status": "SUCCESS",
+            "regions": [
+              "sfo"
+            ],
+            "volume_mounts": []
+          },
+          {
+            "id": "124e1f44-8c5b-46c0-b382-55becb9e6ddb",
+            "name": "become-oko-controlled",
+            "state": "live",
+            "source": {
+              "image": null,
+              "repo": "AlphaCenter/oko",
+              "branch": "main"
+            },
+            "latest_deployment_status": "SUCCESS",
+            "regions": [
+              "sfo"
+            ],
+            "volume_mounts": []
+          },
+          {
+            "id": "b9867b43-80de-40da-b8cd-66c8fc73e523",
+            "name": "become-take-controlled",
+            "state": "live",
+            "source": {
+              "image": null,
+              "repo": "AlphaCenter/take",
+              "branch": "main"
+            },
+            "latest_deployment_status": "SUCCESS",
+            "regions": [
+              "sfo"
+            ],
+            "volume_mounts": []
+          },
+          {
+            "id": "35df1378-ec07-49c4-8fd4-8213fd921eb7",
+            "name": "become-mayaki-controlled",
+            "state": "live",
+            "source": {
+              "image": null,
+              "repo": "AlphaCenter/mayaki",
+              "branch": "agent/become-i4-production-source"
+            },
+            "latest_deployment_status": "SUCCESS",
+            "regions": [
+              "sfo"
+            ],
+            "volume_mounts": []
+          }
+        ],
+        "volumes": [
+          {
+            "id": "1fee4e2f-0d66-4fcf-8038-8f4128275fff",
+            "name": "postgres-volume-7QF6",
+            "state": "live",
+            "region": "sfo",
+            "sizeMB": 500,
+            "mountedOn": null,
+            "stagedChangeCount": 0
+          },
+          {
+            "id": "a33c2323-b98f-46b1-bd97-260bf34ab0bf",
+            "name": "gate-postgres",
+            "state": "live",
+            "region": "sfo",
+            "sizeMB": 5000,
+            "mountedOn": {
+              "serviceId": "561d3da3-ddb5-4d3d-8fa2-c9454b0996bf",
+              "serviceName": "Postgres",
+              "mountPath": "/var/lib/postgresql/data"
+            },
+            "stagedChangeCount": 0
+          }
+        ],
+        "buckets": [],
+        "pending_patch": null
+      }
+    },
+    {
+      "id": "9481ddb1-e3fd-48f6-868e-7855e2061d2e",
+      "name": "sercretarym",
+      "environments": [
+        {
+          "id": "b9570f41-3e3b-4077-b0ed-81406753cb79",
+          "name": "production"
+        }
+      ],
+      "project_service_definitions": [],
+      "inspected_environment": {
+        "id": "b9570f41-3e3b-4077-b0ed-81406753cb79",
+        "name": "production",
+        "services": [],
+        "volumes": [],
+        "buckets": [],
+        "pending_patch": null
+      }
+    }
+  ],
+  "billing": {
+    "source": "Railway dashboard rendered UI",
+    "url": "https://railway.com/workspace/usage",
+    "plan": "Hobby",
+    "period_label": "Oct 17 - Nov 17",
+    "current_usage_usd": 16.63,
+    "included_usage_usd": 5,
+    "current_bill_usd": 16.63,
+    "estimated_bill_usd": 26.24,
+    "agent_usage_usd": 0,
+    "displayed_agent_limit_usd": 5,
+    "cost_components_usd": {
+      "memory": 12.7214,
+      "cpu": 3.4999,
+      "egress": 0.0405,
+      "volume": 0.3341,
+      "backup": 0.0293
+    },
+    "projects_usd": {
+      "gate-backend": 14.08,
+      "become-staging": 1.71,
+      "slovo": 0.8253,
+      "third": 0.0085
+    },
+    "limits_note": "Limits dialog showed blank input values and example placeholders. Effective compute hard limit not established. Nothing changed."
+  },
+  "templates": [
+    {
+      "code": "n8n-10",
+      "name": "n8n",
+      "is_verified": false,
+      "services": [
+        {
+          "slot": "53e562c8-0fa8-44aa-acf6-ec0de8d938a4",
+          "name": "n8n",
+          "source": "image:n8nio/n8n:stable",
+          "clusterRole": null,
+          "mountPaths": [
+            "/home/node/.n8n"
+          ]
+        }
+      ],
+      "variable_names": [
+        "N8N_ENCRYPTION_KEY",
+        "RAILWAY_RUN_UID",
+        "WEBHOOK_URL"
+      ]
+    },
+    {
+      "code": "n8n-7",
+      "name": "n8n",
+      "is_verified": false,
+      "services": [
+        {
+          "slot": "c8048e58-a549-44f9-8c55-1223c21996b2",
+          "name": "n8n",
+          "source": "image:n8nio/n8n:2.42.6",
+          "clusterRole": null,
+          "mountPaths": [
+            "/home/node/.n8n"
+          ]
+        }
+      ],
+      "variable_names": [
+        "DB_SQLITE_POOL_SIZE",
+        "EXECUTIONS_DATA_MAX_AGE",
+        "EXECUTIONS_DATA_PRUNE_MAX_COUNT",
+        "GENERIC_TIMEZONE",
+        "N8N_EDITOR_BASE_URL",
+        "N8N_ENCRYPTION_KEY",
+        "N8N_PROXY_HOPS",
+        "N8N_WEBHOOK_URL",
+        "PORT",
+        "RAILWAY_RUN_UID"
+      ]
+    }
+  ],
+  "limitations": [
+    "Not all environments inspected: primary/production environment per project only; gate-backend staging and aqub-c1c-candidate staging not inventoried here.",
+    "Project-level service definitions can remain without a live environment instance; counts must not be treated as active services.",
+    "No n8n source/name found in inspected service definitions and environments; arbitrary renamed image wrappers not excluded.",
+    "Current OAuth works now; refresh behavior after hours not tested."
+  ]
+}
