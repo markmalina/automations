@@ -6,6 +6,75 @@ const { once } = require('node:events');
 const crypto = require('node:crypto');
 let server;
 let githubPilotCredentials;
+// OPS_OBSERVATION_START — metadata only; no token, manifest, receipt or row is logged.
+function observationJournalSnapshot(directory = '/data/work/control') {
+  let db;
+  try {
+    const path = require('node:path');
+    const file = path.join(directory, 'uploads.sqlite');
+    if (fs.realpathSync(directory) !== path.resolve(directory) || fs.lstatSync(file).isSymbolicLink() ||
+        !fs.statSync(file).isFile() || fs.statSync(file).size > 67108864) throw Error('journal');
+    db = new (require('node:sqlite').DatabaseSync)(file, { readOnly: true });
+    db.exec('BEGIN');
+    if (db.prepare('PRAGMA quick_check').all().some(row => row.quick_check !== 'ok')) throw Error('journal');
+    const hash = crypto.createHash('sha256'); let rows = 0, bytes = 0;
+    const tables = {
+      uploads: ['id', 'digest', 'manifest', 'owner', 'state', 'commit_sha', 'receipt', 'created_at', 'updated_at'],
+      grants: ['token_hash', 'upload_id', 'digest', 'file_count', 'total_bytes', 'expires_at'],
+    };
+    for (const [table, columns] of Object.entries(tables)) {
+      hash.update(table + '\n');
+      for (const row of db.prepare('SELECT ' + columns.join(',') + ' FROM ' + table + ' ORDER BY ' + columns[0]).iterate()) {
+        const raw = JSON.stringify(columns.map(column => row[column]));
+        rows++; bytes += Buffer.byteLength(raw);
+        if (rows > 100000 || bytes > 67108864) throw Error('journal');
+        hash.update(raw + '\n');
+      }
+    }
+    const failedUploadPresent = Boolean(db.prepare('SELECT 1 FROM uploads WHERE id=?').get('9d94bcf3-9a28-4014-93d5-ce8e5d259c7d'));
+    db.exec('COMMIT'); db.close(); db = null;
+    return { status: 'OBSERVED', digest: hash.digest('hex'), failedUploadPresent };
+  } catch { return { status: 'UNAVAILABLE', errorCode: 'E_JOURNAL_OBSERVATION_UNAVAILABLE' }; }
+  finally { try { if (db) db.close(); } catch {} }
+}
+function runtimeObservation({ before, after, temporaryCleanup, confirmedCleanup, env = process.env, observedAt = Date.now() }) {
+  try {
+    const ids = { projectId: '69cc90c9-7ede-4a57-bc03-f3e63f01cca3', environmentId: '369d5bb9-5107-4e39-89d8-668b9b59e230', serviceId: '2425a11a-90bd-47fe-9c5b-03ad96ee7a74' };
+    if (env.RAILWAY_PROJECT_ID !== ids.projectId || env.RAILWAY_ENVIRONMENT_ID !== ids.environmentId ||
+        env.RAILWAY_SERVICE_ID !== ids.serviceId || !/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/.test(env.RAILWAY_DEPLOYMENT_ID || '') ||
+        !Number.isSafeInteger(observedAt) || observedAt < 0) throw Error('target');
+    const digest = value => crypto.createHash('sha256').update(value).digest('hex');
+    if (typeof env.PILOT_BOOTSTRAP_B64 !== 'string' || env.PILOT_BOOTSTRAP_B64.length > 150000 ||
+        fs.realpathSync('/data/work/control') !== '/data/work/control' ||
+        fs.lstatSync('/data/work/control/upload-ledger.cjs').isSymbolicLink() ||
+        !fs.statSync('/data/work/control/upload-ledger.cjs').isFile() ||
+        fs.statSync('/data/work/control/upload-ledger.cjs').size > 100000) throw Error('source');
+    const bootstrap = Buffer.from(env.PILOT_BOOTSTRAP_B64, 'base64');
+    const ledger = fs.readFileSync('/data/work/control/upload-ledger.cjs');
+    if (bootstrap.length < 1 || bootstrap.length > 100000 || ledger.length < 1 || ledger.length > 100000) throw Error('source');
+    const disk = fs.statfsSync('/data'); const availableDiskBytes = Number(disk.bavail) * Number(disk.bsize);
+    if (!Number.isSafeInteger(availableDiskBytes) || availableDiskBytes < 0) throw Error('disk');
+    const temporaryNames = JSON.parse(env.UPLOAD_PRUNE_FAILED_TEMP_DIRS || '[]');
+    const safeStates = new Set(['removed', 'absent']);
+    const cleanupSafe = Array.isArray(temporaryNames) && temporaryNames.length === 1 &&
+      temporaryNames[0] === '.n8n-clone-16b4d4c47d6b593ddfcb6b82' &&
+      Array.isArray(temporaryCleanup?.results) && temporaryCleanup.results.length === 1 &&
+      temporaryCleanup.results[0].name === temporaryNames[0] && safeStates.has(temporaryCleanup.results[0].state) &&
+      Array.isArray(confirmedCleanup?.results) && confirmedCleanup.results.every(row => safeStates.has(row.state));
+    const journalPreserved = before?.status === 'OBSERVED' && after?.status === 'OBSERVED' &&
+      before.failedUploadPresent === true && after.failedUploadPresent === true &&
+      /^[0-9a-f]{64}$/.test(before.digest) && before.digest === after.digest;
+    return { schemaVersion: 'n8n-upload.runtime-observation/v1', status: 'OBSERVED', phase: 'POST_CLEANUP',
+      ...ids, deploymentId: env.RAILWAY_DEPLOYMENT_ID, observedAt,
+      runtimeFiles: [
+        { path: 'tools/n8n-github-upload/pilot-bootstrap.cjs', sha256: digest(bootstrap) },
+        { path: 'tools/n8n-github-upload/upload-ledger.cjs', sha256: digest(ledger) },
+      ], persistent: env.UPLOAD_SERVICE_MODE === 'persistent', availableDiskBytes,
+      journalPreserved, journalDigestBefore: before?.status === 'OBSERVED' ? before.digest : null,
+      journalDigestAfter: after?.status === 'OBSERVED' ? after.digest : null, cleanupSafe };
+  } catch { return { schemaVersion: 'n8n-upload.runtime-observation/v1', status: 'UNAVAILABLE', errorCode: 'E_RUNTIME_OBSERVATION_UNAVAILABLE' }; }
+}
+// OPS_OBSERVATION_END
 function childExitCode(persistentMode, shutdownRequested, code) {
   if(persistentMode&&!shutdownRequested) return typeof code==='number'&&code!==0?code:1;
   return code||0;
@@ -36,6 +105,8 @@ async function main() {
   }
   if (process.getuid() === 0) { process.setgid(1000); process.setuid(1000); }
   console.log('PILOT_UID', process.getuid());
+  const observationBefore = observationJournalSnapshot();
+  let temporaryCleanup = null, confirmedCleanup = null;
   if(process.env.PILOT_LEDGER_B64) {
     const source=Buffer.from(process.env.PILOT_LEDGER_B64,'base64');
     const names=JSON.parse(process.env.UPLOAD_PRUNE_FAILED_TEMP_DIRS||'[]');
@@ -45,12 +116,14 @@ async function main() {
       const result=cp.execFileSync('node',['-','prune-failed-temporary',JSON.stringify({names})],{input:source,encoding:'utf8'});
       const parsed=JSON.parse(result);
       if(parsed.error) throw Error('Temporary clone cleanup failed');
+      temporaryCleanup = parsed;
       console.log('UPLOAD_TEMPORARY_CLEANUP',JSON.stringify(parsed));
     }
     fs.writeFileSync('/data/work/control/upload-ledger.cjs',source,{mode:0o600});
     const result=cp.execFileSync('node',['/data/work/control/upload-ledger.cjs','prune-confirmed','{}'],{encoding:'utf8'});
     const parsed=JSON.parse(result);
     if(parsed.error) throw Error('Confirmed clone cleanup failed');
+    confirmedCleanup = parsed;
     console.log('UPLOAD_CONFIRMED_CLEANUP',JSON.stringify(parsed));
     const disk=fs.statfsSync('/data');
     console.log('UPLOAD_DISK_BYTES',JSON.stringify({available:Number(disk.bavail)*Number(disk.bsize),total:Number(disk.blocks)*Number(disk.bsize)}));
@@ -146,6 +219,8 @@ async function main() {
       await cli(['import:credentials','--input='+filename]);
     } finally { if(fs.existsSync(filename)) fs.unlinkSync(filename); }
   }
+  console.log('UPLOAD_OPS_OBSERVATION_V1', JSON.stringify(runtimeObservation({ before: observationBefore,
+    after: observationJournalSnapshot(), temporaryCleanup, confirmedCleanup })));
   console.log(persistent ? 'UPLOAD_SERVICE_READY' : 'PILOT_READY_TO_START', persistent ? 'persistent' : new Date(deadline).toISOString());
   server = cp.spawn('n8n', ['start'], { stdio: 'inherit', env: { ...process.env, N8N_LISTEN_ADDRESS: '0.0.0.0', N8N_PORT: '5678', N8N_SECURE_COOKIE: 'true' } });
   let shutdownRequested=false;
