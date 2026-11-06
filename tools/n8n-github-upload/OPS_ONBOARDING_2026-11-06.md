@@ -1,49 +1,60 @@
-# Подключение n8n Upload к Ops
+# Подключение n8n Upload к Ops — 06.11.2026
 
-Статус: **SOURCE_CANDIDATE**, живой deploy через Ops не подключён.
+Статус: **CONFIG_EXECUTOR_SOURCE_READY**, живой маршрут не выпущен.
 
-Ops source: https://github.com/markmalina/ops/commit/0ff69fc58cb6cb6a70f68d2c01e986628b98ab2c .
-Review: https://github.com/markmalina/ops/pull/435 .
+Ops: https://github.com/markmalina/ops/commit/40aab72a36dcf5ed018fa0391f3d5a04e4a596df .
+PR: https://github.com/markmalina/ops/pull/435 .
 Задача: https://github.com/markmalina/ops/issues/434 .
 
-`agent-ops.lock` закрепляет exact Ops commit, SHA-256 центрального candidate и
-локального project reference. JSON в `.agent-ops/project.yml` является допустимым
-YAML. Workflow `ops-n8n-preflight.yml` обрабатывает только точную команду
-`/n8n-ops preflight` от владельца на Automations #1, первый run на main.
-Разрешения — только contents:read и issues:read; protected Environment и secrets
-не используются. Проверка создаёт безопасный JSON-отчёт и завершается ABORTED:
-правильный ввод даёт E_NOT_RELEASED, а не успешное развёртывание.
+## Реализовано
 
-Workflow пока находится в draft PR. Не публиковать команду, ожидая живого запуска,
-до source/client review и установки на main.
+Код `agent-ops/n8n-upload/` содержит проверку подписанного плана и отдельного
+одобрения владельца, фиксированный адаптер Railway ChangeSet с baseConfigEtag,
+журнал на отдельной Git-ветке и независимый проверяющий модуль.
 
-## Что подготовлено
+Состояния: CLAIMED → SUBMITTING → SUBMITTED → OBSERVED → VERIFIED.
+Журнал подтверждается удалённым Git до вызова Railway. Конкурирующая запись
+использует non-force parent-bound update. После обрыва или неизвестного результата
+новый apply блокируется, в том числе с новым request ID. Подтверждённая квитанция
+повторяется без второго deploy.
 
-- Точные наблюдённые project/environment/service/volume IDs n8n и 6 полей
-  предлагаемого изменения: два файла из retention commit, persistent mode,
-  один failed temporary clone, ON_FAILURE и максимум 3 повтора.
-- Контроль полного SHA, digest файлов контрактов, личности владельца,
-  номера issue, команды и rerun. Данные credentials не читаются.
-- 52 локальных поведенческих теста центрального кода. Отдельно проверяется
-  фактический запуск CLI с этими клиентскими файлами.
-- Центральные 5 файлов прочитаны по exact commit и сверены с подготовленными.
+Результат Railway SUCCESS даёт только OBSERVED. Для VERIFIED требуется отдельное
+подписанное наблюдение из другого run: точное deployment ID, runtime hashes двух
+файлов, health/readiness, persistent mode, доступный диск и сохранность журнала.
+Проверяющий модуль не содержит токена или графа мутаций Railway.
 
-## Что остаётся
+110 offline tests PASS, Node syntax checks PASS. Native API shape сверена с
+официальным railwayapp/cli@5a07ac2ae44ec2fcf892ba96e18f638402c7f8fb. Это проверка
+исходников API, а не живая приёмка provider capability.
 
-Это проверка подключения, не обработчик применения конфигурации.
-Следующий рассмотренный шаг — отдельные requester/control/verifier и
-типизированный config executor, свежий preflight и план, допустимое approval,
-доказанный доступ к точному n8n project/environment и независимая проверка.
-Наличие подходящего project token в Ops пока не доказано; значения существующих
-секретов не запрашивались и не копировались. Вызов существующего Gate/AQUB executor
-для n8n запрещён его собственной привязкой.
+## Клиентская привязка
 
-Предыдущий railway_accept_deploy отклонён автоматической проверкой. Подключение
-Ops не служит способом обойти этот отказ. Отдельный код проверки не применяет
-staged patch, не меняет таймер, лимиты или размер диска, не запускает upload.
-Старый срок 06.11.2026 19:41:59 МСК остаётся фактом прежней конфигурации;
-после него состояние нужно читать заново.
+`agent-ops.lock` закрепляет exact Ops commit и SHA-256 candidate/project.
+`.agent-ops/project.yml` — JSON, совместимый с YAML. Workflow
+`ops-n8n-preflight.yml` допускает только /n8n-ops preflight от точного владельца
+на issue #1, первый run на main. Все action refs — полные SHA, permissions —
+contents:read/issues:read. Ни secrets, ни protected Environment нет.
 
-Retention fix и прежняя проверка выгрузки:
-https://github.com/markmalina/automations/pull/3 .
-Неудачный upload ID 9d94bcf3-9a28-4014-93d5-ce8e5d259c7d сохраняется.
+Клиент по-прежнему вызывает только onboarding preflight, возвращающий
+ABORTED/E_NOT_RELEASED для корректного кандидата. Новый executor не подключён
+к этому workflow; команда deploy не добавлена.
+
+## Что блокирует живой запуск
+
+- source/client acceptance и выпуск защищённых requester/control/observer workflows;
+- аутентифицированная GitHub/OIDC-привязка планов, одобрения и observation;
+- доказанный доступ к точному project/environment и права на журнал;
+- native disposable-fixture acceptance экспериментального ChangeSet API;
+- отдельный сборщик достоверного runtime observation.
+
+`release.json` enabled=false, bindings=null, mutationBudget=0. Код не создавал
+credential, signing key или journal branch. Фикстуры подписей создаются временно
+в памяти тестов; новые постоянные секреты этим кандидатом не предписываются.
+
+Адаптер отклоняет любую staged-конфигурацию, включая прежний pending patch.
+Он не применяет и не удаляет отклонённый auto-review эффект через иной маршрут.
+Таймер и runtime n8n этой работой не изменены; прежний срок 19:41:59 МСК уже
+прошёл, текущее состояние compute здесь не проверялось.
+
+Retention fix: https://github.com/markmalina/automations/pull/3 .
+Failed upload ID 9d94bcf3-9a28-4014-93d5-ce8e5d259c7d сохраняется.
