@@ -2,7 +2,7 @@
 
 Статус: **PROTECTED_SOURCE_PREPARED / LIVE_BLOCKED**. Постоянный сервис не включён.
 
-Ops commit: https://github.com/markmalina/ops/commit/a2a5b8470f1cb6939baf49e368aadc36b9e51086
+Ops commit: https://github.com/markmalina/ops/commit/8d50065a688f675a1d9bdf1a7d30a9c8ede425c5
 PR435: https://github.com/markmalina/ops/pull/435
 Основная задача: https://github.com/markmalina/ops/issues/434
 Регламент: https://github.com/markmalina/ai/blob/main/WORK-RULES.md
@@ -14,7 +14,7 @@ artifact digest. Ключ из запроса без таких доказате
 Временные ключи не сохраняются; секреты и OIDC tokens в артефакты не помещаются.
 Фактический control run записывается отдельно от завершённого approval run.
 
-147 offline behavioral tests PASS; 10 MJS syntax checks PASS. Реальный CLI
+170 offline behavioral tests PASS; 11 MJS syntax checks PASS. Реальный CLI
 защищённого чтения возвращает ABORTED/E_READ_NOT_RELEASED, providerRead=false,
 secretAccessed=false. Это локальная проверка, не живой доступ Ops к Railway.
 
@@ -59,4 +59,7 @@ Retention fix — PR3, d1abb31147db3d0bd1f7ffbec0c1b6dbffbfeb67.
 Failed upload ID 9d94bcf3-9a28-4014-93d5-ce8e5d259c7d сохранён.
 Новые бинарная/replay/100-file приёмки до допустимого восстановления compute
 не выполнены. Полный source-протокол и остаток:
-https://github.com/markmalina/ops/blob/a2a5b8470f1cb6939baf49e368aadc36b9e51086/docs/runbooks/n8n-upload-protected-launch.md
+https://github.com/markmalina/ops/blob/8d50065a688f675a1d9bdf1a7d30a9c8ede425c5/docs/runbooks/n8n-upload-protected-launch.md
+
+
+Дополнение: отдельный runtime successor PR5 — https://github.com/markmalina/automations/pull/5 , commit e2d0b82ef9c00d4f96ef657c8a29e4b4689fb4f9. Он измеряет source/disk/journal после очистки, но не выбран текущим Ops candidate и не установлен. Новый fixed read-only collector в Ops сохраняет runtimeSampledAt отдельно от observedAt и возвращает OBSERVED_NOT_ACCEPTED; существующий verifier не принимает его формат за VERIFIED. 23 новых collector tests и 10 runtime SQLite tests PASS; старый staged patch/d1abb311 и принятые hashes не подменялись. Нужны отдельные protocol/source/log-provenance/native acceptance.
