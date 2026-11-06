@@ -1,0 +1,55 @@
+name: n8n protected binding metadata check
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: read
+  actions: read
+
+concurrency:
+  group: n8n-binding-metadata
+  cancel-in-progress: false
+
+jobs:
+  inspect:
+    if: >-
+      ${{
+        github.run_attempt == 1 &&
+        github.ref == 'refs/heads/main' &&
+        github.repository == 'markmalina/automations' &&
+        github.repository_id == '1448151721' &&
+        github.actor_id == '23397294' &&
+        github.event.comment.user.id == 23397294 &&
+        github.event.issue.number == 1 &&
+        !github.event.issue.pull_request &&
+        github.event.comment.body == '/n8n-ops binding-check'
+      }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: Check out exact caller revision
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.19.0
+          check-latest: false
+          package-manager-cache: false
+      - name: Observe fixed Environment metadata only
+        env:
+          BINDING_GITHUB_TOKEN: ${{ github.token }}
+        run: node tools/n8n-github-upload/probe-github-binding.mjs
+      - name: Preserve redacted diagnostic receipt
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: n8n-binding-metadata-${{ github.run_id }}
+          path: n8n-binding-diagnostic.json
+          if-no-files-found: error
+          overwrite: false
+          retention-days: 7
