@@ -1,7 +1,7 @@
 {
   "id": "workUploadGrantPilot",
   "name": "Issue one upload grant (metadata only)",
-  "description": "Issue one metadata-bound short-lived upload grant; existing OAuth identity retained. Target optional for legacy compatibility.",
+  "description": "Upload to markmalina repositories via existing OAuth. Before execution read https://github.com/markmalina/automations/blob/main/tools/n8n-github-upload/UNIVERSAL_ROUTE.md. Metadata only; never display grants.",
   "active": false,
   "nodes": [
     {
