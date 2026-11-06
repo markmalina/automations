@@ -3,6 +3,7 @@
 const fs = require('node:fs');
 const cp = require('node:child_process');
 const { once } = require('node:events');
+const crypto = require('node:crypto');
 let server;
 const deadline = Number(process.env.PILOT_DEADLINE_MS);
 if (!Number.isFinite(deadline) || deadline <= Date.now()) process.exit(0);
@@ -31,6 +32,21 @@ async function main() {
   console.log('PILOT_UID', process.getuid());
   console.log(cp.execFileSync('git', ['--version'], { encoding: 'utf8' }).trim());
   fs.writeFileSync('/data/work/.write-probe', 'ok', { mode: 0o600 });
+  if (process.env.GH_APP_PRIVATE_KEY) {
+    const key = crypto.createPrivateKey(process.env.GH_APP_PRIVATE_KEY);
+    if (key.asymmetricKeyType !== 'rsa') throw new Error('GitHub App key must be RSA PEM');
+    const fingerprint = crypto.createHash('sha256').update(crypto.createPublicKey(key).export({type:'spki',format:'der'})).digest('base64');
+    const now = Math.floor(Date.now()/1000);
+    const unsigned = Buffer.from(JSON.stringify({alg:'RS256',typ:'JWT'})).toString('base64url')+'.'+Buffer.from(JSON.stringify({iat:now-30,exp:now+300,iss:'5641721'})).toString('base64url');
+    const jwt = unsigned+'.'+crypto.sign('RSA-SHA256',Buffer.from(unsigned),key).toString('base64url');
+    const result = await fetch('https://api.github.com/app', {headers:{Authorization:'Bearer '+jwt,Accept:'application/vnd.github+json','User-Agent':'markmalina-n8n-upload-pilot'}});
+    if (!result.ok) throw new Error('GitHub App verification HTTP '+result.status);
+    const app = await result.json();
+    if (app.id !== 5641721 || app.slug !== 'markmalina-n8n-upload') throw new Error('Unexpected GitHub App identity');
+    const receipt = {appId:app.id,slug:app.slug,fingerprint,permissions:app.permissions,verifiedAt:new Date().toISOString()};
+    fs.writeFileSync('/data/work/receipts/github-app-auth.json',JSON.stringify(receipt,null,2),{mode:0o600});
+    console.log('PILOT_GITHUB_APP_VERIFIED',JSON.stringify(receipt));
+  }
   const marker = '/data/.n8n/pilot-initialized';
   if (!fs.existsSync(marker)) {
     server = cp.spawn('n8n', ['start'], { stdio: 'inherit', env: { ...process.env, N8N_LISTEN_ADDRESS: '127.0.0.1', N8N_PORT: '15678', N8N_SECURE_COOKIE: 'false' } });
