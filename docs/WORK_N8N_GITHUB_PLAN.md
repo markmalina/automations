@@ -81,3 +81,38 @@ GitHub-коннектор не предоставляет администрат
 - Регламент: https://github.com/markmalina/ai/blob/main/WORK-RULES.md
 
 Этот документ сохранён через GitHub-коннектор как допустимый fallback: существующий n8n не обслуживает назначения Ops/Automations, live running=0. Это сохранение документа, не приёмка n8n-маршрута.
+
+## Спринт 1: фактическое продвижение 06.11.2026, 23:35 МСК
+
+Статус спринта: IN_PROGRESS / WAITING_FOR_SPECIFIC_NEW_ACCESS_CONFIRMATION. Постоянный n8n НЕ запущен.
+
+Было: n8n-upload-readonly возвращал hosted404; наличие Environment было неизвестно. Стало: администраторская страница Automations показала отсутствие всех Environments; исполнитель создал пустой n8n-upload-readonly (GitHub Environment ID26517784507) и сохранил custom branch policy: ровно branch main, 0 tags. UI подтвердил сохранение, секретов и variables в окружении нет. Existing protection не отключалась. Required reviewers не настроены; can_admins_bypass=true по metadata. Это ещё не принятая полностью защищённая привязка Railway.
+Настройка: https://github.com/markmalina/automations/settings/environments/26517784507/edit
+
+Один новый фактический owner command: https://github.com/markmalina/automations/issues/1#issuecomment-6694867383
+Run: https://github.com/markmalina/automations/actions/runs/42289316131
+Exact head69d5eea52b2ff1c0413827b8186e3894e046085b; attempt1; actor/triggeringActor23397294; job128138268376 SUCCESS. HTTP200, environmentObserved=true, branchRestrictionMode=custom. Receipt остаётся OBSERVED_NOT_ACCEPTED/E_PROTECTED_BINDING_ACCEPTANCE_PENDING; credentialPresent=null, railwayScopeAccepted=false; Railway reads/writes из этого job=0, configurationChanged=false. Наличие секрета этим job не проверялось.
+
+Artifact13538657957, n8n-binding-metadata-42289316131,629 bytes, metadata/log SHA2564e02ae1ef3b479fd8b45e72bcb99d19cb0c1d2385f55b21cee119da46af08425. Artifact в этом спринте не скачивался; поля квитанции получены из authenticated job log, metadata artifact сверены с log. Run created20:33:11Z; job started20:33:15Z/completed20:33:29Z,14 seconds; time-to-job-start4s; чистое время очереди unknown. Один исполненный job, повторов/rerun нет. Денежная оценка нового и накопленного Actions расхода, provider usage и invoice здесь unknown.
+
+Точная live-квитанция:
+```json
+{"schemaVersion":"agent-ops.n8n-binding-diagnostic/v1","repository":"markmalina/automations","protectedEnvironment":"n8n-upload-readonly","result":"OBSERVED_NOT_ACCEPTED","errorCode":"E_PROTECTED_BINDING_ACCEPTANCE_PENDING","observedAt":1793997204580,"clientCommit":"69d5eea52b2ff1c0413827b8186e3894e046085b","runId":"42289316131","commentId":"6694867383","githubMetadataHttpStatus":200,"environmentObserved":true,"requiredReviewersConfigured":false,"preventSelfReview":null,"adminsCanBypass":true,"branchRestrictionMode":"custom","credentialPresent":null,"railwayScopeAccepted":false,"githubMetadataRequestAttempts":1,"railwayReads":0,"railwayWrites":0,"configurationChanged":false}
+```
+
+Railway live-read около23:28 МСК по-прежнему running0/total1, старый metadataSUCCESS deploymentd7469a53-374f-4c5f-a5d8-beed4c086847, patch0bfc3cd0-278a-4e41-b1f1-7df8cb385602 STAGED. UI точного проекта/окружения также показал6 pending changes; Deploy не нажимался.
+
+Новая подтверждённая административная предпосылка: страница Project Settings → Tokens точного n8n-проекта показала «You have no tokens yet». Подготовлена, но НЕ отправлена форма:
+- project69cc90c9-7ede-4a57-bc03-f3e63f01cca3
+- environment369d5bb9-5107-4e39-89d8-668b9b59e230 / pilot
+- token name ops-n8n-upload-pilot-434
+- предполагаемое место хранения: secret N8N_UPLOAD_RAILWAY_PROJECT_TOKEN в Environment n8n-upload-readonly репозитория markmalina/automations.
+- URL формы: https://railway.com/project/69cc90c9-7ede-4a57-bc03-f3e63f01cca3/settings/tokens?environmentId=369d5bb9-5107-4e39-89d8-668b9b59e230
+
+Project token даёт постоянный доступ в пределах этого project/environment, включая возможность доступа к его переменным; он НЕ является read-only токеном. Подготовленный inspect workflow использует его только для read, но программная граница и native scope ещё должны пройти приёмку. Токен нельзя выдать за разрешение только к одному service или за уже принятый Ops credential.
+
+Единственное запрашиваемое новое действие: конкретно подтвердить создание этого проектного токена и сохранение его в указанном GitHub Environment Secret. Создание/материальное расширение security-sensitive доступа через браузер требует action-time confirmation по правилам браузера; прежние общие полномочия не подменяют это подтверждение. Пароль/секрет/значение токена в чат не требуется. До подтверждения Create не нажимать, новых credentials не выдавать и не сохранять. Это не повтор общего разрешения довести сервис и не запрос ручного Deploy.
+
+Предыдущее automatic railway_accept_deploy rejection сохраняется отдельно: «Cancelled — the user did not approve this action. No changes were made». Создание credential не снимает этот отказ и не разрешает эквивалентный effect через UI/CLI/Ops. Release/source/native/journal/protocol gates из плана остаются; сервис и полный спринт не приняты.
+
+Никаких Railway mutations, изменения compute/timer/resources или runtime journal, нового upload/replay, Gate/AQUB действий не было. Старый failed ID9d94bcf3-9a28-4014-93d5-ce8e5d259c7d не сбрасывался; содержимое остановленного runtime journal в этом спринте не читалось. Активных исполняющихся jobs нет; новый диагностический run завершён. Настройка Environment сохранена, форма token остаётся только предложением.
