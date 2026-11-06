@@ -1,0 +1,31 @@
+{
+  "mcpWorkflowId": "workUploadGrantPilot",
+  "execution": {
+    "executionId": "30",
+    "status": "started"
+  },
+  "binding": {
+    "id": "77d47998-0f18-4027-80b8-8e6dc0b4d29f",
+    "digest": "0cbf2c10c45a38eedc84982d4f1c0706ee5bcc141e695449440aa3209e1da093",
+    "fileCount": 100,
+    "totalBytes": 30000000
+  },
+  "grant": {
+    "uploadId": "77d47998-0f18-4027-80b8-8e6dc0b4d29f",
+    "uploadUrl": "https://n8n-upload-pilot.up.railway.app/webhook/work-granted-upload-pilot-v1",
+    "headerName": "X-Work-Upload-Grant",
+    "expiresAt": "2026-11-06T13:47:58.029Z",
+    "repository": "markmalina/freelance",
+    "branch": "test/n8n-upload-20261106",
+    "manifestDigest": "0cbf2c10c45a38eedc84982d4f1c0706ee5bcc141e695449440aa3209e1da093",
+    "productionReady": false
+  },
+  "tokenOmitted": true,
+  "diagnosticAuth": "native MCP personal API key, not ChatGPT OAuth",
+  "chatgptOAuthStatus": "prepared, not created or authorized",
+  "oauthScopes": [
+    "workflow:read",
+    "workflow:execute",
+    "execution:read"
+  ]
+}

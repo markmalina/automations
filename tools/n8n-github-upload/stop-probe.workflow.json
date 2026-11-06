@@ -1,0 +1,92 @@
+{
+  "id": "workPilotStop",
+  "name": "Stop bounded pilot compute",
+  "description": "Authenticated operator-only graceful stop of this disposable pilot container.",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "work-pilot-stop-v1",
+        "authentication": "headerAuth",
+        "responseMode": "lastNode",
+        "responseData": "firstEntryJson",
+        "responseBinaryPropertyName": "data",
+        "options": {}
+      },
+      "id": "09b7fd9e-b1f8-4738-bfa4-5a80d05aef2f",
+      "name": "OAuth grant input",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "344a7789-4a7b-4863-aa2a-f35912078fc7",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "workPilotHeaderAuth",
+          "name": "Work pilot header"
+        }
+      }
+    },
+    {
+      "id": "b1f10b16-ffc1-4b93-a34e-6c048b86a4f2",
+      "name": "Request graceful shutdown",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        0,
+        800
+      ],
+      "parameters": {
+        "executeOnce": true,
+        "command": "node -e 'setTimeout(()=>process.kill(1,\"SIGTERM\"),3000)' >/dev/null 2>&1 &"
+      }
+    },
+    {
+      "id": "a7b921b1-98a6-408d-a78b-e4e4af21b16a",
+      "name": "Return temporary grant",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        600,
+        0
+      ],
+      "parameters": {
+        "jsCode": "return [{json:{shutdownRequested:true,confirmedStopped:false}}];"
+      }
+    }
+  ],
+  "connections": {
+    "OAuth grant input": {
+      "main": [
+        [
+          {
+            "node": "Request graceful shutdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Request graceful shutdown": {
+      "main": [
+        [
+          {
+            "node": "Return temporary grant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "none",
+    "saveDataErrorExecution": "none",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": false
+  }
+}

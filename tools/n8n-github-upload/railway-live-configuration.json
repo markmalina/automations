@@ -1,0 +1,58 @@
+{
+  "source_image": "docker.n8n.io/n8nio/n8n:2.46.6",
+  "project_id": "69cc90c9-7ede-4a57-bc03-f3e63f01cca3",
+  "environment_id": "369d5bb9-5107-4e39-89d8-668b9b59e230",
+  "service_id": "2425a11a-90bd-47fe-9c5b-03ad96ee7a74",
+  "replicas": 1,
+  "limits": {
+    "memoryGB": 1,
+    "vCPUs": 0.5
+  },
+  "volume": {
+    "mountPath": "/data",
+    "sizeMB": 1024
+  },
+  "restartPolicyType": "NEVER",
+  "domain": "https://n8n-upload-pilot.up.railway.app",
+  "nonsecret_variables": {
+    "PORT": "5678",
+    "N8N_PORT": "5678",
+    "N8N_HOST": "n8n-upload-pilot.up.railway.app",
+    "N8N_PROTOCOL": "https",
+    "N8N_EDITOR_BASE_URL": "https://n8n-upload-pilot.up.railway.app",
+    "N8N_WEBHOOK_URL": "https://n8n-upload-pilot.up.railway.app/",
+    "N8N_USER_FOLDER": "/data",
+    "DB_TYPE": "sqlite",
+    "N8N_DEFAULT_BINARY_DATA_MODE": "filesystem",
+    "N8N_RESTRICT_FILE_ACCESS_TO": "/data/work",
+    "N8N_PAYLOAD_SIZE_MAX": "64",
+    "N8N_FORMDATA_FILE_SIZE_MAX": "64",
+    "N8N_CONCURRENCY_PRODUCTION_LIMIT": "1",
+    "N8N_BLOCK_ENV_ACCESS_IN_NODE": "true",
+    "N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS": "true",
+    "N8N_UNVERIFIED_PACKAGES_ENABLED": "false",
+    "NODES_EXCLUDE": "[\"n8n-nodes-base.localFileTrigger\"]",
+    "N8N_PROXY_HOPS": "1",
+    "RAILWAY_RUN_UID": "0",
+    "EXECUTIONS_DATA_SAVE_ON_SUCCESS": "none",
+    "EXECUTIONS_DATA_SAVE_ON_ERROR": "none",
+    "PILOT_DEADLINE_MS": "1793973600000"
+  },
+  "secret_variable_names_only": [
+    "N8N_ENCRYPTION_KEY",
+    "PILOT_UPLOAD_TOKEN",
+    "PILOT_OWNER_PASSWORD",
+    "GH_APP_PRIVATE_KEY"
+  ],
+  "bootstrap": "pilot-bootstrap.cjs, encoded programmatically into PILOT_BOOTSTRAP_B64",
+  "workflow_bootstrap": "probe.workflow.json, encoded programmatically into PILOT_WORKFLOW_B64",
+  "deadline_utc": "2026-11-06T14:00:00.000Z",
+  "state": "RETRY_PILOT_GRACEFULLY_STOPPED_RUNNING_REPLICAS_ZERO",
+  "note": "Safe deployment snapshot, no credentials. Execute Command is enabled for trusted mkdir in probe workflow. Stock probe exports are not the final production protocol.",
+  "control_journal": {
+    "path": "/data/work/control/uploads.sqlite",
+    "implementation": "Node built-in SQLite, WAL, FULL synchronous, unique upload ID, BEGIN IMMEDIATE",
+    "credentialsStored": false
+  },
+  "bootstrap_metadata_helper": "upload-ledger.cjs encoded as PILOT_LEDGER_B64"
+}

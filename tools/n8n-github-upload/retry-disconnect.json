@@ -1,0 +1,17 @@
+{
+  "manifest": {
+    "uploadId": "56b470a3-0208-4aea-a6b3-2a8120562610",
+    "files": [
+      {
+        "field": "f000",
+        "path": "Кириллица и пробелы/повтор.bin",
+        "bytes": 155437,
+        "sha256": "ca2b33daf547c0835f4a30e3aeb0eed5cf4fc0ee04ae9f33a1c3124186011053"
+      }
+    ]
+  },
+  "status": null,
+  "receipt": null,
+  "error": "connection_closed_before_response",
+  "seconds": 3.836345
+}

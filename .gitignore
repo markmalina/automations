@@ -1,0 +1,5 @@
+.env
+.pilot-secrets.json
+**/.pilot-secrets.json
+**/__pycache__/
+**/source-inspection/

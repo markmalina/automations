@@ -1,0 +1,15 @@
+{
+  "repository": "markmalina/freelance",
+  "commitSha": "9f22ef7013e288c26449cd59cd1fbf8e24b0a330",
+  "fileCount": 1,
+  "allMatch": true,
+  "files": [
+    {
+      "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 100.bin",
+      "sourceSha256": "ca2b33daf547c0835f4a30e3aeb0eed5cf4fc0ee04ae9f33a1c3124186011053",
+      "downloadedSha256": "ca2b33daf547c0835f4a30e3aeb0eed5cf4fc0ee04ae9f33a1c3124186011053",
+      "match": true
+    }
+  ],
+  "total_seconds": 5.381451
+}

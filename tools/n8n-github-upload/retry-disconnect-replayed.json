@@ -1,0 +1,37 @@
+{
+  "manifest": {
+    "uploadId": "56b470a3-0208-4aea-a6b3-2a8120562610",
+    "files": [
+      {
+        "field": "f000",
+        "path": "Кириллица и пробелы/повтор.bin",
+        "bytes": 155437,
+        "sha256": "ca2b33daf547c0835f4a30e3aeb0eed5cf4fc0ee04ae9f33a1c3124186011053"
+      }
+    ]
+  },
+  "status": 200,
+  "receipt": {
+    "success": true,
+    "repository": "markmalina/freelance",
+    "branch": "test/n8n-upload-20261106",
+    "commitSha": "eb98511b27d7b36dccc576a889f7f4b8b8f32315",
+    "url": "https://github.com/markmalina/freelance/commit/eb98511b27d7b36dccc576a889f7f4b8b8f32315",
+    "uploadId": "56b470a3-0208-4aea-a6b3-2a8120562610",
+    "fileCount": 1,
+    "totalBytes": 155437,
+    "files": [
+      {
+        "path": "n8n-retry-tests/56b470a3-0208-4aea-a6b3-2a8120562610/Кириллица и пробелы/повтор.bin",
+        "sourcePath": "Кириллица и пробелы/повтор.bin",
+        "sha256": "ca2b33daf547c0835f4a30e3aeb0eed5cf4fc0ee04ae9f33a1c3124186011053",
+        "bytes": 155437
+      }
+    ],
+    "productionReady": false,
+    "replayed": true,
+    "processingMs": 783
+  },
+  "error": null,
+  "seconds": 8.709236
+}

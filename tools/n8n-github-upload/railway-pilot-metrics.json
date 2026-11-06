@@ -1,0 +1,36 @@
+{
+  "service": {
+    "id": "2425a11a-90bd-47fe-9c5b-03ad96ee7a74",
+    "name": "n8n-upload"
+  },
+  "environment": {
+    "id": "369d5bb9-5107-4e39-89d8-668b9b59e230",
+    "name": "pilot"
+  },
+  "metrics": [
+    {
+      "measurement": "MEMORY_USAGE_GB",
+      "current": 0.493490176,
+      "average": 0.1271186491239669,
+      "min": 0,
+      "max": 0.624410624,
+      "sampleCount": 121
+    },
+    {
+      "measurement": "CPU_USAGE",
+      "current": 0.005700233333333334,
+      "average": 0.026687530027548215,
+      "min": 0,
+      "max": 0.6222118666666667,
+      "sampleCount": 121
+    },
+    {
+      "measurement": "DISK_USAGE_GB",
+      "current": 0.131637248,
+      "average": 0.02153893447933885,
+      "min": 0,
+      "max": 0.131637248,
+      "sampleCount": 121
+    }
+  ]
+}

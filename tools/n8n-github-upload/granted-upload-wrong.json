@@ -1,0 +1,17 @@
+{
+  "status": 500,
+  "receipt": null,
+  "seconds": 9.021078,
+  "manifest": {
+    "uploadId": "24c6f53a-c2c3-4ec3-b4c0-5282dc69a0af",
+    "files": [
+      {
+        "field": "f000",
+        "path": "MCP разрешение/файл с пробелами.bin",
+        "bytes": 155437,
+        "sha256": "ca2b33daf547c0835f4a30e3aeb0eed5cf4fc0ee04ae9f33a1c3124186011053"
+      }
+    ]
+  },
+  "mcpExecutionId": "18"
+}

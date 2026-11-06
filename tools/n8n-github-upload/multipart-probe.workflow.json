@@ -1,0 +1,120 @@
+{
+  "name": "Work multipart hashes — NOT GitHub upload",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "work-multipart-hash-probe-v1",
+        "authentication": "headerAuth",
+        "responseMode": "lastNode",
+        "responseData": "firstEntryJson",
+        "responseBinaryPropertyName": "data",
+        "options": {}
+      },
+      "id": "5158a967-1b29-4714-b0e2-673cb40b3edc",
+      "name": "Authenticated binary webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "e98006b1-ff95-4430-9623-ebc9b5e85508",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "workPilotHeaderAuth",
+          "name": "Work pilot header"
+        }
+      }
+    },
+    {
+      "id": "09d0df79-4311-4e08-9164-2f71a3020e73",
+      "name": "Manifest to file references",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "parameters": {
+        "jsCode": "const input = $input.first();\nconst manifest = JSON.parse(input.json.body.manifest);\nif (!Array.isArray(manifest.files) || manifest.files.length > 120) throw new Error('Invalid manifest');\nconst keys = Object.keys(input.binary || {});\nif (keys.length !== manifest.files.length) throw new Error('File count mismatch');\nconst start = Date.now();\nreturn manifest.files.map(f => {\n  if (!input.binary[f.field]) throw new Error('Missing field ' + f.field);\n  if (!f.path || f.path.startsWith('/') || f.path.split('/').some(p => !p || p === '.' || p === '..') || f.path.includes('\\\\')) throw new Error('Invalid relative path');\n  return {json: {path:f.path, expected:f.sha256, bytes:f.bytes, processingStarted:start}, binary:{data:input.binary[f.field]}};\n});"
+      },
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "id": "97bf3d00-6c34-49ed-a511-092dca720027",
+      "name": "Hash received bytes",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 2,
+      "parameters": {
+        "action": "hash",
+        "binaryData": true,
+        "binaryPropertyName": "data",
+        "type": "SHA256",
+        "encoding": "hex",
+        "dataPropertyName": "sha256"
+      },
+      "position": [
+        480,
+        0
+      ]
+    },
+    {
+      "id": "a2103956-a143-4bfe-8c10-26b116a356e3",
+      "name": "Return hash receipt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "parameters": {
+        "jsCode": "const items = $input.all().map(i => i.json);\nconst files = items.map(i => ({path:i.path, bytes:i.bytes, sha256:i.sha256, match:i.sha256===i.expected}));\nreturn [{json:{files, fileCount:files.length, totalBytes:files.reduce((n,f)=>n+f.bytes,0), allMatch:files.every(f=>f.match), processingMs:Date.now()-items[0].processingStarted, githubTested:false}}];"
+      },
+      "position": [
+        720,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Authenticated binary webhook": {
+      "main": [
+        [
+          {
+            "node": "Manifest to file references",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manifest to file references": {
+      "main": [
+        [
+          {
+            "node": "Hash received bytes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hash received bytes": {
+      "main": [
+        [
+          {
+            "node": "Return hash receipt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "none",
+    "saveDataErrorExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
+  },
+  "pinData": {},
+  "id": "workMultipartPilot"
+}

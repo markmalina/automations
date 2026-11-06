@@ -1,0 +1,9 @@
+.env
+*.receipt.json
+__pycache__/
+source-inspection/
+.pilot-secrets.json
+.pilot-session.json
+
+.mcp-api-key.json
+.upload-grant*.json

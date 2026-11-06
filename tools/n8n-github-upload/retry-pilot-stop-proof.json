@@ -1,0 +1,118 @@
+{
+  "checkedAt": "2026-11-06T13:47:27.297Z",
+  "status": {
+    "environment": {
+      "id": "369d5bb9-5107-4e39-89d8-668b9b59e230",
+      "name": "pilot"
+    },
+    "services": [
+      {
+        "serviceId": "2425a11a-90bd-47fe-9c5b-03ad96ee7a74",
+        "serviceName": "n8n-upload",
+        "state": "online",
+        "statusText": "Online",
+        "activeDeployments": [
+          {
+            "id": "fa6f10f1-67fb-4613-ba67-9dd0bc6071c9",
+            "status": "SUCCESS",
+            "createdAt": "2026-11-06T13:23:07.126Z",
+            "statusUpdatedAt": "2026-11-06T13:23:53.836Z"
+          }
+        ],
+        "replicaStatus": {
+          "running": 0,
+          "crashed": 0,
+          "total": 1
+        },
+        "cronJob": null,
+        "issues": {
+          "warningCount": 0,
+          "criticalCount": 0
+        },
+        "recentFailures": 4,
+        "recentFailedDeployments": [
+          {
+            "id": "03dba976-d931-4060-b033-05fe485e39d0",
+            "status": "FAILED",
+            "createdAt": "2026-11-06T11:01:49.326Z"
+          },
+          {
+            "id": "514aa797-0aa2-4d4d-acff-b635d58a36e4",
+            "status": "FAILED",
+            "createdAt": "2026-11-06T11:00:14.591Z"
+          },
+          {
+            "id": "ae40ca59-8372-4a67-a9c3-066ba3655d12",
+            "status": "FAILED",
+            "createdAt": "2026-11-06T10:58:51.623Z"
+          }
+        ],
+        "hasIssues": true,
+        "isCronJob": false,
+        "hasVolume": true
+      }
+    ],
+    "pendingWork": [],
+    "summary": {
+      "totalServices": 1,
+      "servicesWithIssues": 1,
+      "totalFailures": 4
+    }
+  },
+  "shutdownLogs": [
+    {
+      "message": "Inbound authentication denied",
+      "timestamp": "2026-11-06T13:42:20.650593827Z"
+    },
+    {
+      "message": "Error",
+      "timestamp": "2026-11-06T13:42:26.513929782Z"
+    },
+    {
+      "message": "Error",
+      "timestamp": "2026-11-06T13:42:26.513934902Z"
+    },
+    {
+      "message": "    at TLSSocket.socketCloseListener (node:_http_client:753:19)",
+      "timestamp": "2026-11-06T13:42:26.513937742Z"
+    },
+    {
+      "message": "    at TLSSocket.emit (node:events:526:24)",
+      "timestamp": "2026-11-06T13:42:26.513940452Z"
+    },
+    {
+      "message": "    at node:net:362:12",
+      "timestamp": "2026-11-06T13:42:26.513944482Z"
+    },
+    {
+      "message": "    at TCP.done (node:internal/tls/wrap:779:7)",
+      "timestamp": "2026-11-06T13:42:26.513947662Z"
+    },
+    {
+      "message": "",
+      "timestamp": "2026-11-06T13:42:26.513950652Z"
+    },
+    {
+      "message": "Webhook execution failed before a response was sent",
+      "timestamp": "2026-11-06T13:42:26.513954132Z"
+    },
+    {
+      "message": "Received SIGTERM. Shutting down...",
+      "timestamp": "2026-11-06T13:45:37.532819930Z"
+    },
+    {
+      "message": "Scheduler stopped",
+      "timestamp": "2026-11-06T13:45:37.532824850Z"
+    },
+    {
+      "message": "",
+      "timestamp": "2026-11-06T13:45:37.532830550Z"
+    },
+    {
+      "message": "Stopping n8n...",
+      "timestamp": "2026-11-06T13:45:37.532835230Z"
+    }
+  ],
+  "stopped": true,
+  "note": "Metadata SUCCESS/Online is not running; confirmed replicaStatus.running=0 after authenticated graceful stop. Persistent volume retained."
+}

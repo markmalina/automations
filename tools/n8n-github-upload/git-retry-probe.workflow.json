@@ -1,0 +1,834 @@
+{
+  "name": "Bounded native Git upload — durable retry pilot",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "work-git-retry-pilot-v1",
+        "authentication": "headerAuth",
+        "responseMode": "lastNode",
+        "responseData": "firstEntryJson",
+        "responseBinaryPropertyName": "data",
+        "options": {}
+      },
+      "id": "5158a967-1b29-4714-b0e2-673cb40b3edc",
+      "name": "Authenticated binary webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "344a7789-4a7b-4863-aa2a-f35912078fc7",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "workPilotHeaderAuth",
+          "name": "Work pilot header"
+        }
+      }
+    },
+    {
+      "id": "958f8635-93b9-452c-9c6f-d4dfba4460e7",
+      "name": "Prepare upload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "parameters": {
+        "jsCode": "const input=$input.first(); const m=JSON.parse(input.json.body.manifest);\nif(!/^[a-f0-9-]{36}$/.test(m.uploadId||'') || !Array.isArray(m.files) || m.files.length<1 || m.files.length>100) throw new Error('Invalid pilot manifest');\nif(Object.keys(input.binary||{}).length!==m.files.length) throw new Error('File count mismatch');\nconst seen=new Set();\nfor(const f of m.files){if(!input.binary[f.field] || !/^[a-f0-9]{64}$/.test(f.sha256) || !Number.isSafeInteger(f.bytes) || f.bytes<0 || !f.path || f.path.startsWith('/') || /[\\\\\\u0000]/.test(f.path) || f.path.split('/').some(p=>!p||p==='.'||p==='..'||p.toLowerCase()==='.git') || seen.has(f.path.normalize('NFC')) || /[,\\r\\n]/.test(f.path))throw new Error('Invalid file');seen.add(f.path.normalize('NFC'));}\nif(m.files.reduce((n,f)=>n+f.bytes,0)>32000000)throw new Error('Pilot size limit');\nconst prefix='n8n-retry-tests/'+m.uploadId+'/';\nreturn [{json:{manifest:m,repoPath:'/data/work/git/pilot-'+m.uploadId,prefix,started:Date.now(),owner:$execution.id}}];"
+      },
+      "position": [
+        250,
+        0
+      ]
+    },
+    {
+      "id": "563e887e-c66e-4d2e-91ca-a57b461c67f5",
+      "name": "Clone isolated repository",
+      "type": "n8n-nodes-base.git",
+      "typeVersion": 1.1,
+      "parameters": {
+        "operation": "clone",
+        "repositoryPath": "={{ $('Prepare upload').first().json.repoPath }}",
+        "options": {},
+        "sourceRepository": "https://github.com/markmalina/freelance.git",
+        "authentication": "gitPassword"
+      },
+      "position": [
+        500,
+        0
+      ],
+      "credentials": {
+        "gitPassword": {
+          "id": "workPilotGitPassword",
+          "name": "Freelance pilot Git token"
+        }
+      }
+    },
+    {
+      "id": "9a4fee6e-710f-4e71-a2af-d1f431047747",
+      "name": "Select test branch",
+      "type": "n8n-nodes-base.git",
+      "typeVersion": 1.1,
+      "parameters": {
+        "operation": "switchBranch",
+        "repositoryPath": "={{ $('Prepare upload').first().json.repoPath }}",
+        "options": {
+          "createBranch": true,
+          "startPoint": "origin/test/n8n-upload-20261106",
+          "setUpstream": true
+        },
+        "branchName": "test/n8n-upload-20261106"
+      },
+      "position": [
+        750,
+        0
+      ]
+    },
+    {
+      "id": "99c29f81-006f-40a3-950f-f984ba1df8d7",
+      "name": "Set commit author name",
+      "type": "n8n-nodes-base.git",
+      "typeVersion": 1.1,
+      "parameters": {
+        "operation": "addConfig",
+        "repositoryPath": "={{ $('Prepare upload').first().json.repoPath }}",
+        "options": {},
+        "key": "user.name",
+        "value": "markmalina n8n pilot"
+      },
+      "position": [
+        1000,
+        0
+      ]
+    },
+    {
+      "id": "2ea9d18f-4015-4d5e-b6a4-9a131a2477d8",
+      "name": "Set commit author email",
+      "type": "n8n-nodes-base.git",
+      "typeVersion": 1.1,
+      "parameters": {
+        "operation": "addConfig",
+        "repositoryPath": "={{ $('Prepare upload').first().json.repoPath }}",
+        "options": {},
+        "key": "user.email",
+        "value": "23397294+markmalina@users.noreply.github.com"
+      },
+      "position": [
+        0,
+        200
+      ]
+    },
+    {
+      "id": "03c41ab9-27a1-4a0a-83f4-c65198169575",
+      "name": "Create relative directories",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "parameters": {
+        "command": "={{ (() => { const p=$('Prepare upload').first().json; const dirs=p.manifest.files.map(f=>p.repoPath+'/'+p.prefix+f.path).map(s=>s.slice(0,s.lastIndexOf('/'))); const quote=s=>String.fromCharCode(39)+s.replaceAll(String.fromCharCode(39),String.fromCharCode(39,92,39,39))+String.fromCharCode(39);return 'mkdir -p -- '+[...new Set(dirs)].map(quote).join(' '); })() }}",
+        "executeOnce": true
+      },
+      "position": [
+        250,
+        200
+      ]
+    },
+    {
+      "id": "590a1d0f-f16d-4bcd-8da0-a5c03d2ee6a5",
+      "name": "Restore file references",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "parameters": {
+        "jsCode": "const p=$('Prepare upload').first().json;const binary=$('Authenticated binary webhook').first().binary;\nreturn p.manifest.files.map(f=>({json:{...f,targetPath:p.prefix+f.path},binary:{data:binary[f.field]}}));"
+      },
+      "position": [
+        500,
+        200
+      ]
+    },
+    {
+      "id": "a11b5d57-02e9-47e3-9ef7-aaefa6d4138b",
+      "name": "Hash source bytes",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 2,
+      "parameters": {
+        "action": "hash",
+        "binaryData": true,
+        "binaryPropertyName": "data",
+        "type": "SHA256",
+        "encoding": "hex",
+        "dataPropertyName": "actualSha256"
+      },
+      "position": [
+        750,
+        200
+      ]
+    },
+    {
+      "id": "1cce9f81-ac79-4f52-8a28-933201e58c80",
+      "name": "Verify source digests",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "parameters": {
+        "jsCode": "const items=$input.all();const binary=$('Authenticated binary webhook').first().binary;for(const i of items){if(i.json.sha256!==i.json.actualSha256)throw new Error('Source digest mismatch');i.binary={data:binary[i.json.field]};}return items;"
+      },
+      "position": [
+        1000,
+        200
+      ]
+    },
+    {
+      "id": "cb7a7731-0de4-4ce2-9a5e-95e94f57bde7",
+      "name": "Write individual files",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ $('Prepare upload').first().json.repoPath + '/' + $json.targetPath }}",
+        "dataPropertyName": "data",
+        "options": {}
+      },
+      "position": [
+        0,
+        400
+      ]
+    },
+    {
+      "id": "2d0c4e7a-a0d7-4632-a85c-13018b884a01",
+      "name": "Collect bundle",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "parameters": {
+        "jsCode": "return [{json:{files:$input.all().map(i=>({path:i.json.targetPath,sourcePath:i.json.path,sha256:i.json.sha256,bytes:i.json.bytes}))}}];"
+      },
+      "position": [
+        250,
+        400
+      ]
+    },
+    {
+      "id": "d4fa271e-5470-46d5-8703-7830ad611d78",
+      "name": "Stage only requested files",
+      "type": "n8n-nodes-base.git",
+      "typeVersion": 1.1,
+      "parameters": {
+        "operation": "add",
+        "repositoryPath": "={{ $('Prepare upload').first().json.repoPath }}",
+        "options": {},
+        "pathsToAdd": "={{ $('Collect bundle').first().json.files.map(f=>f.path).join(',') }}"
+      },
+      "position": [
+        500,
+        400
+      ]
+    },
+    {
+      "id": "2e91dde0-33ff-4482-9f78-191e2da75084",
+      "name": "Commit bundle once",
+      "type": "n8n-nodes-base.git",
+      "typeVersion": 1.1,
+      "parameters": {
+        "operation": "commit",
+        "repositoryPath": "={{ $('Prepare upload').first().json.repoPath }}",
+        "options": {},
+        "message": "={{ 'work-upload:'+ $('Prepare upload').first().json.manifest.uploadId + ':' + $('Parse claim').first().json.digest }}"
+      },
+      "position": [
+        750,
+        400
+      ]
+    },
+    {
+      "id": "c4ea9b4c-ee7a-467e-ab93-6e7697b8de73",
+      "name": "Read committed SHA",
+      "type": "n8n-nodes-base.git",
+      "typeVersion": 1.1,
+      "parameters": {
+        "operation": "log",
+        "repositoryPath": "={{ $('Prepare upload').first().json.repoPath }}",
+        "options": {},
+        "returnAll": false,
+        "limit": 1
+      },
+      "position": [
+        1000,
+        400
+      ]
+    },
+    {
+      "id": "73d98e88-af5b-49fb-8b67-48ea7fc4c88d",
+      "name": "Start push timer",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "parameters": {
+        "jsCode": "return [{json:{pushStarted:Date.now()}}];"
+      },
+      "position": [
+        0,
+        600
+      ]
+    },
+    {
+      "id": "eb84d4f2-a065-4120-9476-1f558f09ab50",
+      "name": "Push bundle once",
+      "type": "n8n-nodes-base.git",
+      "typeVersion": 1.1,
+      "parameters": {
+        "operation": "push",
+        "repositoryPath": "={{ $('Prepare upload').first().json.repoPath }}",
+        "options": {
+          "branch": "test/n8n-upload-20261106"
+        },
+        "authentication": "gitPassword"
+      },
+      "position": [
+        250,
+        600
+      ],
+      "credentials": {
+        "gitPassword": {
+          "id": "workPilotGitPassword",
+          "name": "Freelance pilot Git token"
+        }
+      }
+    },
+    {
+      "id": "d2b2e4af-1291-44e7-8343-6b829b14e9f9",
+      "name": "Stop push timer",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "parameters": {
+        "jsCode": "return [{json:{pushWindowMs:Date.now()-$('Start push timer').first().json.pushStarted}}];"
+      },
+      "position": [
+        500,
+        600
+      ]
+    },
+    {
+      "id": "5cdc4d6b-6d3e-418c-bf03-9ae7a9441533",
+      "name": "Verify remote reachability",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "parameters": {
+        "url": "={{ 'https://api.github.com/repos/markmalina/freelance/compare/'+$json.commitSha+'...test%2Fn8n-upload-20261106' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "position": [
+        750,
+        600
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "workPilotGithubHeader",
+          "name": "Freelance pilot GitHub API header"
+        }
+      }
+    },
+    {
+      "id": "ab284522-a543-46c7-9220-220b7c2eeec6",
+      "name": "Build verified receipt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "parameters": {
+        "jsCode": "if(!['ahead','identical'].includes($json.status))throw Error('REMOTE_NOT_CONFIRMED');\nconst p=$('Prepare upload').first().json;const record=$('Parse claim').first().json;\nconst sha=record.commitSha||$('Known commit').first().json.commitSha;\nconst receipt=record.receipt||{success:true,repository:'markmalina/freelance',branch:'test/n8n-upload-20261106',commitSha:sha,url:'https://github.com/markmalina/freelance/commit/'+sha,uploadId:p.manifest.uploadId,fileCount:p.manifest.files.length,totalBytes:p.manifest.files.reduce((n,f)=>n+f.bytes,0),files:p.manifest.files.map(f=>({path:p.prefix+f.path,sourcePath:f.path,sha256:f.sha256,bytes:f.bytes})),productionReady:false};\nreturn [{json:{receipt,replayed:record.route==='verify',processingMs:Date.now()-p.started}}];"
+      },
+      "position": [
+        1000,
+        600
+      ]
+    },
+    {
+      "id": "4cd51300-9d92-48c6-93b7-0a2c35abdf30",
+      "name": "Claim durable upload",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        0,
+        800
+      ],
+      "parameters": {
+        "executeOnce": true,
+        "command": "={{ (()=>{ const payload={id:$('Prepare upload').first().json.manifest.uploadId,manifest:$('Prepare upload').first().json.manifest,owner:$('Prepare upload').first().json.owner}; const quote=s=>String.fromCharCode(39)+s.replaceAll(String.fromCharCode(39),String.fromCharCode(39,92,39,39))+String.fromCharCode(39);return 'node /data/work/control/upload-ledger.cjs claim '+quote(JSON.stringify(payload)); })() }}"
+      }
+    },
+    {
+      "id": "a0f5118f-0f4a-416d-904f-1c65c5249e47",
+      "name": "Parse claim",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        250,
+        800
+      ],
+      "parameters": {
+        "jsCode": "const r=JSON.parse($json.stdout);if(r.error)throw Error(r.error);if(r.route==='uncertain')throw Error('UPLOAD_UNCERTAIN: no automatic second commit; operator recovery required');return [{json:r}];"
+      }
+    },
+    {
+      "id": "3abff9e9-696b-42e2-a9b4-7a2efa0dc6f9",
+      "name": "Already has commit",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        500,
+        800
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "42b5b1bb-1239-4ce6-acb8-c575b074ee56",
+              "leftValue": "={{ $json.route==='verify' }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "d46e6492-a4b2-4a75-a8e1-7a6014c7621a",
+      "name": "Journal committed SHA",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        750,
+        800
+      ],
+      "parameters": {
+        "executeOnce": true,
+        "command": "={{ (()=>{ const payload={id:$('Prepare upload').first().json.manifest.uploadId,owner:$('Prepare upload').first().json.owner,sha:$('Read committed SHA').first().json.hash}; const quote=s=>String.fromCharCode(39)+s.replaceAll(String.fromCharCode(39),String.fromCharCode(39,92,39,39))+String.fromCharCode(39);return 'node /data/work/control/upload-ledger.cjs committed '+quote(JSON.stringify(payload)); })() }}"
+      }
+    },
+    {
+      "id": "b3cdb72e-3a89-4447-8b78-369462d3f35c",
+      "name": "Known commit",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        800
+      ],
+      "parameters": {
+        "jsCode": "return [{json:JSON.parse($json.stdout)}];"
+      }
+    },
+    {
+      "id": "2ebed266-84c7-4a3e-823d-ff49f5de6771",
+      "name": "Select known SHA",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        1000
+      ],
+      "parameters": {
+        "jsCode": "const r=$('Parse claim').first().json;return [{json:r}];"
+      }
+    },
+    {
+      "id": "ddd6c235-1333-4841-a5a5-4ba92c8d87a7",
+      "name": "After push journal",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        250,
+        1000
+      ],
+      "parameters": {
+        "jsCode": "return [{json:$('Known commit').first().json}];"
+      }
+    },
+    {
+      "id": "94f1f931-fcf7-484e-8675-2220337b3826",
+      "name": "Simulate lost confirmation",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        500,
+        1000
+      ],
+      "parameters": {
+        "jsCode": "if($('Prepare upload').first().json.manifest.testFault==='afterPush')throw Error('TEST_AFTER_PUSH_BEFORE_CONFIRMATION');return $input.all();"
+      }
+    },
+    {
+      "id": "589bc159-05f4-4278-9b26-458d95168e58",
+      "name": "Persist confirmed receipt",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        750,
+        1000
+      ],
+      "parameters": {
+        "executeOnce": true,
+        "command": "={{ (()=>{ const payload={id:$('Prepare upload').first().json.manifest.uploadId,receipt:$('Build verified receipt').first().json.receipt}; const quote=s=>String.fromCharCode(39)+s.replaceAll(String.fromCharCode(39),String.fromCharCode(39,92,39,39))+String.fromCharCode(39);return 'node /data/work/control/upload-ledger.cjs confirmed '+quote(JSON.stringify(payload)); })() }}"
+      }
+    },
+    {
+      "id": "a0c869e7-d3c7-455e-860e-98aa67ad9065",
+      "name": "Return durable receipt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        1000
+      ],
+      "parameters": {
+        "jsCode": "const r=JSON.parse($json.stdout);return [{json:{...r.receipt,replayed:$('Build verified receipt').first().json.replayed,processingMs:$('Build verified receipt').first().json.processingMs}}];"
+      }
+    }
+  ],
+  "connections": {
+    "Authenticated binary webhook": {
+      "main": [
+        [
+          {
+            "node": "Prepare upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare upload": {
+      "main": [
+        [
+          {
+            "node": "Claim durable upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clone isolated repository": {
+      "main": [
+        [
+          {
+            "node": "Select test branch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select test branch": {
+      "main": [
+        [
+          {
+            "node": "Set commit author name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set commit author name": {
+      "main": [
+        [
+          {
+            "node": "Set commit author email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set commit author email": {
+      "main": [
+        [
+          {
+            "node": "Create relative directories",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create relative directories": {
+      "main": [
+        [
+          {
+            "node": "Restore file references",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restore file references": {
+      "main": [
+        [
+          {
+            "node": "Hash source bytes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hash source bytes": {
+      "main": [
+        [
+          {
+            "node": "Verify source digests",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify source digests": {
+      "main": [
+        [
+          {
+            "node": "Write individual files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write individual files": {
+      "main": [
+        [
+          {
+            "node": "Collect bundle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect bundle": {
+      "main": [
+        [
+          {
+            "node": "Stage only requested files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stage only requested files": {
+      "main": [
+        [
+          {
+            "node": "Commit bundle once",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Commit bundle once": {
+      "main": [
+        [
+          {
+            "node": "Read committed SHA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read committed SHA": {
+      "main": [
+        [
+          {
+            "node": "Journal committed SHA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start push timer": {
+      "main": [
+        [
+          {
+            "node": "Push bundle once",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Push bundle once": {
+      "main": [
+        [
+          {
+            "node": "Stop push timer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stop push timer": {
+      "main": [
+        [
+          {
+            "node": "Simulate lost confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claim durable upload": {
+      "main": [
+        [
+          {
+            "node": "Parse claim",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse claim": {
+      "main": [
+        [
+          {
+            "node": "Already has commit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Already has commit": {
+      "main": [
+        [
+          {
+            "node": "Select known SHA",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Clone isolated repository",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select known SHA": {
+      "main": [
+        [
+          {
+            "node": "Verify remote reachability",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Journal committed SHA": {
+      "main": [
+        [
+          {
+            "node": "Known commit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Known commit": {
+      "main": [
+        [
+          {
+            "node": "Start push timer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simulate lost confirmation": {
+      "main": [
+        [
+          {
+            "node": "After push journal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "After push journal": {
+      "main": [
+        [
+          {
+            "node": "Verify remote reachability",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify remote reachability": {
+      "main": [
+        [
+          {
+            "node": "Build verified receipt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build verified receipt": {
+      "main": [
+        [
+          {
+            "node": "Persist confirmed receipt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persist confirmed receipt": {
+      "main": [
+        [
+          {
+            "node": "Return durable receipt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "none",
+    "saveDataErrorExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
+  },
+  "pinData": {},
+  "id": "workGitRetryPilot"
+}

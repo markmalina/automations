@@ -1,0 +1,193 @@
+{
+  "name": "Download and hash exact GitHub commit — pilot",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "work-git-verify-pilot-v1",
+        "authentication": "headerAuth",
+        "responseMode": "lastNode",
+        "responseData": "firstEntryJson",
+        "responseBinaryPropertyName": "data",
+        "options": {}
+      },
+      "id": "5158a967-1b29-4714-b0e2-673cb40b3edc",
+      "name": "Authenticated binary webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "00f6151f-0b38-4616-ad20-dd11c2342753",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "workPilotHeaderAuth",
+          "name": "Work pilot header"
+        }
+      }
+    },
+    {
+      "id": "6798aaad-2bde-4245-8b60-c40fd7ecdd15",
+      "name": "Prepare download list",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "parameters": {
+        "jsCode": "const b=$input.first().json.body;if(!/^[a-f0-9]{40}$/.test(b.commitSha||'')||!Array.isArray(b.files)||b.files.length<1||b.files.length>100)throw new Error('Invalid verification');return b.files.map(f=>{if(!f.path||f.path.startsWith('/')||f.path.split('/').some(p=>!p||p==='.'||p==='..'||p.toLowerCase()==='.git')||! /^[a-f0-9]{64}$/.test(f.sha256))throw new Error('Invalid file');return {json:{...f,commitSha:b.commitSha,url:'https://api.github.com/repos/markmalina/freelance/contents/'+f.path.split('/').map(encodeURIComponent).join('/')+'?ref='+b.commitSha}};});"
+      },
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "id": "0ef115a6-2b0f-42ac-b3d5-a100f1b18224",
+      "name": "Download exact GitHub bytes",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/vnd.github.raw+json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "data"
+            }
+          }
+        }
+      },
+      "position": [
+        480,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "workPilotGithubHeader",
+          "name": "Freelance pilot GitHub API header"
+        }
+      }
+    },
+    {
+      "id": "a8a19118-6188-4dbe-9492-26f707eaf6e4",
+      "name": "Restore verification metadata",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "parameters": {
+        "jsCode": "const m=$('Prepare download list').all();return $input.all().map((i,k)=>({json:m[k].json,binary:i.binary}));"
+      },
+      "position": [
+        720,
+        0
+      ]
+    },
+    {
+      "id": "15950cdc-651d-4408-8cd3-0abd99b469d7",
+      "name": "Hash GitHub download",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 2,
+      "parameters": {
+        "action": "hash",
+        "binaryData": true,
+        "binaryPropertyName": "data",
+        "type": "SHA256",
+        "encoding": "hex",
+        "dataPropertyName": "downloadedSha256"
+      },
+      "position": [
+        960,
+        0
+      ]
+    },
+    {
+      "id": "7273cf93-725c-473b-8ace-c7e5d1365840",
+      "name": "Return verified hashes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "parameters": {
+        "jsCode": "const files=$input.all().map(i=>({path:i.json.path,sourceSha256:i.json.sha256,downloadedSha256:i.json.downloadedSha256,match:i.json.sha256===i.json.downloadedSha256}));return [{json:{repository:'markmalina/freelance',commitSha:$('Prepare download list').first().json.commitSha,fileCount:files.length,allMatch:files.every(f=>f.match),files}}];"
+      },
+      "position": [
+        1200,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Authenticated binary webhook": {
+      "main": [
+        [
+          {
+            "node": "Prepare download list",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare download list": {
+      "main": [
+        [
+          {
+            "node": "Download exact GitHub bytes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download exact GitHub bytes": {
+      "main": [
+        [
+          {
+            "node": "Restore verification metadata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restore verification metadata": {
+      "main": [
+        [
+          {
+            "node": "Hash GitHub download",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hash GitHub download": {
+      "main": [
+        [
+          {
+            "node": "Return verified hashes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "none",
+    "saveDataErrorExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
+  },
+  "pinData": {},
+  "id": "workGitVerifyPilot"
+}

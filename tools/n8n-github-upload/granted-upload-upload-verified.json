@@ -1,0 +1,15 @@
+{
+  "repository": "markmalina/freelance",
+  "commitSha": "311331694c30903cf82d3e5e729bdf76ca3f9931",
+  "fileCount": 1,
+  "allMatch": true,
+  "files": [
+    {
+      "path": "n8n-retry-tests/24c6f53a-c2c3-4ec3-b4c0-5282dc69a0af/MCP разрешение/файл с пробелами.bin",
+      "sourceSha256": "ca2b33daf547c0835f4a30e3aeb0eed5cf4fc0ee04ae9f33a1c3124186011053",
+      "downloadedSha256": "ca2b33daf547c0835f4a30e3aeb0eed5cf4fc0ee04ae9f33a1c3124186011053",
+      "match": true
+    }
+  ],
+  "total_seconds": 7.575859
+}

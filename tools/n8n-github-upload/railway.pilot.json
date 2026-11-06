@@ -1,0 +1,11 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "deploy": {
+    "startCommand": "node -e 'eval(Buffer.from(process.env.PILOT_BOOTSTRAP_B64,\"base64\").toString())'",
+    "healthcheckPath": "/healthz",
+    "healthcheckTimeout": 180,
+    "restartPolicyType": "NEVER",
+    "numReplicas": 1,
+    "sleepApplication": false
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "http_status": 200,
+  "total_seconds": 15.178046,
+  "receipt": {
+    "success": true,
+    "repository": "markmalina/freelance",
+    "branch": "test/n8n-upload-20261106",
+    "commitSha": "cf5de102ed5a628d992f96fd4c114c064ab0cd55",
+    "url": "https://github.com/markmalina/freelance/commit/cf5de102ed5a628d992f96fd4c114c064ab0cd55",
+    "uploadId": "163904af-4837-4596-a1ff-77b443aabbf5",
+    "fileCount": 1,
+    "totalBytes": 3151219,
+    "files": [
+      {
+        "path": "Проверка байтов 01.png",
+        "sourcePath": "Проверка байтов 01.png",
+        "sha256": "93950c83617d21b8d9f945d90d3f20dc18e75ab3e6c4b3ea3dfeafb5d8fd3800",
+        "bytes": 3151219
+      }
+    ],
+    "processingMs": 9821,
+    "commitNodes": 1,
+    "pushNodes": 1,
+    "productionReady": false
+  },
+  "manifest": {
+    "uploadId": "163904af-4837-4596-a1ff-77b443aabbf5",
+    "files": [
+      {
+        "field": "f000",
+        "path": "Проверка байтов 01.png",
+        "bytes": 3151219,
+        "sha256": "93950c83617d21b8d9f945d90d3f20dc18e75ab3e6c4b3ea3dfeafb5d8fd3800"
+      }
+    ]
+  },
+  "sourceFileBytes": 3151219,
+  "download_hash_verification": false
+}

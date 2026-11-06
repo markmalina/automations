@@ -1,0 +1,41 @@
+{
+  "http_status": 200,
+  "total_seconds": 10.05918,
+  "receipt": {
+    "success": true,
+    "repository": "markmalina/freelance",
+    "branch": "test/n8n-upload-20261106",
+    "commitSha": "9f22ef7013e288c26449cd59cd1fbf8e24b0a330",
+    "url": "https://github.com/markmalina/freelance/commit/9f22ef7013e288c26449cd59cd1fbf8e24b0a330",
+    "uploadId": "5ee6ab12-d494-408b-aeb3-feb1f22fcf05",
+    "fileCount": 1,
+    "totalBytes": 155437,
+    "files": [
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 100.bin",
+        "sourcePath": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 100.bin",
+        "sha256": "ca2b33daf547c0835f4a30e3aeb0eed5cf4fc0ee04ae9f33a1c3124186011053",
+        "bytes": 155437
+      }
+    ],
+    "processingMs": 2765,
+    "gitPushWindowMs": 1719,
+    "commitNodes": 1,
+    "pushNodes": 1,
+    "productionReady": false
+  },
+  "manifest": {
+    "uploadId": "5ee6ab12-d494-408b-aeb3-feb1f22fcf05",
+    "files": [
+      {
+        "field": "f000",
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 100.bin",
+        "bytes": 155437,
+        "sha256": "ca2b33daf547c0835f4a30e3aeb0eed5cf4fc0ee04ae9f33a1c3124186011053"
+      }
+    ]
+  },
+  "sourceFileBytes": 155437,
+  "download_hash_verification": false,
+  "client_body_send_seconds": 0.000202
+}
