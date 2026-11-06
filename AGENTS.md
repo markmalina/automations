@@ -8,3 +8,10 @@
 - Разрешён ограниченный пилот до $1 и двух часов compute. PILOT_DEADLINE_MS — абсолютный срок; не продлевать автоматически. После пилота остановить compute, проверить состояние. Долговременная работа требует решения владельца.
 - Отчёт разделяет подготовку, реальное выполнение и ещё не пройденную приёмку. Проверять подтверждённый push, SHA-256 и отсутствие дубликатов, не выдавать HTTP 200 за полную готовность маршрута.
 - История переноса: freelance issue #8 / draft PR #9; исходные исследования там сохраняются.
+
+## Ops: подключение n8n Upload
+
+- Кандидат подключения: Ops #434 / draft PR #435; локальная инструкция tools/n8n-github-upload/OPS_ONBOARDING_2026-11-06.md.
+- agent-ops.lock и .agent-ops/project.yml допускают только provider-free onboarding-preflight; это не разрешение на apply.
+- Точный клиентский workflow .github/workflows/ops-n8n-preflight.yml закрепляет полный Ops SHA. Команда /n8n-ops preflight на issue #1 возвращает ABORTED/E_NOT_RELEASED до приёмки живого маршрута.
+- Не подменять отсутствующий n8n executor существующими Gate/AQUB действиями, не копировать их credentials. Кандидат не включает provider/secret access и не служит обходом отклонённого deploy.
