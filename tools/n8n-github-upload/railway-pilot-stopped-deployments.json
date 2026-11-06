@@ -1,0 +1,148 @@
+{
+  "deployments": [
+    {
+      "id": "3bc58a91-4bd9-4c57-a872-ba6725379afc",
+      "status": "REMOVED",
+      "createdAt": "2026-11-06T11:08:29.074Z",
+      "updatedAt": "2026-11-06T11:17:52.739Z",
+      "serviceId": "2425a11a-90bd-47fe-9c5b-03ad96ee7a74",
+      "environmentId": "369d5bb9-5107-4e39-89d8-668b9b59e230",
+      "url": null,
+      "snapshotId": "67810cfa-99ba-46ff-8fd9-c32987302461",
+      "creator": {
+        "id": "665be88c-2efa-4351-aea6-be9ebdf89aab",
+        "name": null,
+        "email": "webdiktor@gmail.com"
+      },
+      "canRollback": true,
+      "canRedeploy": true,
+      "regions": [
+        "sfo"
+      ],
+      "meta": {
+        "reason": "redeploy",
+        "image": "docker.n8n.io/n8nio/n8n:2.46.6"
+      }
+    },
+    {
+      "id": "104146b7-b9d2-415c-981e-3f0c2f34ae67",
+      "status": "REMOVED",
+      "createdAt": "2026-11-06T11:05:47.300Z",
+      "updatedAt": "2026-11-06T11:08:57.033Z",
+      "serviceId": "2425a11a-90bd-47fe-9c5b-03ad96ee7a74",
+      "environmentId": "369d5bb9-5107-4e39-89d8-668b9b59e230",
+      "url": null,
+      "snapshotId": "f401d41a-89aa-44f8-a882-4c27266bf040",
+      "creator": {
+        "id": "665be88c-2efa-4351-aea6-be9ebdf89aab",
+        "name": null,
+        "email": "webdiktor@gmail.com"
+      },
+      "canRollback": true,
+      "canRedeploy": true,
+      "regions": [
+        "sfo"
+      ],
+      "meta": {
+        "reason": "deploy",
+        "image": "docker.n8n.io/n8nio/n8n:2.46.6"
+      }
+    },
+    {
+      "id": "03dba976-d931-4060-b033-05fe485e39d0",
+      "status": "FAILED",
+      "createdAt": "2026-11-06T11:01:49.326Z",
+      "updatedAt": "2026-11-06T11:05:40.641Z",
+      "serviceId": "2425a11a-90bd-47fe-9c5b-03ad96ee7a74",
+      "environmentId": "369d5bb9-5107-4e39-89d8-668b9b59e230",
+      "url": null,
+      "snapshotId": "7d166f38-830c-457a-9e3e-7d857684065c",
+      "creator": {
+        "id": "665be88c-2efa-4351-aea6-be9ebdf89aab",
+        "name": null,
+        "email": "webdiktor@gmail.com"
+      },
+      "canRollback": true,
+      "canRedeploy": true,
+      "regions": [
+        "sfo"
+      ],
+      "meta": {
+        "reason": "deploy",
+        "image": "docker.n8n.io/n8nio/n8n:2.46.6"
+      }
+    },
+    {
+      "id": "514aa797-0aa2-4d4d-acff-b635d58a36e4",
+      "status": "FAILED",
+      "createdAt": "2026-11-06T11:00:14.591Z",
+      "updatedAt": "2026-11-06T11:03:15.929Z",
+      "serviceId": "2425a11a-90bd-47fe-9c5b-03ad96ee7a74",
+      "environmentId": "369d5bb9-5107-4e39-89d8-668b9b59e230",
+      "url": null,
+      "snapshotId": "92d099f3-e54b-4e9f-9682-f6cd78ba669a",
+      "creator": {
+        "id": "665be88c-2efa-4351-aea6-be9ebdf89aab",
+        "name": null,
+        "email": "webdiktor@gmail.com"
+      },
+      "canRollback": true,
+      "canRedeploy": true,
+      "regions": [
+        "sfo"
+      ],
+      "meta": {
+        "reason": "deploy",
+        "image": "docker.n8n.io/n8nio/n8n:2.46.6"
+      }
+    },
+    {
+      "id": "ae40ca59-8372-4a67-a9c3-066ba3655d12",
+      "status": "FAILED",
+      "createdAt": "2026-11-06T10:58:51.623Z",
+      "updatedAt": "2026-11-06T11:01:51.202Z",
+      "serviceId": "2425a11a-90bd-47fe-9c5b-03ad96ee7a74",
+      "environmentId": "369d5bb9-5107-4e39-89d8-668b9b59e230",
+      "url": null,
+      "snapshotId": "3ab7f3bb-eae1-4ada-9e2f-e66621e827fd",
+      "creator": {
+        "id": "665be88c-2efa-4351-aea6-be9ebdf89aab",
+        "name": null,
+        "email": "webdiktor@gmail.com"
+      },
+      "canRollback": true,
+      "canRedeploy": true,
+      "regions": [
+        "sfo"
+      ],
+      "meta": {
+        "reason": "deploy",
+        "image": "docker.n8n.io/n8nio/n8n:2.46.6"
+      }
+    },
+    {
+      "id": "6cc20f31-dd6a-4c0f-9f93-a8d97e982984",
+      "status": "FAILED",
+      "createdAt": "2026-11-06T10:55:43.619Z",
+      "updatedAt": "2026-11-06T10:59:00.913Z",
+      "serviceId": "2425a11a-90bd-47fe-9c5b-03ad96ee7a74",
+      "environmentId": "369d5bb9-5107-4e39-89d8-668b9b59e230",
+      "url": null,
+      "snapshotId": "75ca53e5-614c-490f-8f40-422e91a82aa8",
+      "creator": {
+        "id": "665be88c-2efa-4351-aea6-be9ebdf89aab",
+        "name": null,
+        "email": "webdiktor@gmail.com"
+      },
+      "canRollback": true,
+      "canRedeploy": true,
+      "regions": [
+        "sfo"
+      ],
+      "meta": {
+        "reason": "deploy",
+        "image": "docker.n8n.io/n8nio/n8n:2.46.6"
+      }
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "test": "live-probe-after-restart-stable",
+  "file_name": "Проверка байтов 01.png",
+  "url": "https://n8n-upload-pilot.up.railway.app/webhook/work-github-upload-probe-v1",
+  "checks": [
+    {
+      "auth": "missing",
+      "status": 403,
+      "total_seconds": 20.271476,
+      "passed": true
+    },
+    {
+      "auth": "wrong",
+      "status": 403,
+      "total_seconds": 5.675791,
+      "passed": true
+    },
+    {
+      "auth": "correct",
+      "status": 200,
+      "total_seconds": 6.579892,
+      "bytes": 3151219,
+      "returned_bytes": 3151219,
+      "source_sha256": "93950c83617d21b8d9f945d90d3f20dc18e75ab3e6c4b3ea3dfeafb5d8fd3800",
+      "returned_sha256": "93950c83617d21b8d9f945d90d3f20dc18e75ab3e6c4b3ea3dfeafb5d8fd3800",
+      "match": true,
+      "passed": true
+    }
+  ],
+  "all_passed": true,
+  "github_tested": false,
+  "timing_note": "Client roundtrip only. Upload, server processing and network return are not separated."
+}

@@ -1,6 +1,6 @@
 {
-  "status": "PROPOSED_NOT_APPLIED",
-  "billing_approval": "PENDING",
+  "status": "SUPERSEDED_BY_APPROVED_PILOT_TARGET",
+  "billing_approval": "APPROVED_BY_OWNER_2026-11-06",
   "workspace_id": "e4c7b70e-ba0f-4c79-8d84-c62debc3867d",
   "workspace_name": "markmalina's Projects",
   "placement": {
@@ -47,7 +47,8 @@
     "N8N_TEMPLATES_ENABLED": "false",
     "N8N_PROXY_HOPS": "1",
     "EXECUTIONS_DATA_SAVE_ON_SUCCESS": "none",
-    "EXECUTIONS_DATA_SAVE_ON_ERROR": "none"
+    "EXECUTIONS_DATA_SAVE_ON_ERROR": "none",
+    "PORT": "5678"
   },
   "secret_requirements": [
     "Permanent n8n encryption key, generated without model/user-facing output and stored as service secret.",
@@ -75,5 +76,6 @@
     "Actual startup, used volume, CPU and memory measured.",
     "No Railway Agent/LLM, Redis or separate database service.",
     "Original full GitHub/batch/retry/restart/Android acceptance remains outstanding."
-  ]
+  ],
+  "note": "Historical initial proposal. Live IDs and deadline are in railway-pilot-target.json; actual applied changes and tests in later reports."
 }

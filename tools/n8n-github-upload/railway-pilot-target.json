@@ -19,5 +19,8 @@
   "approved_additional_budget_usd": 1,
   "github_repo": "markmalina/automations",
   "github_issue": 1,
-  "github_branch": "infra/work-github-upload"
+  "github_branch": "infra/work-github-upload",
+  "state": "COMPUTE_STOPPED_VOLUME_RETAINED",
+  "domain": "https://n8n-upload-pilot.up.railway.app",
+  "stop_reason": "Bounded pilot transport tests complete; pending GitHub app access confirmation"
 }

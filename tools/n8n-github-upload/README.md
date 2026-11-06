@@ -1,3 +1,5 @@
+> Текущий статус после переноса в markmalina/automations: см. LIVE_PILOT_2026-11-06.md. Реальный Work → n8n transport проверен; полный GitHub маршрут ещё не принят. Исторические разделы ниже описывают прежнюю подготовку.
+
 # Work → n8n → GitHub
 
 Задача: https://github.com/markmalina/freelance/issues/8
