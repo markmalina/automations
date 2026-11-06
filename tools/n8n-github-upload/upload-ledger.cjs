@@ -6,6 +6,61 @@ const crypto = require('node:crypto');
 const path = require('node:path');
 const directory = process.env.UPLOAD_LEDGER_DIR || '/data/work/control';
 fs.mkdirSync(directory, {recursive:true,mode:0o700});
+
+const cloneRoot = process.env.UPLOAD_GIT_ROOT || '/data/work/git';
+const temporaryRoot = path.dirname(cloneRoot);
+function safeDirectory(candidate, parent) {
+ try {
+  if(fs.realpathSync(parent)!==path.resolve(parent)) return 'unsafe_parent';
+  const s=fs.lstatSync(candidate);
+  return s.isDirectory() && !s.isSymbolicLink() ? 'directory' : 'unsafe_path';
+ } catch(e) {return e.code==='ENOENT' ? 'absent' : 'inspect_failed';}
+}
+function pruneConfirmedClone(id) {
+ if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(id)) return {state:'invalid_id'};
+ const candidate=path.join(cloneRoot,'pilot-'+id);
+ const state=safeDirectory(candidate,cloneRoot);
+ if(state!=='directory') return {state};
+ try {fs.rmSync(candidate,{recursive:true,force:true});return {state:'removed'};}
+ catch(e) {return {state:'cleanup_failed',code:String(e.code||'UNKNOWN')};}
+}
+function pruneFailedTemporary(names) {
+ if(!Array.isArray(names)||names.length>10) throw Error('Invalid temporary cleanup list');
+ const results=[];
+ for(const name of names) {
+  if(typeof name!=='string'||!/^\.n8n-clone-[a-f0-9]{16,64}$/.test(name)) throw Error('Invalid temporary clone name');
+  const candidate=path.join(temporaryRoot,name);
+  const state=safeDirectory(candidate,temporaryRoot);
+  if(state!=='directory'){results.push({name,state});continue;}
+  const git=path.join(candidate,'.git');
+  if(safeDirectory(git,candidate)!=='directory'){results.push({name,state:'missing_git_directory'});continue;}
+  const configPath=path.join(git,'config');
+  const configStat=fs.lstatSync(configPath);
+  if(!configStat.isFile()||configStat.isSymbolicLink()||configStat.size>1000000){results.push({name,state:'unverified_config'});continue;}
+  const config=fs.readFileSync(configPath,'utf8');
+  const origin=config.split(/(?=^\[)/m).find(section=>/^\[remote "origin"\]/.test(section));
+  if(!origin||!/^\s*url\s*=\s*https:\/\/github\.com\/markmalina\/freelance\.git\s*$/m.test(origin)){
+   results.push({name,state:'unexpected_origin'});continue;
+  }
+  const logPath=path.join(git,'logs','HEAD');
+  if(!fs.existsSync(logPath)||fs.lstatSync(logPath).isSymbolicLink()||fs.statSync(logPath).size>1000000){
+   results.push({name,state:'unverified_history'});continue;
+  }
+  const log=fs.readFileSync(logPath,'utf8');
+  if(!log.includes('clone: from ')||/\t(?:commit|reset|rebase|merge|cherry-pick)/.test(log)){
+   results.push({name,state:'local_changes_in_history'});continue;
+  }
+  try {fs.rmSync(candidate,{recursive:true,force:true});results.push({name,state:'removed'});}
+  catch(e){results.push({name,state:'cleanup_failed',code:String(e.code||'UNKNOWN')});}
+ }
+ return {results};
+}
+if(process.argv[2]==='prune-failed-temporary'){
+ try {console.log(JSON.stringify(pruneFailedTemporary(JSON.parse(process.argv[3]||'{}').names)));}
+ catch(e){console.log(JSON.stringify({error:e.message}));process.exitCode=1;}
+ process.exit(process.exitCode||0);
+}
+
 const db = new DatabaseSync(path.join(directory,'uploads.sqlite'));
 db.exec('PRAGMA busy_timeout=15000; PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL;');
 db.exec(`CREATE TABLE IF NOT EXISTS uploads (
@@ -24,6 +79,10 @@ function canonical(v) {
 }
 function run(action,input) {
  const now=Date.now();
+ if(action==='prune-confirmed') {
+  const rows=db.prepare("SELECT id FROM uploads WHERE state='confirmed' AND commit_sha IS NOT NULL AND receipt IS NOT NULL").all();
+  return {results:rows.map(row=>({id:row.id,...pruneConfirmedClone(row.id)}))};
+ }
  if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(input.id||'')) throw Error('Invalid upload ID');
  db.exec('BEGIN IMMEDIATE');
  try {
@@ -37,7 +96,7 @@ function run(action,input) {
    db.prepare('DELETE FROM grants WHERE expires_at<?').run(now);
    db.prepare('INSERT INTO grants VALUES (?,?,?,?,?,?)').run(hash,input.id,input.digest,input.fileCount,input.totalBytes,expiresAt);
    db.exec('COMMIT');
-   return {uploadId:input.id,uploadUrl:'https://n8n-upload-pilot.up.railway.app/webhook/work-granted-upload-pilot-v1',headerName:'X-Work-Upload-Grant',token,expiresAt:new Date(expiresAt).toISOString(),repository:'markmalina/freelance',branch:'test/n8n-upload-20261106',manifestDigest:input.digest,productionReady:false};
+   return {uploadId:input.id,uploadUrl:'https://n8n-upload-pilot.up.railway.app/webhook/work-fresh-token-upload-pilot-v1',headerName:'X-Work-Upload-Grant',token,expiresAt:new Date(expiresAt).toISOString(),repository:'markmalina/freelance',branch:'test/n8n-upload-20261106',manifestDigest:input.digest,productionReady:false};
   }
   if(action==='claim-granted') {
    if(!/^[0-9a-f]{64}$/.test(input.grant||'')) throw Error('GRANT_DENIED');
@@ -69,9 +128,11 @@ function run(action,input) {
   } else if(action!=='read') throw Error('Unknown action');
   db.exec('COMMIT');
   if(!row) return {found:false};
-  return {found:true,id:row.id,digest:row.digest,state:row.state,route:row.route,commitSha:row.commit_sha,receipt:row.receipt?JSON.parse(row.receipt):null};
+  const cleanup=action==='confirmed'&&row.state==='confirmed'?pruneConfirmedClone(row.id):undefined;
+  return {found:true,id:row.id,digest:row.digest,state:row.state,route:row.route,commitSha:row.commit_sha,receipt:row.receipt?JSON.parse(row.receipt):null,...(cleanup?{cleanup}:{})};
  } catch(e) {db.exec('ROLLBACK');throw e;}
 }
 try {console.log(JSON.stringify(run(process.argv[2],JSON.parse(process.argv[3]||'{}'))));}
 catch(e){console.log(JSON.stringify({error:e.message}));}
 finally{db.close();}
+

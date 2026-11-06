@@ -1,0 +1,15 @@
+{
+  "label": "new-work-batch",
+  "uploadId": "9d94bcf3-9a28-4014-93d5-ce8e5d259c7d",
+  "manifestDigest": "c70e309b44dd36290d14dfec7434bd6fde1616c48c3b294809b98aa57c1a2455",
+  "fileCount": 100,
+  "totalBytes": 30000000,
+  "mcpExecutionId": "40",
+  "endpoint": "https://n8n-upload-pilot.up.railway.app/webhook/work-fresh-token-upload-pilot-v1",
+  "httpStatus": 500,
+  "validReceipt": false,
+  "errorType": "HTTPError",
+  "outcome": "unconfirmed; inspect remote before retry",
+  "httpSeconds": 26.513647,
+  "oauthGrantToReceiptSeconds": 36.753253
+}

@@ -1,0 +1,35 @@
+{
+  "label": "new-work-single",
+  "uploadId": "0d3f97fd-0b2f-4a51-bf6c-a5cf218975b5",
+  "manifestDigest": "dc237fe84f3b6856b411ca2fa7d1f8b6abb67d7540c436f83a48fdb37e58b2d3",
+  "fileCount": 1,
+  "totalBytes": 300000,
+  "mcpExecutionId": "37",
+  "endpoint": "https://n8n-upload-pilot.up.railway.app/webhook/work-fresh-token-upload-pilot-v1",
+  "httpStatus": 200,
+  "receipt": {
+    "success": true,
+    "repository": "markmalina/freelance",
+    "branch": "test/n8n-upload-20261106",
+    "commitSha": "0fd7208ff8f56c8b9d381861899a66c8bdf3fc39",
+    "url": "https://github.com/markmalina/freelance/commit/0fd7208ff8f56c8b9d381861899a66c8bdf3fc39",
+    "uploadId": "0d3f97fd-0b2f-4a51-bf6c-a5cf218975b5",
+    "fileCount": 1,
+    "totalBytes": 300000,
+    "files": [
+      {
+        "path": "n8n-retry-tests/0d3f97fd-0b2f-4a51-bf6c-a5cf218975b5/Новый Work/Проверка 001.bin",
+        "sourcePath": "Новый Work/Проверка 001.bin",
+        "sha256": "065b02fcf41db00951f3f4e05595798e1f329c92dc94335a651b26e6ce379c26",
+        "bytes": 300000
+      }
+    ],
+    "replayed": true,
+    "githubTokenExpiresAt": "2026-11-06T16:28:13Z",
+    "processingMs": 1036,
+    "gitPushWindowMs": 1990,
+    "productionReady": false
+  },
+  "validReceipt": true,
+  "httpSeconds": 9.331025
+}

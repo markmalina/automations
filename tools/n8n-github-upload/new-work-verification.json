@@ -1,0 +1,28 @@
+{
+  "single": {
+    "commitSha": "0fd7208ff8f56c8b9d381861899a66c8bdf3fc39",
+    "path": "n8n-retry-tests/0d3f97fd-0b2f-4a51-bf6c-a5cf218975b5/Новый Work/Проверка 001.bin",
+    "sourceSha256": "065b02fcf41db00951f3f4e05595798e1f329c92dc94335a651b26e6ce379c26",
+    "bytesMatch": true,
+    "gitBlobSha": "74a0f26f100a2d3cc561b6f57bf6d1b6830541f1",
+    "expectedBlobSha": "74a0f26f100a2d3cc561b6f57bf6d1b6830541f1"
+  },
+  "remote": {
+    "sha": "0fd7208ff8f56c8b9d381861899a66c8bdf3fc39",
+    "files": [
+      {
+        "path": "n8n-retry-tests/0d3f97fd-0b2f-4a51-bf6c-a5cf218975b5/Новый Work/Проверка 001.bin",
+        "status": "added"
+      }
+    ],
+    "parents": [
+      "9c9e4a262de79ac9bd35bab14121ae8fd09b598b"
+    ]
+  },
+  "batch": {
+    "status": "failed",
+    "reason": "No space left on device during native Git clone checkout",
+    "remoteHeadAfterFailure": "0fd7208ff8f56c8b9d381861899a66c8bdf3fc39"
+  },
+  "sourceHead": "f0e08d9ee4d5f1a02c6b4a6683f10c9c935c2dd2"
+}
