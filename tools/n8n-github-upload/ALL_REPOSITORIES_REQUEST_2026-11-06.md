@@ -1,4 +1,12 @@
-# Расширение на все репозитории: подготовлено, не сохранено
+# Расширение на все репозитории: подтверждено и сохранено
+
+## Текущее состояние — 15:16–15:17 МСК
+
+Владелец подтвердил расширенный scope отдельным «Да». В installation settings нажата Save. GitHub показал `markmalina-n8n-upload was updated for the @markmalina account`; All repositories остаётся выбранным, Save disabled. Доступ ко всем текущим/будущим репозиториям markmalina, включая приватные, теперь СОХРАНЁН. Permissions остались metadata read и code read/write. Новый screenshot: `evidence/github-all-repositories-enabled-2026-11-06.jpg`.
+
+Независимый Railway read в 15:17 подтвердил: GH_APP_PRIVATE_KEY всё ещё STAGED, один pending change; активного deployment нет (последние успешные REMOVED). Ручной Deploy пока не наблюдался. accept-deploy после прежних отказов не повторялся; обход через UI/другой агентский API не выполнялся. Для продолжения нужен ручной Deploy владельца. PEM/JWT/installation token/Git пока не проверены. Абсолютный deadline пилота 15:45:16 МСК не изменён.
+
+Ниже — история подготовки до подтверждения, а не текущий scope.
 
 06.11.2026, около 15:08–15:10 МСК.
 
