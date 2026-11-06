@@ -1,7 +1,7 @@
 {
   "schemaVersion": "agent-ops.n8n-upload-lock/v1",
   "centralRepository": "markmalina/ops",
-  "centralCommit": "8d50065a688f675a1d9bdf1a7d30a9c8ede425c5",
+  "centralCommit": "46147d5b8b89fd8eb420c5a2b277e08992ab1e59",
   "actionPath": "agent-ops/actions/n8n-upload-preflight",
   "targetId": "n8n-upload-existing-service-v1",
   "operation": "onboarding-preflight",

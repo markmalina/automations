@@ -36,7 +36,7 @@ jobs:
           ref: ${{ github.sha }}
           persist-credentials: false
       - id: admission
-        uses: markmalina/ops/agent-ops/actions/n8n-upload-readiness@8d50065a688f675a1d9bdf1a7d30a9c8ede425c5
+        uses: markmalina/ops/agent-ops/actions/n8n-upload-readiness@46147d5b8b89fd8eb420c5a2b277e08992ab1e59
         with:
           mode: admit
       - name: Save admission evidence
@@ -61,7 +61,7 @@ jobs:
           ref: ${{ github.sha }}
           persist-credentials: false
       - name: Collect fixed-target read-only evidence
-        uses: markmalina/ops/agent-ops/actions/n8n-upload-readiness@8d50065a688f675a1d9bdf1a7d30a9c8ede425c5
+        uses: markmalina/ops/agent-ops/actions/n8n-upload-readiness@46147d5b8b89fd8eb420c5a2b277e08992ab1e59
         with:
           mode: collect
         env:
