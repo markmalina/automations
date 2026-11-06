@@ -1,3 +1,5 @@
+> Последняя Git-приёмка: GIT_ACCEPTANCE_2026-11-06.md — реальный single/100-file/update push и сверка скачанных файлов прошли; idempotency и постоянное подключение новых Work ещё не готовы.
+
 > Текущий статус после переноса в markmalina/automations: см. LIVE_PILOT_2026-11-06.md. Реальный Work → n8n transport проверен; полный GitHub маршрут ещё не принят. Исторические разделы ниже описывают прежнюю подготовку.
 
 # Work → n8n → GitHub

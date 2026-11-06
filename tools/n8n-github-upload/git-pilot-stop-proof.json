@@ -1,0 +1,81 @@
+{
+  "checkedAtMsk": "2026-11-06T15:47:00+03:00",
+  "logs": [
+    {
+      "timestamp": "2026-11-06T12:45:26.450148231Z",
+      "message": "PILOT_DEADLINE_REACHED"
+    },
+    {
+      "timestamp": "2026-11-06T12:45:26.450152941Z",
+      "message": "Received SIGTERM. Shutting down..."
+    },
+    {
+      "timestamp": "2026-11-06T12:45:26.450157121Z",
+      "message": "Scheduler stopped"
+    },
+    {
+      "timestamp": "2026-11-06T12:45:26.450165321Z",
+      "message": "Stopping n8n..."
+    }
+  ],
+  "environment": {
+    "environment": {
+      "id": "369d5bb9-5107-4e39-89d8-668b9b59e230",
+      "name": "pilot"
+    },
+    "services": [
+      {
+        "serviceId": "2425a11a-90bd-47fe-9c5b-03ad96ee7a74",
+        "serviceName": "n8n-upload",
+        "state": "online",
+        "statusText": "Online",
+        "activeDeployments": [
+          {
+            "id": "d4dbb4ef-cef3-4f7c-9ee7-80795c3c8fda",
+            "status": "SUCCESS",
+            "createdAt": "2026-11-06T12:34:24.946Z",
+            "statusUpdatedAt": "2026-11-06T12:35:14.824Z"
+          }
+        ],
+        "replicaStatus": {
+          "running": 0,
+          "crashed": 0,
+          "total": 1
+        },
+        "cronJob": null,
+        "issues": {
+          "warningCount": 0,
+          "criticalCount": 0
+        },
+        "recentFailures": 4,
+        "recentFailedDeployments": [
+          {
+            "id": "03dba976-d931-4060-b033-05fe485e39d0",
+            "status": "FAILED",
+            "createdAt": "2026-11-06T11:01:49.326Z"
+          },
+          {
+            "id": "514aa797-0aa2-4d4d-acff-b635d58a36e4",
+            "status": "FAILED",
+            "createdAt": "2026-11-06T11:00:14.591Z"
+          },
+          {
+            "id": "ae40ca59-8372-4a67-a9c3-066ba3655d12",
+            "status": "FAILED",
+            "createdAt": "2026-11-06T10:58:51.623Z"
+          }
+        ],
+        "hasIssues": true,
+        "isCronJob": false,
+        "hasVolume": true
+      }
+    ],
+    "pendingWork": [],
+    "summary": {
+      "totalServices": 1,
+      "servicesWithIssues": 1,
+      "totalFailures": 4
+    }
+  },
+  "healthcheck": "Work request timed out"
+}

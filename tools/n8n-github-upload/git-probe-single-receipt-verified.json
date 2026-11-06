@@ -1,0 +1,15 @@
+{
+  "repository": "markmalina/freelance",
+  "commitSha": "cf5de102ed5a628d992f96fd4c114c064ab0cd55",
+  "fileCount": 1,
+  "allMatch": true,
+  "files": [
+    {
+      "path": "Проверка байтов 01.png",
+      "sourceSha256": "93950c83617d21b8d9f945d90d3f20dc18e75ab3e6c4b3ea3dfeafb5d8fd3800",
+      "downloadedSha256": "93950c83617d21b8d9f945d90d3f20dc18e75ab3e6c4b3ea3dfeafb5d8fd3800",
+      "match": true
+    }
+  ],
+  "total_seconds": 7.539019
+}

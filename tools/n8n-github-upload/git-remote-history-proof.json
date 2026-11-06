@@ -1,0 +1,434 @@
+{
+  "single": {
+    "sha": "cf5de102ed5a628d992f96fd4c114c064ab0cd55",
+    "parents": [
+      "67ea0e533dbf9d07a80ab2423b11b6cf58ee9133"
+    ],
+    "files": [
+      {
+        "path": "Проверка байтов 01.png",
+        "status": "added"
+      }
+    ]
+  },
+  "batch": {
+    "sha": "6cb9e34b0eb72a1afc6f657a42881af1c5dff1f4",
+    "parents": [
+      "cf5de102ed5a628d992f96fd4c114c064ab0cd55"
+    ],
+    "files": [
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 1/вложенная папка/Файл 001.jpg",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 1/вложенная папка/Файл 002.png",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 1/вложенная папка/Файл 003.svg",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 1/вложенная папка/Файл 004.pdf",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 1/вложенная папка/Файл 005.docx",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 1/вложенная папка/Файл 006.txt",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 1/вложенная папка/Файл 007.js",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 1/вложенная папка/Файл 008.csv",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 1/вложенная папка/Файл 009.json",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 1/вложенная папка/Файл 010.bin",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 1/вложенная папка/Файл 011.jpg",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 1/вложенная папка/Файл 012.png",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 1/вложенная папка/Файл 013.svg",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 1/вложенная папка/Файл 014.pdf",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 1/вложенная папка/Файл 015.docx",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 1/вложенная папка/Файл 016.txt",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 1/вложенная папка/Файл 017.js",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 1/вложенная папка/Файл 018.csv",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 1/вложенная папка/Файл 019.json",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 1/вложенная папка/Файл 020.bin",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 2/вложенная папка/Файл 021.jpg",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 2/вложенная папка/Файл 022.png",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 2/вложенная папка/Файл 023.svg",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 2/вложенная папка/Файл 024.pdf",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 2/вложенная папка/Файл 025.docx",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 2/вложенная папка/Файл 026.txt",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 2/вложенная папка/Файл 027.js",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 2/вложенная папка/Файл 028.csv",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 2/вложенная папка/Файл 029.json",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 2/вложенная папка/Файл 030.bin",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 2/вложенная папка/Файл 031.jpg",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 2/вложенная папка/Файл 032.png",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 2/вложенная папка/Файл 033.svg",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 2/вложенная папка/Файл 034.pdf",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 2/вложенная папка/Файл 035.docx",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 2/вложенная папка/Файл 036.txt",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 2/вложенная папка/Файл 037.js",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 2/вложенная папка/Файл 038.csv",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 2/вложенная папка/Файл 039.json",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 2/вложенная папка/Файл 040.bin",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 3/вложенная папка/Файл 041.jpg",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 3/вложенная папка/Файл 042.png",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 3/вложенная папка/Файл 043.svg",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 3/вложенная папка/Файл 044.pdf",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 3/вложенная папка/Файл 045.docx",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 3/вложенная папка/Файл 046.txt",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 3/вложенная папка/Файл 047.js",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 3/вложенная папка/Файл 048.csv",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 3/вложенная папка/Файл 049.json",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 3/вложенная папка/Файл 050.bin",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 3/вложенная папка/Файл 051.jpg",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 3/вложенная папка/Файл 052.png",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 3/вложенная папка/Файл 053.svg",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 3/вложенная папка/Файл 054.pdf",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 3/вложенная папка/Файл 055.docx",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 3/вложенная папка/Файл 056.txt",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 3/вложенная папка/Файл 057.js",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 3/вложенная папка/Файл 058.csv",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 3/вложенная папка/Файл 059.json",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 3/вложенная папка/Файл 060.bin",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 4/вложенная папка/Файл 061.jpg",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 4/вложенная папка/Файл 062.png",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 4/вложенная папка/Файл 063.svg",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 4/вложенная папка/Файл 064.pdf",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 4/вложенная папка/Файл 065.docx",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 4/вложенная папка/Файл 066.txt",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 4/вложенная папка/Файл 067.js",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 4/вложенная папка/Файл 068.csv",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 4/вложенная папка/Файл 069.json",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 4/вложенная папка/Файл 070.bin",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 4/вложенная папка/Файл 071.jpg",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 4/вложенная папка/Файл 072.png",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 4/вложенная папка/Файл 073.svg",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 4/вложенная папка/Файл 074.pdf",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 4/вложенная папка/Файл 075.docx",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 4/вложенная папка/Файл 076.txt",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 4/вложенная папка/Файл 077.js",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 4/вложенная папка/Файл 078.csv",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 4/вложенная папка/Файл 079.json",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 4/вложенная папка/Файл 080.bin",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 081.jpg",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 082.png",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 083.svg",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 084.pdf",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 085.docx",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 086.txt",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 087.js",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 088.csv",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 089.json",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 090.bin",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 091.jpg",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 092.png",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 093.svg",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 094.pdf",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 095.docx",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 096.txt",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 097.js",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 098.csv",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 099.json",
+        "status": "added"
+      },
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 100.bin",
+        "status": "added"
+      }
+    ]
+  },
+  "update": {
+    "sha": "9f22ef7013e288c26449cd59cd1fbf8e24b0a330",
+    "parents": [
+      "6cb9e34b0eb72a1afc6f657a42881af1c5dff1f4"
+    ],
+    "files": [
+      {
+        "path": "n8n-tests/1046ee79-090f-40ac-8348-2dc4c19a72fa/Раздел 5/вложенная папка/Файл 100.bin",
+        "status": "modified"
+      }
+    ]
+  }
+}

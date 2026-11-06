@@ -5,6 +5,7 @@ const cp = require('node:child_process');
 const { once } = require('node:events');
 const crypto = require('node:crypto');
 let server;
+let githubPilotCredentials;
 const deadline = Number(process.env.PILOT_DEADLINE_MS);
 if (!Number.isFinite(deadline) || deadline <= Date.now()) process.exit(0);
 const watchdog = setTimeout(() => {
@@ -32,6 +33,11 @@ async function main() {
   console.log('PILOT_UID', process.getuid());
   console.log(cp.execFileSync('git', ['--version'], { encoding: 'utf8' }).trim());
   fs.writeFileSync('/data/work/.write-probe', 'ok', { mode: 0o600 });
+  for (const id of (process.env.PILOT_PRUNE_FAILED_CLONES || '').split(',').filter(Boolean)) {
+    if (!/^[0-9a-f-]{36}$/.test(id)) throw new Error('Invalid failed-pilot cleanup ID');
+    fs.rmSync('/data/work/git/pilot-'+id,{recursive:true,force:true});
+    console.log('PILOT_FAILED_CLONE_PRUNED',id);
+  }
   if (process.env.GH_APP_PRIVATE_KEY) {
     const key = crypto.createPrivateKey(process.env.GH_APP_PRIVATE_KEY);
     if (key.asymmetricKeyType !== 'rsa') throw new Error('GitHub App key must be RSA PEM');
@@ -46,6 +52,20 @@ async function main() {
     const receipt = {appId:app.id,slug:app.slug,fingerprint,permissions:app.permissions,verifiedAt:new Date().toISOString()};
     fs.writeFileSync('/data/work/receipts/github-app-auth.json',JSON.stringify(receipt,null,2),{mode:0o600});
     console.log('PILOT_GITHUB_APP_VERIFIED',JSON.stringify(receipt));
+    const tokenResponse = await fetch('https://api.github.com/app/installations/179245428/access_tokens', {
+      method:'POST',headers:{Authorization:'Bearer '+jwt,Accept:'application/vnd.github+json','User-Agent':'markmalina-n8n-upload-pilot','Content-Type':'application/json'},
+      body:JSON.stringify({repository_ids:[1378687935],permissions:{contents:'write'}})
+    });
+    if (!tokenResponse.ok) throw new Error('Installation token HTTP '+tokenResponse.status);
+    const installation = await tokenResponse.json();
+    if (!installation.token || installation.repositories?.length !== 1 || installation.repositories[0].full_name !== 'markmalina/freelance') throw new Error('Unexpected installation token scope');
+    githubPilotCredentials = [
+      {id:'workPilotGitPassword',name:'Freelance pilot Git token',type:'gitPassword',data:{username:'x-access-token',password:installation.token}},
+      {id:'workPilotGithubApi',name:'Freelance pilot GitHub token',type:'githubApi',data:{accessToken:installation.token,server:'https://api.github.com'}},
+      {id:'workPilotGithubHeader',name:'Freelance pilot GitHub API header',type:'httpHeaderAuth',data:{name:'Authorization',value:'Bearer '+installation.token}},
+      {id:'workPilotGithubJwt',name:'GitHub App signing key',type:'jwtAuth',data:{keyType:'pemKey',privateKey:process.env.GH_APP_PRIVATE_KEY,algorithm:'RS256'}}
+    ];
+    console.log('PILOT_GITHUB_TOKEN_SCOPED',JSON.stringify({repository:'markmalina/freelance',expiresAt:installation.expires_at}));
   }
   const marker = '/data/.n8n/pilot-initialized';
   if (!fs.existsSync(marker)) {
@@ -94,6 +114,13 @@ async function main() {
       for (const p of [credsPath, workflowPath]) { if (fs.existsSync(p)) fs.unlinkSync(p); }
     }
     fs.writeFileSync(marker, new Date().toISOString(), { mode: 0o600 });
+  }
+  if (githubPilotCredentials) {
+    const filename='/data/.n8n/github-pilot-import.json';
+    try {
+      fs.writeFileSync(filename,JSON.stringify(githubPilotCredentials),{mode:0o600});
+      await cli(['import:credentials','--input='+filename]);
+    } finally { if(fs.existsSync(filename)) fs.unlinkSync(filename); }
   }
   console.log('PILOT_READY_TO_START', new Date(deadline).toISOString());
   server = cp.spawn('n8n', ['start'], { stdio: 'inherit', env: { ...process.env, N8N_LISTEN_ADDRESS: '0.0.0.0', N8N_PORT: '5678', N8N_SECURE_COOKIE: 'true' } });

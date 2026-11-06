@@ -6,10 +6,15 @@
   "repository_selection": "all",
   "scope_confirmed_by_owner": true,
   "scope_saved_at_msk": "2026-11-06T15:16:00+03:00",
-  "permissions": {"metadata": "read", "contents": "write"},
+  "permissions": {
+    "metadata": "read",
+    "contents": "write"
+  },
   "settings_url": "https://github.com/settings/installations/179245428",
-  "runtime_private_key_applied": false,
-  "private_key_status": "STAGED_AWAITING_MANUAL_DEPLOY",
-  "runtime_authentication_tested": false,
-  "note": "UI-confirmed installation scope; not proof of runtime GitHub authentication or upload acceptance. Mint each eventual upload token for its target repository only."
+  "runtime_private_key_applied": true,
+  "private_key_status": "APPLIED_RSA_PEM_VERIFIED",
+  "runtime_authentication_tested": true,
+  "note": "UI-confirmed installation scope; not proof of runtime GitHub authentication or upload acceptance. Mint each eventual upload token for its target repository only.",
+  "git_push_tested": true,
+  "production_ready": false
 }
