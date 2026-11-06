@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "agent-ops.n8n-scope-read/v1",
+  "targetId": "n8n-upload-scope-read-v1",
+  "ownerRepository": "markmalina/automations",
+  "ownerRepositoryId": "1448151721",
+  "actorId": "23397294",
+  "operation": "read-project-scope",
+  "providerMutations": false,
+  "credentialProvisioning": false,
+  "projectId": "69cc90c9-7ede-4a57-bc03-f3e63f01cca3",
+  "environmentId": "369d5bb9-5107-4e39-89d8-668b9b59e230",
+  "serviceId": "2425a11a-90bd-47fe-9c5b-03ad96ee7a74",
+  "protectedEnvironment": "n8n-upload-readonly",
+  "credentialName": "N8N_UPLOAD_RAILWAY_PROJECT_TOKEN",
+  "maximumProviderRequests": 1,
+  "maximumResponseBytes": 65536,
+  "maximumRequestMilliseconds": 15000,
+  "previousDeploymentRefusalResolved": false
+}

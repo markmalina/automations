@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "agent-ops.n8n-scope-lock/v1",
+  "centralRepository": "markmalina/ops",
+  "centralCommit": "6e8598bddf7b33a9cda65efab878fff994048176",
+  "helperPath": "agent-ops/n8n-upload/scope-probe.mjs",
+  "profilePath": "agent-ops/registry/targets/n8n-upload-scope-read-v1.json",
+  "helperSha256": "f825b933429bece9472315d485234cc218fa6438af33b74a7422ed84d4d95aab",
+  "profileSha256": "e024d2e7987bee01624cfca60ae56483c65f0b759cc9ba77919e7b84de2018cd"
+}
