@@ -2,7 +2,7 @@
 import concurrent.futures,hashlib,json,os,pathlib,sqlite3,subprocess,tempfile,uuid
 ROOT=pathlib.Path(__file__).parent
 with tempfile.TemporaryDirectory()as directory:
- env={**os.environ,'UPLOAD_LEDGER_DIR':directory};upload_id=str(uuid.uuid4())
+ env={**os.environ,'UPLOAD_LEDGER_DIR':directory,'UPLOAD_GIT_ROOT':str(pathlib.Path(directory)/'git')};upload_id=str(uuid.uuid4())
  manifest={'uploadId':upload_id,'files':[{'field':'f000','path':"Кириллица и ' апостроф.bin",'bytes':7,'sha256':'a'*64}]}
  def call(action,payload):
   run=subprocess.run(['node',str(ROOT/'upload-ledger.cjs'),action,json.dumps(payload,ensure_ascii=False)],env=env,capture_output=True,text=True,check=True)
@@ -25,3 +25,4 @@ with tempfile.TemporaryDirectory()as directory:
  with sqlite3.connect(pathlib.Path(directory)/'uploads.sqlite')as db:db.execute('UPDATE grants SET expires_at=0')
  assert call('claim-granted',payload)['error']=='GRANT_DENIED'
  print(json.dumps({'concurrentClaims':16,'newClaims':1,'differentManifestRejected':True,'committedRetryVerifiesRemote':True,'receiptSurvivesNewProcess':True,'validGrantAccepted':True,'wrongTokenRejected':True,'changedManifestRejected':True,'expiredGrantRejected':True}))
+

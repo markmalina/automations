@@ -7,3 +7,4 @@ source-inspection/
 
 .mcp-api-key.json
 .upload-grant*.json
+.*-grant.json

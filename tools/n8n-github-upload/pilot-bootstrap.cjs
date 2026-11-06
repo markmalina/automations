@@ -1,4 +1,4 @@
-// Bounded pilot bootstrap. Uses stock n8n CLI and local owner-setup endpoint.
+// n8n bootstrap: explicit persistent mode or a bounded pilot. Uses stock n8n CLI and local owner-setup endpoint.
 // Contains no file-upload implementation or credentials.
 const fs = require('node:fs');
 const cp = require('node:child_process');
@@ -6,9 +6,14 @@ const { once } = require('node:events');
 const crypto = require('node:crypto');
 let server;
 let githubPilotCredentials;
+function childExitCode(persistentMode, shutdownRequested, code) {
+  if(persistentMode&&!shutdownRequested) return typeof code==='number'&&code!==0?code:1;
+  return code||0;
+}
+const persistent = process.env.UPLOAD_SERVICE_MODE === 'persistent';
 const deadline = Number(process.env.PILOT_DEADLINE_MS);
-if (!Number.isFinite(deadline) || deadline <= Date.now()) process.exit(0);
-const watchdog = setTimeout(() => {
+if (!persistent && (!Number.isFinite(deadline) || deadline <= Date.now())) process.exit(0);
+const watchdog = persistent ? null : setTimeout(() => {
   console.log('PILOT_DEADLINE_REACHED');
   if (server) server.kill('SIGTERM');
   setTimeout(() => process.exit(0), 20000);
@@ -31,10 +36,28 @@ async function main() {
   }
   if (process.getuid() === 0) { process.setgid(1000); process.setuid(1000); }
   console.log('PILOT_UID', process.getuid());
-  if(process.env.PILOT_LEDGER_B64) fs.writeFileSync('/data/work/control/upload-ledger.cjs',Buffer.from(process.env.PILOT_LEDGER_B64,'base64'),{mode:0o600});
+  if(process.env.PILOT_LEDGER_B64) {
+    const source=Buffer.from(process.env.PILOT_LEDGER_B64,'base64');
+    const names=JSON.parse(process.env.UPLOAD_PRUNE_FAILED_TEMP_DIRS||'[]');
+    // This exact allowlist is checked before deleting a failed pre-commit clone.
+    // Run the verified helper from stdin first, so cleanup works on a full disk.
+    if(names.length) {
+      const result=cp.execFileSync('node',['-','prune-failed-temporary',JSON.stringify({names})],{input:source,encoding:'utf8'});
+      const parsed=JSON.parse(result);
+      if(parsed.error) throw Error('Temporary clone cleanup failed');
+      console.log('UPLOAD_TEMPORARY_CLEANUP',JSON.stringify(parsed));
+    }
+    fs.writeFileSync('/data/work/control/upload-ledger.cjs',source,{mode:0o600});
+    const result=cp.execFileSync('node',['/data/work/control/upload-ledger.cjs','prune-confirmed','{}'],{encoding:'utf8'});
+    const parsed=JSON.parse(result);
+    if(parsed.error) throw Error('Confirmed clone cleanup failed');
+    console.log('UPLOAD_CONFIRMED_CLEANUP',JSON.stringify(parsed));
+    const disk=fs.statfsSync('/data');
+    console.log('UPLOAD_DISK_BYTES',JSON.stringify({available:Number(disk.bavail)*Number(disk.bsize),total:Number(disk.blocks)*Number(disk.bsize)}));
+  }
   console.log(cp.execFileSync('git', ['--version'], { encoding: 'utf8' }).trim());
   fs.writeFileSync('/data/work/.write-probe', 'ok', { mode: 0o600 });
-  for (const id of (process.env.PILOT_PRUNE_FAILED_CLONES || '').split(',').filter(Boolean)) {
+  for (const id of (persistent ? [] : (process.env.PILOT_PRUNE_FAILED_CLONES || '').split(',').filter(Boolean))) {
     if (!/^[0-9a-f-]{36}$/.test(id)) throw new Error('Invalid failed-pilot cleanup ID');
     fs.rmSync('/data/work/git/pilot-'+id,{recursive:true,force:true});
     console.log('PILOT_FAILED_CLONE_PRUNED',id);
@@ -123,12 +146,15 @@ async function main() {
       await cli(['import:credentials','--input='+filename]);
     } finally { if(fs.existsSync(filename)) fs.unlinkSync(filename); }
   }
-  console.log('PILOT_READY_TO_START', new Date(deadline).toISOString());
+  console.log(persistent ? 'UPLOAD_SERVICE_READY' : 'PILOT_READY_TO_START', persistent ? 'persistent' : new Date(deadline).toISOString());
   server = cp.spawn('n8n', ['start'], { stdio: 'inherit', env: { ...process.env, N8N_LISTEN_ADDRESS: '0.0.0.0', N8N_PORT: '5678', N8N_SECURE_COOKIE: 'true' } });
-  process.on('SIGTERM', () => server.kill('SIGTERM'));
-  process.on('SIGINT', () => server.kill('SIGTERM'));
+  let shutdownRequested=false;
+  process.on('SIGTERM', () => {shutdownRequested=true;server.kill('SIGTERM');});
+  process.on('SIGINT', () => {shutdownRequested=true;server.kill('SIGTERM');});
   const [code] = await once(server, 'exit');
-  clearTimeout(watchdog);
-  process.exit(code || 0);
+  if(watchdog) clearTimeout(watchdog);
+  // A persistent service must surface an unexpected child exit to ON_FAILURE.
+  process.exit(childExitCode(persistent,shutdownRequested,code));
 }
 main().catch(async e => { console.error('PILOT_BOOTSTRAP_FAILED', e.message); await stop(); process.exit(1); });
+
