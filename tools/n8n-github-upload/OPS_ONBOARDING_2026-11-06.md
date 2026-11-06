@@ -1,60 +1,62 @@
 # Подключение n8n Upload к Ops — 06.11.2026
 
-Статус: **CONFIG_EXECUTOR_SOURCE_READY**, живой маршрут не выпущен.
+Статус: **PROTECTED_SOURCE_PREPARED / LIVE_BLOCKED**. Постоянный сервис не включён.
 
-Ops: https://github.com/markmalina/ops/commit/40aab72a36dcf5ed018fa0391f3d5a04e4a596df .
-PR: https://github.com/markmalina/ops/pull/435 .
-Задача: https://github.com/markmalina/ops/issues/434 .
+Ops commit: https://github.com/markmalina/ops/commit/a2a5b8470f1cb6939baf49e368aadc36b9e51086
+PR435: https://github.com/markmalina/ops/pull/435
+Основная задача: https://github.com/markmalina/ops/issues/434
+Регламент: https://github.com/markmalina/ai/blob/main/WORK-RULES.md
 
-## Реализовано
+В исходниках есть фиксированный configuration executor, Railway ChangeSet adapter,
+durable Git journal и независимый verifier. Добавлена аутентификация подписанных
+role artifacts через GitHub run/actor/source/workflow/comment и скачанный
+artifact digest. Ключ из запроса без таких доказательств не принимается.
+Временные ключи не сохраняются; секреты и OIDC tokens в артефакты не помещаются.
+Фактический control run записывается отдельно от завершённого approval run.
 
-Код `agent-ops/n8n-upload/` содержит проверку подписанного плана и отдельного
-одобрения владельца, фиксированный адаптер Railway ChangeSet с baseConfigEtag,
-журнал на отдельной Git-ветке и независимый проверяющий модуль.
+147 offline behavioral tests PASS; 10 MJS syntax checks PASS. Реальный CLI
+защищённого чтения возвращает ABORTED/E_READ_NOT_RELEASED, providerRead=false,
+secretAccessed=false. Это локальная проверка, не живой доступ Ops к Railway.
 
-Состояния: CLAIMED → SUBMITTING → SUBMITTED → OBSERVED → VERIFIED.
-Журнал подтверждается удалённым Git до вызова Railway. Конкурирующая запись
-использует non-force parent-bound update. После обрыва или неизвестного результата
-новый apply блокируется, в том числе с новым request ID. Подтверждённая квитанция
-повторяется без второго deploy.
+## Клиент
 
-Результат Railway SUCCESS даёт только OBSERVED. Для VERIFIED требуется отдельное
-подписанное наблюдение из другого run: точное deployment ID, runtime hashes двух
-файлов, health/readiness, persistent mode, доступный диск и сохранность журнала.
-Проверяющий модуль не содержит токена или графа мутаций Railway.
+agent-ops.lock и preflight workflow закрепляют указанный полный Ops SHA.
+Команда /n8n-ops preflight остаётся provider-free, ABORTED/E_NOT_RELEASED.
 
-110 offline tests PASS, Node syntax checks PASS. Native API shape сверена с
-официальным railwayapp/cli@5a07ac2ae44ec2fcf892ba96e18f638402c7f8fb. Это проверка
-исходников API, а не живая приёмка provider capability.
+Добавлен отдельный /n8n-ops inspect на issue1. agent-ops.read.lock и
+.agent-ops/read-project.json связывают full SHA, target, operation и read-release.
+Первый job без provider credentials; условный второй job имеет фиксированный
+protected Environment n8n-upload-readonly и только named project token.
+Сейчас read-release.enabled=false/sourceAcceptance=PENDING: защищённый job
+не допускается. Environment/credential не создавались, их наличие неизвестно.
+Workflow находится в draft PR, на main обработчика ещё нет.
 
-## Клиентская привязка
+## Фактическое состояние
 
-`agent-ops.lock` закрепляет exact Ops commit и SHA-256 candidate/project.
-`.agent-ops/project.yml` — JSON, совместимый с YAML. Workflow
-`ops-n8n-preflight.yml` допускает только /n8n-ops preflight от точного владельца
-на issue #1, первый run на main. Все action refs — полные SHA, permissions —
-contents:read/issues:read. Ни secrets, ни protected Environment нет.
+В read-only наблюдении около 20:44 МСК: точный сервис, metadata SUCCESS/Online,
+но running=0 из 1. Лог PILOT_DEADLINE_REACHED — 19:42:02 МСК. Старый deadline
+19:41:59 МСК не продлевался. Patch 0bfc3cd0-278a-4e41-b1f1-7df8cb385602
+остаётся STAGED: шесть полей/пять native операций, не применён и не очищен.
 
-Клиент по-прежнему вызывает только onboarding preflight, возвращающий
-ABORTED/E_NOT_RELEASED для корректного кандидата. Новый executor не подключён
-к этому workflow; команда deploy не добавлена.
+Существующее OAuth-подключение использовано: get_workflow_details для
+workUploadGrantPilot снова вернул Internal error. Execution/grant не выдан.
+Причина ошибки коннектора не установлена. Пароль/секреты/повторный OAuth
+не запрашивались. Наблюдение через connector не доказывает scope Ops credential.
 
-## Что блокирует живой запуск
+## Блокеры живой приёмки
 
-- source/client acceptance и выпуск защищённых requester/control/observer workflows;
-- аутентифицированная GitHub/OIDC-привязка планов, одобрения и observation;
-- доказанный доступ к точному project/environment и права на журнал;
-- native disposable-fixture acceptance экспериментального ChangeSet API;
-- отдельный сборщик достоверного runtime observation.
+Предыдущий automatic deploy rejection остаётся обязательным ограничением.
+Повтор/эквивалентный deploy через Ops, браузер или CLI не выполнялся.
 
-`release.json` enabled=false, bindings=null, mutationBudget=0. Код не создавал
-credential, signing key или journal branch. Фикстуры подписей создаются временно
-в памяти тестов; новые постоянные секреты этим кандидатом не предписываются.
+Также остаются независимая source/client acceptance, установленные защищённые
+planner/approval/control/observer workflows, принятые bindings и scopes, native
+disposable-fixture acceptance, owned journal access/concurrency и источник
+достоверного runtime observation. Новый read-only collector не импортирует
+граф мутаций и не выдаёт HTTP200 за runtime hashes/disk/persistent/journal proof:
+эти поля остаются null. Main и release политики не включены.
 
-Адаптер отклоняет любую staged-конфигурацию, включая прежний pending patch.
-Он не применяет и не удаляет отклонённый auto-review эффект через иной маршрут.
-Таймер и runtime n8n этой работой не изменены; прежний срок 19:41:59 МСК уже
-прошёл, текущее состояние compute здесь не проверялось.
-
-Retention fix: https://github.com/markmalina/automations/pull/3 .
-Failed upload ID 9d94bcf3-9a28-4014-93d5-ce8e5d259c7d сохраняется.
+Retention fix — PR3, d1abb31147db3d0bd1f7ffbec0c1b6dbffbfeb67.
+Failed upload ID 9d94bcf3-9a28-4014-93d5-ce8e5d259c7d сохранён.
+Новые бинарная/replay/100-file приёмки до допустимого восстановления compute
+не выполнены. Полный source-протокол и остаток:
+https://github.com/markmalina/ops/blob/a2a5b8470f1cb6939baf49e368aadc36b9e51086/docs/runbooks/n8n-upload-protected-launch.md

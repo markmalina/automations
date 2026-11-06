@@ -15,3 +15,11 @@
 - agent-ops.lock и .agent-ops/project.yml допускают только provider-free onboarding-preflight; это не разрешение на apply.
 - Точный клиентский workflow .github/workflows/ops-n8n-preflight.yml закрепляет полный Ops SHA. Команда /n8n-ops preflight на issue #1 возвращает ABORTED/E_NOT_RELEASED до приёмки живого маршрута.
 - Не подменять отсутствующий n8n executor существующими Gate/AQUB действиями, не копировать их credentials. Кандидат не включает provider/secret access и не служит обходом отклонённого deploy.
+
+## Ops: read-only inspection candidate
+
+- Команда /n8n-ops inspect на issue1 подготовлена отдельным workflow; до merge/main и read-release acceptance обработчик не установлен.
+- agent-ops.read.lock и .agent-ops/read-project.json закрепляют точный Ops SHA, target, read operation и release bytes.
+- Первый job без provider secrets. Protected job n8n-upload-readonly допускается только после отдельно принятого read-release; сейчас OFF, E_READ_NOT_RELEASED до чтения секрета.
+- Имена protected Environment и N8N_UPLOAD_RAILWAY_PROJECT_TOKEN — только предполагаемые bindings: их создание и наличие не подтверждены. Не использовать Gate/AQUB/shared credentials.
+- Диагностика не применяет/удаляет staged patch и не снимает прежний отказ deploy. HTTP200 не подтверждает runtime hashes/disk/journal/persistent mode.

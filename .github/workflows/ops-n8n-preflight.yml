@@ -35,7 +35,7 @@ jobs:
           ref: ${{ github.sha }}
           persist-credentials: false
       - name: Check onboarding contracts without provider access
-        uses: markmalina/ops/agent-ops/actions/n8n-upload-preflight@40aab72a36dcf5ed018fa0391f3d5a04e4a596df
+        uses: markmalina/ops/agent-ops/actions/n8n-upload-preflight@a2a5b8470f1cb6939baf49e368aadc36b9e51086
       - name: Save redacted candidate report
         if: ${{ always() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
