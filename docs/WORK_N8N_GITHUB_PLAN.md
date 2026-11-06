@@ -1,8 +1,8 @@
 # Work → n8n → GitHub: план доведения до рабочего сервиса
 
-Актуальный указатель — последняя секция «Последний шаг: 07.11.2026, 00:30 МСК»: исходный механизм запуска повторно отказал; установлена текущая настройка ChatGPT permissions Railway, подготовлен конкретный вопрос о режиме подтверждения.
+Актуальный указатель — последняя секция «Последний шаг: 07.11.2026, 01:15 МСК»: универсальный исходник объединён в PR8 и прошёл CI; Railway ask_before_writes установлен, но исходный Deploy снова отменён. SOURCE ACCEPTED / LIVE BLOCKED.
 
-Состояние: 06.11.2026, проверка Railway около 22:46 МСК. Это план и зафиксированное состояние, не подтверждение запуска постоянного сервиса.
+Актуальное состояние: 07.11.2026, проверка Railway около 01:09 МСК: running=0/total=1. Ниже сохранена история; её ранние незавершённые source-пункты уточняются последней секцией. Постоянный сервис не запущен.
 
 ## Цель и решение владельца
 
@@ -16,7 +16,7 @@
 
 1. У точного n8n-сервиса running=0/total=1. Metadata SUCCESS/Online не подтверждает работающий процесс.
 2. Исправление ENOSPC и persistent mode d1abb31147db3d0bd1f7ffbec0c1b6dbffbfeb67 не установлено. Patch 0bfc3cd0-278a-4e41-b1f1-7df8cb385602 остаётся STAGED.
-3. Существующий grant/upload runtime привязан к markmalina/freelance, test/n8n-upload-20261106 и отдельному path prefix. Универсальные repo/branch/path ещё не реализованы.
+3. Установленный grant/upload runtime привязан к markmalina/freelance, test/n8n-upload-20261106 и отдельному path prefix. Универсальные repo/branch/path реализованы в исходнике PR8/main ce9c515…, но в runtime ещё не установлены.
 4. Ops имеет подготовленные библиотеки и проверки, но живые request/control/observation workflows, действующая привязка доступа и принятый протокол наблюдений не завершены. Release выключен.
 5. OAuth-подключение существует, но последний get_workflow_details(workUploadGrantPilot) возвращал Internal error. Причина внутри коннектора не установлена; нулевая работающая compute — отдельное подтверждённое наблюдение.
 6. Новый Work проверен только для одного бинарного файла и повтора. Полная новая пакетная и универсальная приёмка отсутствует.
@@ -230,3 +230,69 @@ isError=true, structured error_code=INVALID_ARGUMENT. Это отказ допу
 Старый независимый read route работает, project credential уже установлен; новых ключей/CI/resources/jobs в этом ходе нет. Постоянный runtime остаётся не запущенным по последней подтверждённой проверке; фактического нового upload/readback/replay нет. Инженерная часть write route также не завершена и не подменяется этим диагностическим выводом.
 
 ДАЛЬШЕ: Марк — выбрать для Railway конкретный режим «чтение разрешено, изменения с подтверждением»; затем я — применить этот выбор и снова пройти исходный допуск с явным подтверждением, без альтернативного обходного deploy. Остальные этапы продолжаются в этой же задаче, не требуют отдельных Work или общего «продолжай».
+
+
+## Последний шаг: 07.11.2026, 01:15 МСК — универсальный исходник объединён; живой запуск заблокирован
+
+**Статус: SOURCE ACCEPTED / LIVE BLOCKED.** Все действия ниже выполнены в этой же задаче, без создания владельцем отдельных Work.
+
+### Допуск Railway: подтверждённое изменение, отрицательный результат
+
+Владелец явно выбрал режим Railway «Allow read actions / изменения с подтверждением». Исполнитель установил `ask_before_writes` только для Railway и прочитал настройку обратно: override действительно действует. Full access не включался; новые provider credentials не создавались.
+
+После read-only сверки прежнего exact target и STAGED patch выполнен ровно один повтор исходного `railway_accept_deploy`. Результат:
+```
+Cancelled — the user did not approve this action. No changes were made.
+```
+`isError=true`, `error_code=INVALID_ARGUMENT`. Гипотеза, что смена режима разрешит допуск, **не подтвердилась**. Подробная внутренняя причина не раскрыта. Это не отсутствие поручения владельца. Повторное общее разрешение не запрашивается. Дальнейших попыток, full_access или эквивалентного Deploy через UI/CLI/Ops не было.
+
+### Универсальный маршрут: исходники уже в main
+
+PR: https://github.com/markmalina/automations/pull/8 — объединён.
+Финальный source head: `01229243811ca756a741c25ea8ccf58f649d5bae`.
+Merge commit: https://github.com/markmalina/automations/commit/ce9c5150368434436ecafedcdbe9f5f1da87bc47 .
+Все 20 добавленных файлов прочитаны по merge SHA и точно совпали с опубликованными байтами. Базовое дерево сохранено, удалений нет.
+
+- Клиент Python передаёт настоящие бинарные файлы HTTPS multipart; архив и Base64 через модель не используются. Одно прежнее OAuth-подключение и существующий GitHub App остаются основой. Краткосрочное разрешение передаётся через проверенный stdin/PTY с отключённым echo, без секрета в argv/stdout.
+- V2 grant привязан к UUID uploadId, неизменяемому repositoryId, owner markmalina (23397294), repository, existing branch, prefix и хешам файлов. Схема описана в https://github.com/markmalina/automations/blob/ce9c5150368434436ecafedcdbe9f5f1da87bc47/tools/n8n-github-upload/UNIVERSAL_ROUTE.md .
+- Новый stock n8n workflow использует Git Data API без клонирования репозитория: ограниченный installation token на один repositoryId, blobs/tree/один commit, запись commit SHA в SQLite перед non-force обновлением ref и подтверждение достижимости. Внутренняя кодировка blob API остаётся внутри n8n.
+- Аддитивная nullable-миграция grants.target_json сохраняет старые grants/uploads/receipts. Legacy endpoint отвергает V2 до claim: устранён независимо найденный P1, при котором target-bound grant мог попасть в старый фиксированный freelance route.
+- До GitHub writes проверяются фактические размеры и SHA-256 бинарных данных; клиент отвергает FIFO/symlinks/races, коллизии и недопустимые пути. Публикация последовательная, без автоматических mutation retries, concurrency=1 в persistent mode. Bootstrap импортирует и публикует фиксированные workflow IDs перед запуском.
+- Сохранены legacy-маршрут и failed ID `9d94bcf3-9a28-4014-93d5-ce8e5d259c7d`. Уже записанный, но неподтверждённый commit требует восстановления с тем же ID, а не нового commit или сброса журнала.
+
+Границы: только принадлежащие markmalina репозитории, существующая ветка, до 100 файлов / 32 000 000 байт; приёмочная нагрузка остаётся 100 файлов / 30 000 000 байт. Создание веток и PR не реализовано; `.github/workflows` отклоняется, Workflows:write не выдавался. Это не обещание записи вопреки GitHub branch protection.
+
+### Проверки исходников
+
+- Основная сборка: 66 Node tests + 40 Python tests PASS, отдельно legacy bootstrap/concurrency/retention PASS. Независимый обзор считает те же 66+legacy bootstrap как 67 Node, поэтому это не дополнительный набор 67. Дополнительная независимая cross-endpoint regression PASS; контрпример до исправления воспроизводится.
+- Реальный локальный client → SQLite → n8n Code protocol проверен с фикстурами. Multipart 100 файлов / 30 000 000 байт проверен локальным fake HTTP transport. Это не живая n8n-приёмка.
+- Независимый итог: ACCEPT **as a source candidate**, включая узкую повторную проверку последней правки discovery description.
+- Первая CI: https://github.com/markmalina/automations/actions/runs/42301852890 — SUCCESS.
+- Финальный exact source: https://github.com/markmalina/automations/actions/runs/42302210787 — SUCCESS.
+- После merge main: https://github.com/markmalina/automations/actions/runs/42302399955 — SUCCESS.
+- Все 3 jobs закончены, rerun не выполнялись; суммарно наблюдаемые 63 секунды job duration, не billed minutes. Фактическое списание и денежная стоимость unknown. Активных субагентов нет.
+- n8n SDK connector вернул MCP -32603 Internal error; native SDK validation не заявляется. Сверка официального исходника n8n@2.46.6 и offline tests не заменяет импорт/исполнение в реальном n8n.
+
+Финальные SHA-256:
+```
+upload-ledger.cjs                         81a4b3af7a15fe165fb7ca41b73dd228eb2ec57826b422064f2f40dc974f4401
+owner-repository-upload.workflow.json      ae983561ed594a4fe0971c5b8b6be3a16eb87ac40311883d5ee7f34ed55a9c18
+upload-grant.workflow.json                 8bf95f9e993e4ff494ad3cf90e86e694194366cb18c85496ec4e3abba9b3ff43
+pilot-bootstrap.cjs                       1ab2b0cf3397117ebb857b760253034db5449c2d21ed76a66915d5f94ff4d45b
+work_upload.py                            bd18630daef9ca5f4e925dd1ccf8474e8696bff6f692afaec7fc9b978439c515
+build_universal_workflow.py                d1bc5c661c3a7f30a61575d04984e13a3256ecd3fc18de58b16a431a3d7badcb
+```
+
+### Живая граница и остаток работы
+
+Свежий read около 01:09 МСК: точный service `2425a11a-90bd-47fe-9c5b-03ad96ee7a74`, environment `369d5bb9-5107-4e39-89d8-668b9b59e230`, project `69cc90c9-7ede-4a57-bc03-f3e63f01cca3`: running=0 / total=1. Старый SUCCESS deployment d7469a53-374f-4c5f-a5d8-beed4c086847 не означает работающий процесс.
+
+Patch `0bfc3cd0-278a-4e41-b1f1-7df8cb385602` остаётся STAGED с прежним d1abb311… source. **Новый universal bootstrap 1ab2… не принят в этот patch и не установлен в runtime.** Нельзя выдавать старый patch за применение нового исходника.
+
+Ops435 release OFF/PENDING; authenticated planner/request/approval/control/observer и принятие нового source/patch ещё не завершены. Старый adapter отвергает pending patch. Read-only scope workflow уже доказал точный provider access, но не даёт write acceptance. Программная часть спринтов 3–4 существенно выполнена PR8; их живая приёмка и завершение спринта1 остаются открытыми.
+
+После разрешённого допуска нужны: согласование exact source/patch и write-контракта Ops; native import/publish и MCP visibility под существующим OAuth; actual running/source/persistent/disk/journal evidence; один бинарный файл/readback/replay; 100 файлов / 30 МБ; interrupted publication, retention/GC/memory/disk и рестарт с сохранением журнала. Native app description по-прежнему содержит старую область freelance; новый discovery description существует в source, в остановленный runtime не установлен.
+
+Новой пользовательской выгрузки, сброса журнала, Railway mutation/compute/resources/timer в этом ходе нет. Содержимое live journal не прочитано. Gate/AQUB и чужие credentials не затронуты. Старые PR435/3/4/5 не объединены.
+
+ДАЛЬШЕ: исполнитель — при наличии действующего допуска исходного Deploy согласовать новый exact source/patch с Ops и пройти живую приёмку; до этого сервис остаётся LIVE BLOCKED. Новые постоянные токены и отдельный Work от владельца не нужны.
