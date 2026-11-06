@@ -1,0 +1,92 @@
+{
+  "id": "workUploadGrantPilot",
+  "name": "Issue one upload grant (metadata only)",
+  "description": "Issue a 10-minute upload permission bound to an uploadId, canonical manifest SHA256, count and bytes. Only private markmalina/freelance test/n8n-upload-20261106 in this pilot. No file bytes or permanent secrets in inputs. OAuth MCP may execute this published workflow with webhookData.body {id,digest,fileCount,totalBytes}; poll get_workflow_execution node Return temporary grant. Do not display token. HTTP trigger separately requires private pilot header.",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "work-upload-grant-pilot-v1",
+        "authentication": "headerAuth",
+        "responseMode": "lastNode",
+        "responseData": "firstEntryJson",
+        "responseBinaryPropertyName": "data",
+        "options": {}
+      },
+      "id": "09b7fd9e-b1f8-4738-bfa4-5a80d05aef2f",
+      "name": "OAuth grant input",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "344a7789-4a7b-4863-aa2a-f35912078fc7",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "workPilotHeaderAuth",
+          "name": "Work pilot header"
+        }
+      }
+    },
+    {
+      "id": "b1f10b16-ffc1-4b93-a34e-6c048b86a4f2",
+      "name": "Issue bound grant",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        0,
+        800
+      ],
+      "parameters": {
+        "executeOnce": true,
+        "command": "={{ (()=>{const p=$json.body;if(!p || Object.keys(p).some(k=>!['id','digest','fileCount','totalBytes'].includes(k)))throw Error('Invalid grant fields');const quote=s=>String.fromCharCode(39)+s.replaceAll(String.fromCharCode(39),String.fromCharCode(39,92,39,39))+String.fromCharCode(39);return 'node /data/work/control/upload-ledger.cjs grant '+quote(JSON.stringify(p));})() }}"
+      }
+    },
+    {
+      "id": "a7b921b1-98a6-408d-a78b-e4e4af21b16a",
+      "name": "Return temporary grant",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        600,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const r=JSON.parse($json.stdout);if(r.error)throw Error(r.error);return [{json:r}];"
+      }
+    }
+  ],
+  "connections": {
+    "OAuth grant input": {
+      "main": [
+        [
+          {
+            "node": "Issue bound grant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Issue bound grant": {
+      "main": [
+        [
+          {
+            "node": "Return temporary grant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "none",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": false
+  }
+}

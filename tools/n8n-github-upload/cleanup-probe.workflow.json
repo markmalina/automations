@@ -1,0 +1,92 @@
+{
+  "id": "workPilotCleanup",
+  "name": "Explicit bounded pilot clone cleanup",
+  "description": "Remove two confirmed disposable test clones. No remote Git mutations.",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "work-pilot-cleanup-v1",
+        "authentication": "headerAuth",
+        "responseMode": "lastNode",
+        "responseData": "firstEntryJson",
+        "responseBinaryPropertyName": "data",
+        "options": {}
+      },
+      "id": "09b7fd9e-b1f8-4738-bfa4-5a80d05aef2f",
+      "name": "OAuth grant input",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "344a7789-4a7b-4863-aa2a-f35912078fc7",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "workPilotHeaderAuth",
+          "name": "Work pilot header"
+        }
+      }
+    },
+    {
+      "id": "b1f10b16-ffc1-4b93-a34e-6c048b86a4f2",
+      "name": "Remove confirmed test clones",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        0,
+        800
+      ],
+      "parameters": {
+        "executeOnce": true,
+        "command": "node -e 'const fs=require(\"node:fs\");const ids=[\"0e0909a5-7013-44b3-a33a-7853e383adbe\",\"24c6f53a-c2c3-4ec3-b4c0-5282dc69a0af\"];for(const id of ids)fs.rmSync(\"/data/work/git/pilot-\"+id,{recursive:true,force:true});const d=fs.statfsSync(\"/data\");console.log(JSON.stringify({removedDisposableClones:ids,freeBytes:d.bavail*d.bsize}))'"
+      }
+    },
+    {
+      "id": "a7b921b1-98a6-408d-a78b-e4e4af21b16a",
+      "name": "Return temporary grant",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        600,
+        0
+      ],
+      "parameters": {
+        "jsCode": "return [{json:JSON.parse($json.stdout)}];"
+      }
+    }
+  ],
+  "connections": {
+    "OAuth grant input": {
+      "main": [
+        [
+          {
+            "node": "Remove confirmed test clones",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove confirmed test clones": {
+      "main": [
+        [
+          {
+            "node": "Return temporary grant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "none",
+    "saveDataErrorExecution": "none",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": false
+  }
+}

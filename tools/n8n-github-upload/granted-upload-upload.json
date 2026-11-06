@@ -1,0 +1,37 @@
+{
+  "status": 200,
+  "receipt": {
+    "success": true,
+    "repository": "markmalina/freelance",
+    "branch": "test/n8n-upload-20261106",
+    "commitSha": "311331694c30903cf82d3e5e729bdf76ca3f9931",
+    "url": "https://github.com/markmalina/freelance/commit/311331694c30903cf82d3e5e729bdf76ca3f9931",
+    "uploadId": "24c6f53a-c2c3-4ec3-b4c0-5282dc69a0af",
+    "fileCount": 1,
+    "totalBytes": 155437,
+    "files": [
+      {
+        "path": "n8n-retry-tests/24c6f53a-c2c3-4ec3-b4c0-5282dc69a0af/MCP разрешение/файл с пробелами.bin",
+        "sourcePath": "MCP разрешение/файл с пробелами.bin",
+        "sha256": "ca2b33daf547c0835f4a30e3aeb0eed5cf4fc0ee04ae9f33a1c3124186011053",
+        "bytes": 155437
+      }
+    ],
+    "productionReady": false,
+    "replayed": false,
+    "processingMs": 16031
+  },
+  "seconds": 25.477699,
+  "manifest": {
+    "uploadId": "24c6f53a-c2c3-4ec3-b4c0-5282dc69a0af",
+    "files": [
+      {
+        "field": "f000",
+        "path": "MCP разрешение/файл с пробелами.bin",
+        "bytes": 155437,
+        "sha256": "ca2b33daf547c0835f4a30e3aeb0eed5cf4fc0ee04ae9f33a1c3124186011053"
+      }
+    ]
+  },
+  "mcpExecutionId": "18"
+}

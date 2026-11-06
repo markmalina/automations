@@ -4,8 +4,14 @@
   "environment_id": "369d5bb9-5107-4e39-89d8-668b9b59e230",
   "service_id": "2425a11a-90bd-47fe-9c5b-03ad96ee7a74",
   "replicas": 1,
-  "limits": {"memoryGB": 1, "vCPUs": 0.5},
-  "volume": {"mountPath": "/data", "sizeMB": 1024},
+  "limits": {
+    "memoryGB": 1,
+    "vCPUs": 0.5
+  },
+  "volume": {
+    "mountPath": "/data",
+    "sizeMB": 1024
+  },
   "restartPolicyType": "NEVER",
   "domain": "https://n8n-upload-pilot.up.railway.app",
   "nonsecret_variables": {
@@ -29,12 +35,24 @@
     "N8N_PROXY_HOPS": "1",
     "RAILWAY_RUN_UID": "0",
     "EXECUTIONS_DATA_SAVE_ON_SUCCESS": "none",
-    "EXECUTIONS_DATA_SAVE_ON_ERROR": "none"
+    "EXECUTIONS_DATA_SAVE_ON_ERROR": "none",
+    "PILOT_DEADLINE_MS": "1793973600000"
   },
-  "secret_variable_names_only": ["N8N_ENCRYPTION_KEY", "PILOT_UPLOAD_TOKEN", "PILOT_OWNER_PASSWORD", "GH_APP_PRIVATE_KEY"],
+  "secret_variable_names_only": [
+    "N8N_ENCRYPTION_KEY",
+    "PILOT_UPLOAD_TOKEN",
+    "PILOT_OWNER_PASSWORD",
+    "GH_APP_PRIVATE_KEY"
+  ],
   "bootstrap": "pilot-bootstrap.cjs, encoded programmatically into PILOT_BOOTSTRAP_B64",
   "workflow_bootstrap": "probe.workflow.json, encoded programmatically into PILOT_WORKFLOW_B64",
-  "deadline_utc": "2026-11-06T12:45:16.582Z",
-  "state": "PILOT_DEADLINE_REACHED_RUNNING_REPLICAS_ZERO",
-  "note": "Safe deployment snapshot, no credentials. Execute Command is enabled for trusted mkdir in probe workflow. Stock probe exports are not the final production protocol."
+  "deadline_utc": "2026-11-06T14:00:00.000Z",
+  "state": "RETRY_PILOT_GRACEFULLY_STOPPED_RUNNING_REPLICAS_ZERO",
+  "note": "Safe deployment snapshot, no credentials. Execute Command is enabled for trusted mkdir in probe workflow. Stock probe exports are not the final production protocol.",
+  "control_journal": {
+    "path": "/data/work/control/uploads.sqlite",
+    "implementation": "Node built-in SQLite, WAL, FULL synchronous, unique upload ID, BEGIN IMMEDIATE",
+    "credentialsStored": false
+  },
+  "bootstrap_metadata_helper": "upload-ledger.cjs encoded as PILOT_LEDGER_B64"
 }

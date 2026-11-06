@@ -1,0 +1,174 @@
+{
+  "protocol": "2026-07-28",
+  "authUsedForDiagnostic": "native personal MCP API key; value omitted",
+  "toolCount": 55,
+  "tools": {
+    "execute_workflow": {
+      "type": "object",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "properties": {
+        "workflowId": {
+          "type": "string",
+          "description": "The ID of the workflow to execute"
+        },
+        "executionMode": {
+          "type": "string",
+          "enum": [
+            "manual",
+            "production"
+          ],
+          "description": "Required execution intent. Use \"manual\" for testing or validating the current workflow, including tests against live external services. Use \"production\" only when intentionally running the published workflow as a live execution."
+        },
+        "triggerNodeName": {
+          "type": "string",
+          "description": "Name of the trigger node to execute. Required when providing inputs. If omitted, the workflow must have exactly one trigger that does not require inputs (Schedule Trigger, or Manual Trigger in manual mode). Use get_workflow_details to see available trigger names."
+        },
+        "inputs": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "chatInput": {
+                  "type": "string",
+                  "description": "Input for chat-based workflows"
+                }
+              },
+              "required": [
+                "chatInput"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "formData": {
+                  "type": "object",
+                  "additionalProperties": {},
+                  "description": "Input data for form-based workflows"
+                }
+              },
+              "required": [
+                "formData"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "webhookData": {
+                  "type": "object",
+                  "properties": {
+                    "method": {
+                      "type": "string",
+                      "enum": [
+                        "GET",
+                        "POST",
+                        "PUT",
+                        "DELETE",
+                        "PATCH",
+                        "HEAD",
+                        "OPTIONS"
+                      ],
+                      "default": "GET",
+                      "description": "HTTP method (defaults to GET)"
+                    },
+                    "query": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "Query string parameters"
+                    },
+                    "body": {
+                      "type": "object",
+                      "additionalProperties": {},
+                      "description": "Request body data (main webhook payload)"
+                    },
+                    "headers": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "HTTP headers (e.g., authorization, content-type)"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "description": "Input data for webhook-based workflows"
+                }
+              },
+              "required": [
+                "webhookData"
+              ],
+              "additionalProperties": false
+            }
+          ],
+          "description": "Trigger payload. Required for webhook, chat, and form triggers. Must be omitted for schedule and manual triggers. Use get_workflow_details to see the expected payload for each trigger."
+        }
+      },
+      "required": [
+        "workflowId",
+        "executionMode"
+      ],
+      "additionalProperties": false
+    },
+    "get_workflow_execution": {
+      "type": "object",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "properties": {
+        "workflowId": {
+          "type": "string",
+          "description": "The ID of the workflow the execution belongs to"
+        },
+        "executionId": {
+          "type": "string",
+          "description": "The ID of the execution to retrieve"
+        },
+        "includeData": {
+          "type": "boolean",
+          "description": "Whether to include the full execution result data. Defaults to false (metadata only). Set to true to include node inputs/outputs. Use `false` to quickly check execution status"
+        },
+        "nodeNames": {
+          "type": "array",
+          "description": "When includeData is true, return data only for these node names. If omitted, data for all nodes is included.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "truncateData": {
+          "type": "integer",
+          "description": "When includeData is true, limit the number of data items returned per node output to this value. If omitted, all items are returned.",
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "workflowId",
+        "executionId"
+      ],
+      "additionalProperties": false
+    },
+    "get_workflow_details": {
+      "type": "object",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "properties": {
+        "workflowId": {
+          "type": "string",
+          "description": "The ID of the workflow to retrieve"
+        },
+        "detailLevel": {
+          "type": "string",
+          "enum": [
+            "full",
+            "execution"
+          ],
+          "default": "full",
+          "description": "Level of detail to return. 'full' (default) includes the complete workflow payload. 'execution' returns only the workflow metadata and trigger information needed to run it — prefer it when the goal is just to execute the workflow via execute_workflow."
+        }
+      },
+      "required": [
+        "workflowId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "openaiFileParamsPresent": false
+}

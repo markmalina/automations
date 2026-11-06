@@ -25,12 +25,13 @@ async function stop() {
   await done;
 }
 async function main() {
-  for (const path of ['/data', '/data/.n8n', '/data/work', '/data/work/git', '/data/work/uploads', '/data/work/receipts']) {
+  for (const path of ['/data', '/data/.n8n', '/data/work', '/data/work/git', '/data/work/uploads', '/data/work/receipts', '/data/work/control']) {
     fs.mkdirSync(path, { recursive: true, mode: 0o700 });
     if (process.getuid() === 0) fs.chownSync(path, 1000, 1000);
   }
   if (process.getuid() === 0) { process.setgid(1000); process.setuid(1000); }
   console.log('PILOT_UID', process.getuid());
+  if(process.env.PILOT_LEDGER_B64) fs.writeFileSync('/data/work/control/upload-ledger.cjs',Buffer.from(process.env.PILOT_LEDGER_B64,'base64'),{mode:0o600});
   console.log(cp.execFileSync('git', ['--version'], { encoding: 'utf8' }).trim());
   fs.writeFileSync('/data/work/.write-probe', 'ok', { mode: 0o600 });
   for (const id of (process.env.PILOT_PRUNE_FAILED_CLONES || '').split(',').filter(Boolean)) {
