@@ -1,5 +1,7 @@
 # Work → n8n → GitHub: план доведения до рабочего сервиса
 
+Актуальный указатель — последняя секция «Текущий указатель: 07.11.2026, 00:01 МСК»: служебный доступ установлен и проверен живым запросом; runtime всё ещё остановлен.
+
 Состояние: 06.11.2026, проверка Railway около 22:46 МСК. Это план и зафиксированное состояние, не подтверждение запуска постоянного сервиса.
 
 ## Цель и решение владельца
@@ -116,3 +118,91 @@ Project token даёт постоянный доступ в пределах э�
 Предыдущее automatic railway_accept_deploy rejection сохраняется отдельно: «Cancelled — the user did not approve this action. No changes were made». Создание credential не снимает этот отказ и не разрешает эквивалентный effect через UI/CLI/Ops. Release/source/native/journal/protocol gates из плана остаются; сервис и полный спринт не приняты.
 
 Никаких Railway mutations, изменения compute/timer/resources или runtime journal, нового upload/replay, Gate/AQUB действий не было. Старый failed ID9d94bcf3-9a28-4014-93d5-ce8e5d259c7d не сбрасывался; содержимое остановленного runtime journal в этом спринте не читалось. Активных исполняющихся jobs нет; новый диагностический run завершён. Настройка Environment сохранена, форма token остаётся только предложением.
+
+## Текущий указатель: 07.11.2026, 00:01 МСК
+
+**Спринт1: PROJECT_ACCESS_READY / LIVE_SCOPE_OBSERVED; постоянный сервис НЕ запущен.**
+Предыдущий checkpoint ожидания токена заменён: владелец подтвердил конкретное создание/сохранение и поручил упростить маршрут. Ровно один служебный project/environment token ops-n8n-upload-pilot-434 создан и сохранён как N8N_UPLOAD_RAILWAY_PROJECT_TOKEN в Environment n8n-upload-readonly (main-only). UI подтвердил наличие secret; значение не выводилось в переписку/исходники/логи, clipboard и временные browser-переменные очищены. Дополнительных source-access App keys, repository-sharing изменений и новых OAuth-подключений не создавалось. Новые Work используют существующий n8n OAuth; GitHub App остаётся прежним.
+
+### Установленный простой read route
+
+Вместо зависимости от скачивания приватного Ops action установлен один project-owned workflow Automations. Первый job без Railway secret проверяет owner/main/issue1/source/original fresh comment; второй получает уже сохранённый project token и делает один фиксированный READ. Reader/profile — побайтовая копия рассмотренного immutable Ops source, оба SHA256 и commit закреплены до импорта. Это отдельный ограниченный read profile, не включение старых mutation releases.
+
+- Ops PR436 merged: https://github.com/markmalina/ops/pull/436
+- Рассмотренный source: https://github.com/markmalina/ops/commit/6e8598bddf7b33a9cda65efab878fff994048176
+- Ops main merge: https://github.com/markmalina/ops/commit/e2b0a2851fb15fd204a43d6951859dcfa0f0965e
+- Automations PR7 merged: https://github.com/markmalina/automations/pull/7
+- Client source: https://github.com/markmalina/automations/commit/ee2b9cc45dbb4ffac67ac0016e9017158e4bdbbc
+- Client main merge: https://github.com/markmalina/automations/commit/ea0e3a89d801971fdbb297b2cafeed3e969ac5de
+- Полные base trees сохранены: центрально4добавленных файла, клиент7добавленных; удалений нет. Все11файлов перечитаны по exact commits и совпали; ключевые merged файлы повторно сверены.
+- Helper SHA256f825b933429bece9472315d485234cc218fa6438af33b74a7422ed84d4d95aab; profile SHA256e024d2e7987bee01624cfca60ae56483c65f0b759cc9ba77919e7b84de2018cd.
+- Независимый source review ACCEPT:37/37PASS (18helper,12source pin,7independent). Центральная адаптация18PASS — те же helper cases, не дополнительные18. Дополнительный фактический CLI клиента: offline admission PASS,0 provider requests,0600receipt,передача source provenance.
+- Найден и исправлен broadcatch: сбой после provider read больше не подменяет результат ложным providerRead:false; ранняя квитанция сохраняется. Независимый regression PASS на исправлении и FAIL на реконструированном прежнем catch.
+- Source CI SUCCESS https://github.com/markmalina/ops/actions/runs/42292434870 и Security SUCCESS https://github.com/markmalina/ops/actions/runs/42292434784 .
+- Main CI SUCCESS https://github.com/markmalina/ops/actions/runs/42292679918 и Security SUCCESS https://github.com/markmalina/ops/actions/runs/42292679642 .
+- Source CI:2609Node testsPASS,0FAIL;2property testsPASS. Build/dependencies/licenses/secrets/action checks успешны. Это не runtime-приёмка.
+
+### Живая проверка доступа
+
+Команда https://github.com/markmalina/automations/issues/1#issuecomment-6695364833 запустила
+https://github.com/markmalina/automations/actions/runs/42292745553 .
+Attempt1, actor/triggeringActor23397294, exact client main ea0e3a89d801971fdbb297b2cafeed3e969ac5de.
+Admission job128150106876 SUCCESS; inspect job128150238198 SUCCESS; весь runSUCCESS. Выполнен ровно1provider request, HTTP200; точный project/environment/service tuple совпал, scopeAccepted=true, mutationCount=0. Такой доступ действительно существует в проектном workflow, а не только в отдельном ChatGPT Railway connector.
+
+Квитанция из authenticated job log:
+```json
+{
+  "schemaVersion": "agent-ops.n8n-scope/v1",
+  "targetId": "n8n-upload-scope-read-v1",
+  "target": {
+    "projectId": "69cc90c9-7ede-4a57-bc03-f3e63f01cca3",
+    "environmentId": "369d5bb9-5107-4e39-89d8-668b9b59e230",
+    "serviceId": "2425a11a-90bd-47fe-9c5b-03ad96ee7a74"
+  },
+  "repository": "markmalina/automations",
+  "result": "OBSERVED_NOT_ACCEPTED",
+  "errorCode": "E_LIVE_ACCEPTANCE_PENDING",
+  "centralRepository": "markmalina/ops",
+  "centralCommit": "6e8598bddf7b33a9cda65efab878fff994048176",
+  "helperSha256": "f825b933429bece9472315d485234cc218fa6438af33b74a7422ed84d4d95aab",
+  "profileSha256": "e024d2e7987bee01624cfca60ae56483c65f0b759cc9ba77919e7b84de2018cd",
+  "allowed": false,
+  "observedAt": 1793998709158,
+  "clientCommit": "ea0e3a89d801971fdbb297b2cafeed3e969ac5de",
+  "workflowRef": "markmalina/automations/.github/workflows/ops-n8n-inspect.yml@refs/heads/main",
+  "runId": "42292745553",
+  "commentId": "6695364833",
+  "providerRead": true,
+  "providerRequestAttempts": 1,
+  "providerHttpStatus": 200,
+  "providerErrorCodes": [],
+  "providerValidationFields": [],
+  "mutationCount": 0,
+  "scopeAccepted": true,
+  "nativeCapabilityAccepted": false,
+  "deploymentId": "d7469a53-374f-4c5f-a5d8-beed4c086847",
+  "deploymentStatus": "SUCCESS",
+  "deploymentStopped": true,
+  "availableDiskBytes": null,
+  "persistent": null,
+  "journalPreserved": null
+}
+```
+
+Observation artifact13539309995,922bytes, SHA256354a0eb4354fdea8143a1eee4afe7636ce338fbe7de8bcffdc850281f5fabf39.
+Admission artifact13540841387,868bytes, SHA25653a560e5f8e42f65f223d2735f031a40a4d55342182be8196e56cb2ab5341617.
+Artifact metadata/run/source/digest сверены с job log; архивы в этом ходе не скачивались. JSON квитанции сохранён здесь для долговременной фиксации после срока хранения Actions.
+
+### Что ещё мешает постоянному запуску
+
+- Живой scope-read вернул deploymentStopped=true для старого d7469a53-374f-4c5f-a5d8-beed4c086847. Свежий connector read около23:58МСК подтвердил running0/total1, прежний patch0bfc3cd0-278a-4e41-b1f1-7df8cb385602STAGED. Сервис не восстановлен.
+- Прежний automatic railway_accept_deploy refusal остаётся отдельным внешним запретом на effect: «Cancelled — the user did not approve this action. No changes were made». Владелец ранее прямо запретил обходить его эквивалентным действием через UI/CLI/Ops. Новый token/read route не снимает этот отказ; повторное общее разрешение у владельца не запрашивается.
+- Инженерная часть write route также не завершена: старый Ops435 apply engine/release OFF; authenticated planner/approval/control/observer не установлены, source/protocol/native/journal acceptance остаются непринятыми. Старый adapter отвергает текущий pending patch. Принятие scope не подменяет эти проверки и не означает, что достаточно поменять enabled.
+- Следующее применение должно иметь один допустимый точный effect и согласованный source/patch; до разрешения предыдущего отказа выполнить живое применение нельзя. Подготовленный read workflow принципиально не умеет выполнять его.
+- После допустимого применения обязательны actual running/source/persistent/disk/journal evidence, one-file/readback/replay и дальнейшие спринты. Никакой новой пользовательской выгрузки в этом ходе не было.
+
+Railway Deploy/patch/compute/timer/resources и runtime journal этим ходом не менялись. Старый failedID9d94bcf3-9a28-4014-93d5-ce8e5d259c7d не сбрасывался; содержимое остановленного runtime journal сейчас не читалось. Gate/AQUB и их credentials не затронуты. Старые PR435/3/4/5 не объединены.
+
+Все запущенные CI/Security/read jobs завершены; активных субагентов нет. В текущем ходе12исполненных jobs, суммарная наблюдаемая job duration319секунд (5мин19с); это не billed minutes. Автоматические проверки после merge учтены отдельно от PR head, rerun не выполнялись; неприменимые issue handlersSKIPPED не считаются исполненными. Фактическое списание/provider usage/денежная оценка нового и накопленного расхода unknown, не0. Чистая runner queue unknown.
+
+ДАЛЬШЕ: я — довести единственный допустимый write-контракт Ops после разрешения прежнего отказа эффекта и выполнить восстановление с живой приёмкой. Новые постоянные токены для каждого Work не требуются; полный спринт1 остаётся открытым.
