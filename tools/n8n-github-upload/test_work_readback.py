@@ -24,6 +24,93 @@ TARGET = {"repositoryId": 1448151721, "repository": "markmalina/automations",
           "branch": "main", "prefix": "данные с пробелом"}
 
 
+class DeadlineLines:
+    """Test stdout reader: only OS reads, with an explicit bounded line buffer."""
+    def __init__(self, descriptor, wait=select.select, clock=time.monotonic):
+        self.descriptor, self.wait, self.clock = descriptor, wait, clock
+        self.pending = bytearray()
+
+    def readline(self, timeout=3):
+        deadline = self.clock() + timeout
+        while b"\n" not in self.pending:
+            remaining = deadline - self.clock()
+            if remaining <= 0 or not self.wait([self.descriptor], [], [], remaining)[0]:
+                raise AssertionError("protocol deadline")
+            chunk = os.read(self.descriptor, 65536)
+            if not chunk:
+                raise AssertionError("protocol EOF before complete line")
+            self.pending.extend(chunk)
+            if len(self.pending) > 65536:
+                raise AssertionError("protocol stdout size")
+        line, _, rest = self.pending.partition(b"\n")
+        self.pending = bytearray(rest)
+        return bytes(line) + b"\n"
+
+
+class StdoutReaderTests(unittest.TestCase):
+    def setUp(self):
+        self.read, self.write = os.pipe()
+        self.addCleanup(os.close, self.read)
+        self.addCleanup(os.close, self.write)
+
+    def test_coalesced_ready_and_request_consumed_without_second_select(self):
+        # One atomic write, writer stays open: OS readiness must be empty after
+        # the first read, while REQUEST remains in the reader's own line buffer.
+        os.write(self.write, b"READY_FOR_GRANT\nREADBACK_REQUEST {}\n")
+        waits = []
+        def wait(*args):
+            waits.append(args[-1])
+            self.assertEqual(len(waits), 1, "select called despite an already buffered complete line")
+            return select.select(*args)
+        reader = DeadlineLines(self.read, wait=wait)
+        self.assertEqual(reader.readline(), b"READY_FOR_GRANT\n")
+        self.assertFalse(select.select([self.read], [], [], 0)[0])
+        self.assertEqual(reader.readline(), b"READBACK_REQUEST {}\n")
+        self.assertEqual(len(waits), 1)
+
+    def test_partial_line_then_tail_and_next_line_share_original_deadline(self):
+        os.write(self.write, b"READBACK_REQ")
+        waits = []
+        ticks = iter([10, 10, 11, 11])
+        def wait(*args):
+            waits.append(args[-1])
+            if len(waits) == 2:
+                # The tail is released only after the prefix has been consumed.
+                # This is deterministic scheduling, without sleeps or threads.
+                os.write(self.write, b"UEST {}\nREADBACK_RESULT {}\n")
+            return select.select(*args)
+        reader = DeadlineLines(self.read, wait=wait, clock=lambda: next(ticks))
+        self.assertEqual(reader.readline(), b"READBACK_REQUEST {}\n")
+        self.assertEqual(waits, [3, 2])
+        self.assertEqual(reader.readline(), b"READBACK_RESULT {}\n")
+        self.assertEqual(len(waits), 2)
+
+    def test_partial_line_does_not_reset_deadline(self):
+        os.write(self.write, b"READBACK_REQ")
+        waits = []
+        ticks = iter([10, 10, 12.5])
+        def wait(*args):
+            waits.append(args[-1])
+            return select.select(*args) if len(waits) == 1 else ([], [], [])
+        reader = DeadlineLines(self.read, wait=wait, clock=lambda: next(ticks))
+        with self.assertRaisesRegex(AssertionError, "protocol deadline"):
+            reader.readline()
+        self.assertEqual(waits, [3, 0.5])
+
+    def test_partial_line_eof_is_not_a_complete_protocol_line(self):
+        # A separate pipe allows closing its writer without changing addCleanup.
+        read, write = os.pipe()
+        try:
+            os.write(write, b"READBACK_REQ")
+        finally:
+            os.close(write)
+        try:
+            with self.assertRaisesRegex(AssertionError, "protocol EOF"):
+                DeadlineLines(read).readline()
+        finally:
+            os.close(read)
+
+
 def blob_sha(raw):
     return hashlib.sha1(b"blob " + str(len(raw)).encode() + b"\0" + raw).hexdigest()
 
@@ -242,9 +329,9 @@ class ReadbackTests(unittest.TestCase):
             process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         captured = bytearray()
         try:
+            lines = DeadlineLines(process.stdout.fileno())
             for _ in range(12):
-                self.assertTrue(select.select([process.stdout], [], [], 3)[0], "protocol deadline")
-                line = process.stdout.readline()
+                line = lines.readline()
                 captured.extend(line)
                 if line.startswith(b"READBACK_REQUEST "):
                     request = json.loads(line[len(b"READBACK_REQUEST "):])

@@ -1,6 +1,6 @@
 # S2.A / №10 — exact-commit readback, готово к приёмке
 
-Дата подготовки: 07.11.2026, 13:50 МСК.  
+Дата подготовки: 07.11.2026, 13:50 МСК; обновление R1 — 14:08 МСК.  
 Задача: https://github.com/markmalina/automations/issues/10  
 Регламент: https://github.com/markmalina/ai/blob/main/WORK-RULES.md  
 Передача: https://github.com/markmalina/automations/blob/ad155965a73b4f4e768d7323112c46f32127ebf3/docs/handoffs/S2A-WORK-READBACK-2026-11-07.md
@@ -87,9 +87,9 @@ permissions или смены транспорта по догадке.
 ## A2 — локальные проверки и self-review
 
 Финальная локальная версия: Python3.12.14, Node24.22.1.
-- python -m unittest -q test_work_readback.py: **20 PASS**.
+- python -m unittest -v test_work_readback.py: **24 PASS** (20 исходных +4 R1).
 - python -m unittest discover -s tools/n8n-github-upload -p 'test_*.py' -q:
-  **60 PASS** (40 прежних +20 новых), 0 fail.
+  **64 PASS** (40 прежних +24 readback), 0 fail.
 - python -m py_compile work_readback.py и node --check WORK_READBACK_BRIDGE.js:
   PASS.
 - Реальные локальные pipe и PTY прогнаны против fake transport. Echo-off handshake
@@ -104,6 +104,47 @@ permissions или смены транспорта по догадке.
   входные JSON переведены на существующий safe ordinary-file opener, добавлены
   две проверки. Также driver проверяет UTF8 byte budget и terminal exit helper.
   Это собственный разбор, не независимое review.
+
+
+### Исправление R1 после проверки контроллера
+
+Замечание:
+https://github.com/markmalina/automations/pull/11#issuecomment-6705972062 .
+Контроллер воспроизвёл ложный timeout test harness на прежнем head
+8098cfcfe131d4f43bd1f469f429bd78eecfda76. Причина — select перед readline
+буферизованного stdout: REQUEST уже находился в Python-буфере после чтения
+READY, хотя OS fd больше не был readable. Это не установленный сбой verifier.
+
+В test_work_readback.py добавлен только тестовый DeadlineLines:
+os.read читает OS descriptor, явный byte buffer сначала отдаёт готовые строки,
+select ждёт только при отсутствии полного newline. Частичная строка сохраняется,
+remaining считается от одного deadline на всю строку и не сбрасывается при
+поступлении очередного фрагмента. Сохраняется прежний 3s deadline; buffer
+ограничен65536bytes, EOF без newline отклоняется. Popen stdin/буферизация не
+менялись; stdout Python reader больше не используется для чтения.
+
+Четыре детерминированные regression:
+- READY и REQUEST записаны одним os.write в реальный pipe, writer остаётся
+  открытым. После первой строки OS fd пуст; вторая возвращается из явного
+  буфера без второго select.
+- Prefix частичной строки записан до чтения; tail + следующая строка
+  выпускаются только на втором вызове wait. Проверяется целая строка,
+  сохранение остатка и remaining3s→2s от исходного deadline.
+- Неоконченный prefix не обновляет deadline: remaining3s→0.5s, затем отказ.
+- EOF после prefix не принимается за полную protocol line.
+
+Контроль регрессии: подстановка прежнего алгоритма select + buffered readline
+в новый coalesced regression детерминированно даёт ожидаемый FAIL
+«select called despite an already buffered complete line». С исправленным
+reader все24 readback теста и полный64-test discovery PASS. Sleep/retry,
+увеличение timeout или ослабление canary/no-echo/termios/cleanup не добавлялись.
+Реальные pipe/PTY тесты продолжают проверять защитные свойства и report0600.
+
+В исправлении меняются только этот тестовый файл и отчёт. Product verifier,
+code-mode bridge, WORK_CLIENT.md, work_upload.py и все S1/server blobs неизменны.
+Отдельный публичный smoke не повторялся: исполняемые product bytes не менялись.
+Исторический CI42365732052 остаётся доказательством только прежнего head;
+один необходимый новый CI для R1 фиксируется после завершения в №10.
 
 Новый hosted CI должен быть ровно один на подготовленном PR head. Его actual
 run/status публикуется в итоговом комментарии №10 после чтения terminal result;
@@ -144,7 +185,7 @@ upload→readback после n8n. Эти критерии остаются PENDI
 | --- | --- |
 | work_readback.py | 931d3f88e40130fff40a7925111cc84c2e811fd80327ed349f285fb2b5d6aa95 |
 | WORK_READBACK_BRIDGE.js | 72d7b720f604cf4c500863b564aa2fe5366f7f53c3b7ad6d800098c5c9fb19bd |
-| test_work_readback.py | 234d96c23d0a6397b60449d01081ca205ca8aead22ffbe49cd12f70ae30ea9ef |
+| test_work_readback.py | 6e73109bc351a03983228ef887d0f52d81ce238ef267f1ca3dbda3cdadab8af7 |
 | WORK_CLIENT.md | b78664dae15be8c9a3b01473b74b584500c436053c7e755a5e13b9624fdff55a |
 | work_upload.py | bd18630daef9ca5f4e925dd1ccf8474e8696bff6f692afaec7fc9b978439c515 |
 
