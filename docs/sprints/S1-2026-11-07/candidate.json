@@ -1,0 +1,123 @@
+{
+  "schemaVersion": "automations.s1-candidate/v1",
+  "status": "PREPARED_NOT_STAGED_NOT_DEPLOYED",
+  "issue": 9,
+  "sourceCommit": "2e7643bd805840f5ddba4d9836a8caf8fc6f508d",
+  "acceptedRuntimeMerge": "ce9c5150368434436ecafedcdbe9f5f1da87bc47",
+  "target": {
+    "projectId": "69cc90c9-7ede-4a57-bc03-f3e63f01cca3",
+    "environmentId": "369d5bb9-5107-4e39-89d8-668b9b59e230",
+    "serviceId": "2425a11a-90bd-47fe-9c5b-03ad96ee7a74"
+  },
+  "expectedPatch": {
+    "id": "0bfc3cd0-278a-4e41-b1f1-7df8cb385602",
+    "status": "STAGED",
+    "changeCount": 6,
+    "updatedAt": "2026-11-06T15:48:28.606Z",
+    "variableBytesReadable": false
+  },
+  "sourceFiles": [
+    {
+      "path": "tools/n8n-github-upload/pilot-bootstrap.cjs",
+      "sha256": "1ab2b0cf3397117ebb857b760253034db5449c2d21ed76a66915d5f94ff4d45b",
+      "gitBlob": "25e32a647cf36f7b0c936f629b379a2964bc5d16"
+    },
+    {
+      "path": "tools/n8n-github-upload/upload-ledger.cjs",
+      "sha256": "81a4b3af7a15fe165fb7ca41b73dd228eb2ec57826b422064f2f40dc974f4401",
+      "gitBlob": "98b8a2179a36c7543b25f19df2f3515cd6dee94a"
+    },
+    {
+      "path": "tools/n8n-github-upload/upload-grant.workflow.json",
+      "sha256": "8bf95f9e993e4ff494ad3cf90e86e694194366cb18c85496ec4e3abba9b3ff43",
+      "gitBlob": "fda4b735c20480fefb5b92e51d23f9052033cad5"
+    },
+    {
+      "path": "tools/n8n-github-upload/owner-repository-upload.workflow.json",
+      "sha256": "ae983561ed594a4fe0971c5b8b6be3a16eb87ac40311883d5ee7f34ed55a9c18",
+      "gitBlob": "09ef4e90e22a24af51c017c6d1aa8e750c75e3f1"
+    }
+  ],
+  "variables": {
+    "PILOT_BOOTSTRAP_B64": {
+      "valueFrom": {
+        "ref": "2e7643bd805840f5ddba4d9836a8caf8fc6f508d",
+        "path": "tools/n8n-github-upload/pilot-bootstrap.cjs",
+        "sha256": "1ab2b0cf3397117ebb857b760253034db5449c2d21ed76a66915d5f94ff4d45b",
+        "encoding": "base64"
+      }
+    },
+    "PILOT_LEDGER_B64": {
+      "valueFrom": {
+        "ref": "2e7643bd805840f5ddba4d9836a8caf8fc6f508d",
+        "path": "tools/n8n-github-upload/upload-ledger.cjs",
+        "sha256": "81a4b3af7a15fe165fb7ca41b73dd228eb2ec57826b422064f2f40dc974f4401",
+        "encoding": "base64"
+      }
+    },
+    "UPLOAD_SERVICE_MODE": {
+      "value": "persistent"
+    },
+    "UPLOAD_PRUNE_FAILED_TEMP_DIRS": {
+      "value": "[\".n8n-clone-16b4d4c47d6b593ddfcb6b82\"]"
+    }
+  },
+  "deploy": {
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 3
+  },
+  "preserve": {
+    "image": "docker.n8n.io/n8nio/n8n:2.46.6",
+    "startCommand": "node -e 'eval(Buffer.from(process.env.PILOT_BOOTSTRAP_B64,\"base64\").toString())'",
+    "healthcheckPath": "/healthz",
+    "limits": {
+      "cpu": 0.5,
+      "memoryBytes": 1000000000
+    },
+    "volume": {
+      "id": "cdfc9da6-bc0d-4d5d-aa0d-fc5d26a95ea0",
+      "mountPath": "/data",
+      "sizeMB": 1024
+    },
+    "hostname": "n8n-upload-pilot.up.railway.app",
+    "workflowIds": [
+      "workUploadGrantPilot",
+      "workOwnerRepositoryUploadV1"
+    ],
+    "failedUploadId": "9d94bcf3-9a28-4014-93d5-ce8e5d259c7d"
+  },
+  "admission": {
+    "status": "BLOCKED",
+    "originalAction": "railway_accept_deploy",
+    "lastReportedError": "Cancelled — the user did not approve this action. No changes were made.",
+    "lastReportedCode": "INVALID_ARGUMENT",
+    "newAttemptThisExecution": false,
+    "operationId": null,
+    "permission": "ask_before_writes already set; no evidence refusal resolved",
+    "retryRequires": "Verified admission correction or an actual applicable admission through the original mechanism, followed by fresh exact-patch review; no equivalent alternate interface."
+  },
+  "preApply": [
+    "Re-read main, issue 9, live service and exact pending patch; stop for changed/foreign work.",
+    "Fetch source bytes by sourceCommit and validate all listed hashes before Base64 encoding; generated workflows are embedded in bootstrap.",
+    "Resolve original admission blocker before provider mutation. No unstaged/immediate deploy.",
+    "Adopt/replace the four candidate variables in the same existing patch; retain explicit restart ON_FAILURE/3. Do not delete/reset the patch.",
+    "Read back and review only six candidate fields on exact existing service; no extra resource/shared/network/credential changes. OAuth variable values are redacted, so do not claim pending-byte verification unless separately measured.",
+    "Commit once through the original accept_deploy only with effective admission."
+  ],
+  "rollback": {
+    "status": "PREPARED_FAIL_CLOSED_NOT_EXECUTED",
+    "reason": "Legacy d1abb311 source does not enforce V2 target-bound grants. It is not an approved online rollback after universal grants exist.",
+    "source": "Retain the exact universal bootstrap and ledger hashes above and all SQLite/volume bytes.",
+    "emergencyStop": {
+      "variables": {
+        "UPLOAD_SERVICE_MODE": "pilot",
+        "PILOT_DEADLINE_MS": "0"
+      },
+      "deploy": {
+        "restartPolicyType": "NEVER"
+      }
+    },
+    "admission": "Every change still requires original permission/admission; do not use rollback as an alternative deploy path.",
+    "resume": "Restore candidate persistent mode and restart policy with same compatible source; never restore a pre-migration DB over live rows."
+  }
+}
