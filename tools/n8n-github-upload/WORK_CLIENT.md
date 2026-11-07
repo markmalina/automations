@@ -5,6 +5,14 @@
 напрямую HTTPS multipart; в upload-вызове MCP передаётся только метаинформация.
 Независимый readback получает bytes через GitHub MCP программно, без вывода в модель.
 
+Multipart содержит текстовое поле `manifest` без собственного `Content-Type` и
+без filename. Его значение — прежний canonical UTF-8 JSON; digest и grant binding
+не меняются. n8n2.46.6/formidable классифицирует часть с MIME type как файл,
+поэтому `application/json` здесь недопустим. Части `file0`, `file1`, … сохраняют
+`application/octet-stream` и передают исходные binary bytes. Регрессия
+`test_work_multipart.py` захватывает запрос самого `upload()`; она не заменяет
+отдельный запуск native parser и live-приёмку.
+
 1. Work определяет назначенный репозиторий `markmalina/name`, его числовой ID,
    существующую ветку и относительный `prefix` (может быть пустым). В
    `target.json` записываются ровно `repositoryId`, `repository`, `branch`,
