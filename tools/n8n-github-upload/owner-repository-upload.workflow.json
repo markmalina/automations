@@ -218,7 +218,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({repository_ids:[$('Prepare upload').first().json.target.repositoryId],permissions:{contents:'write'}}) }}"
+        "jsonBody": "={{ JSON.stringify({repository_ids:[$('Prepare upload').first().json.target.repositoryId],permissions:{contents:'write'} }) }}"
       },
       "retryOnFail": false
     },

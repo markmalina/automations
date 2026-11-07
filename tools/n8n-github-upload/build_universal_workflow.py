@@ -57,7 +57,7 @@ const canonical=v=>Array.isArray(v)?'['+v.map(canonical).join(',')+']':v&&typeof
 if(canonical(r.target)!==canonical(p.target)||r.id!==p.manifest.uploadId||!/^[a-f0-9]{64}$/.test(r.digest))throw Error('E_TARGET_BINDING');
 if(r.route==='verify'&&!/^[a-f0-9]{40}$/.test(r.commitSha||''))throw Error('E_COMMIT');return [{json:r}];''')
 node('Sign GitHub App JWT','jwt',{'operation':'sign','useJson':True,'claimsJson':"={{ JSON.stringify({iss:'5641721',iat:Math.floor(Date.now()/1000)-30,exp:Math.floor(Date.now()/1000)+300}) }}",'options':{}},1,credentials={'jwtAuth':{'id':'workPilotGithubJwt','name':'GitHub App signing key'}})
-http('Issue installation token','https://api.github.com/app/installations/179245428/access_tokens','POST',"={{ JSON.stringify({repository_ids:[$('Prepare upload').first().json.target.repositoryId],permissions:{contents:'write'}}) }}",jwt=True)
+http('Issue installation token','https://api.github.com/app/installations/179245428/access_tokens','POST',"={{ JSON.stringify({repository_ids:[$('Prepare upload').first().json.target.repositoryId],permissions:{contents:'write'} }) }}",jwt=True)
 code('Validate installation scope',r'''const r=$json,t=$('Prepare upload').first().json.target;
 if(typeof r.token!=='string'||r.token.length<20||r.token.length>512||/\s/.test(r.token)||!Array.isArray(r.repositories)||r.repositories.length!==1||r.repositories[0].id!==t.repositoryId||r.repositories[0].full_name!==t.repository||!r.permissions||r.permissions.contents!=='write'||Object.entries(r.permissions).some(([k,v])=>!(k==='contents'&&v==='write'||k==='metadata'&&v==='read')))throw Error('E_INSTALLATION_SCOPE');
 return [{json:{repositoryId:t.repositoryId}}];''')
