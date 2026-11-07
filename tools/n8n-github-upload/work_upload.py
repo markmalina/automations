@@ -365,8 +365,9 @@ def upload(bundle, grant, connection_factory=None, now=None):
                 fail("E_SOURCE_CHANGED")
             handles[item["field"]] = handle
         boundary = "workn8n-" + secrets.token_hex(24)
-        lead = ("--" + boundary + '\r\nContent-Disposition: form-data; name="manifest"\r\n'
-                'Content-Type: application/json\r\n\r\n').encode() + canonical(manifest) + b"\r\n"
+        # A multipart text field must have no per-part MIME type: n8n's
+        # formidable parser classifies any part with a MIME type as a file.
+        lead = ("--" + boundary + '\r\nContent-Disposition: form-data; name="manifest"\r\n\r\n').encode() + canonical(manifest) + b"\r\n"
         prefixes = [(f, ("--" + boundary + '\r\nContent-Disposition: form-data; name="' + f["field"] +
                         '"; filename="' + f["field"] + '.bin"\r\nContent-Type: application/octet-stream\r\n\r\n').encode())
                     for f in manifest["files"]]
