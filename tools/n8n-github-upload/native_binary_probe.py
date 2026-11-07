@@ -42,6 +42,28 @@ def fixture_payloads(case):
     raise ValueError('unknown fixture case')
 
 
+def published_snapshot(db_path, workflow, expected_version=None):
+    deadline = time.monotonic() + 15
+    while time.monotonic() < deadline:
+        with sqlite3.connect(db_path) as db:
+            row = db.execute('SELECT e.activeVersionId,p.publishedVersionId FROM workflow_entity e JOIN workflow_published_version p ON e.id=p.workflowId WHERE e.id=?', ('workOwnerRepositoryUploadV1',)).fetchone()
+            if row and row[0] == row[1]:
+                assert expected_version is None or row[0] == expected_version, 'E_RESTART_VERSION'
+                snapshot = db.execute('SELECT nodes FROM workflow_history WHERE versionId=?', (row[0],)).fetchone()
+                assert snapshot and json.loads(snapshot[0]) == workflow['nodes'], 'E_SNAPSHOT_BYTES'
+                return row[0]
+        time.sleep(0.3)
+    raise RuntimeError('E_PUBLISHED_SNAPSHOT')
+
+
+def ledger_evidence(path, upload_id):
+    with sqlite3.connect(path.as_uri() + '?mode=ro', uri=True) as db:
+        row = db.execute('SELECT state,commit_sha,receipt FROM uploads WHERE id=?', (upload_id,)).fetchone()
+    assert row and row[0] == 'confirmed' and row[1] and row[2], 'E_LEDGER_RECEIPT'
+    return dict(state=row[0], receiptSha256=hashlib.sha256(row[2].encode()).hexdigest(),
+                commitSha=row[1], inode=path.stat().st_ino)
+
+
 class Fixture:
     def __init__(self, payloads=None):
         self.payloads = fixture_payloads('small') if payloads is None else payloads
@@ -123,7 +145,8 @@ class Fixture:
         return Handler
 
 
-def run(root, case='small'):
+def run(root, case='small', restart_before_replay=False):
+    assert not restart_before_replay or case == 'small', 'E_RESTART_CASE'
     started = time.monotonic()
     payloads = fixture_payloads(case)
     source, runtime = root / 'source', root / 'runtime'
@@ -227,19 +250,8 @@ def run(root, case='small'):
         command('publish:workflow', '--id=workOwnerRepositoryUploadV1')
         start()
         db_path = next(runtime.rglob('database.sqlite'))
-        deadline = time.monotonic() + 15
-        while time.monotonic() < deadline:
-            with sqlite3.connect(db_path) as db:
-                row = db.execute('SELECT e.activeVersionId,p.publishedVersionId FROM workflow_entity e JOIN workflow_published_version p ON e.id=p.workflowId WHERE e.id=?', ('workOwnerRepositoryUploadV1',)).fetchone()
-                if row and row[0] == row[1]:
-                    result['publishedVersion'] = row[0]
-                    snapshot = db.execute('SELECT nodes FROM workflow_history WHERE versionId=?', (row[0],)).fetchone()
-                    assert snapshot and json.loads(snapshot[0]) == workflow['nodes'], 'E_SNAPSHOT_BYTES'
-                    result['publishedNodesExact'] = True
-                    break
-            time.sleep(0.3)
-        else:
-            raise RuntimeError('E_PUBLISHED_SNAPSHOT')
+        result['publishedVersion'] = published_snapshot(db_path, workflow)
+        result['publishedNodesExact'] = True
         result['phase'] = 'native-binary'
         mappings = []
         for name, payload in payloads.items():
@@ -257,6 +269,51 @@ def run(root, case='small'):
         receipt = w.upload(bundle, grant, connection_factory=factory)
         result['firstRequestSeconds'] = round(time.monotonic() - request_started, 3)
         assert time.monotonic() - started < 300, 'E_REPLAY_BUDGET'
+        if restart_before_replay:
+            result['phase'] = 'restart-before-replay'
+            assert fixture.commit_writes == fixture.ref_writes == 1 and fixture.errors == 0, 'E_FIRST_COUNTS'
+            for name, payload in payloads.items():
+                entry = next(x for x in fixture.tree if x['path'] == 'fixtures/' + name)
+                raw = fixture.blobs[entry['sha']]
+                manifest = next(x for x in bundle['manifest']['files'] if x['path'] == name)
+                assert raw == payload and git_sha('blob', raw) == entry['sha'], 'E_REMOTE_BLOB'
+                assert len(raw) == manifest['bytes'] and hashlib.sha256(raw).hexdigest() == manifest['sha256'], 'E_REMOTE_BYTES'
+            first_deadline = time.monotonic() + 5
+            while True:
+                with sqlite3.connect(db_path) as db:
+                    first = db.execute('SELECT status,workflowVersionId FROM execution_entity WHERE workflowId=?', ('workOwnerRepositoryUploadV1',)).fetchall()
+                if first == [('success', result['publishedVersion'])] or time.monotonic() >= first_deadline:
+                    break
+                time.sleep(0.2)
+            assert first == [('success', result['publishedVersion'])], 'E_FIRST_EXECUTION'
+            result['firstExecutionBeforeStop'] = dict(status=first[0][0], versionId=first[0][1])
+            ledger_path = runtime / 'ledger' / 'uploads.sqlite'
+            before = ledger_evidence(ledger_path, bundle['manifest']['uploadId'])
+            assert before['commitSha'] == receipt['commitSha'], 'E_LEDGER_COMMIT'
+            old_pid, db_inode = proc.pid, db_path.stat().st_ino
+            result['ledgerBeforeRestart'] = before
+            stop()
+            group_deadline = time.monotonic() + 3
+            while True:
+                try:
+                    os.killpg(old_pid, 0)
+                except ProcessLookupError:
+                    break
+                assert time.monotonic() < group_deadline, 'E_OLD_PROCESS_GROUP'
+                time.sleep(0.1)
+            result['oldProcessWaited'] = True
+            result['oldProcessGroupAbsent'] = True
+            start()
+            assert proc.pid != old_pid, 'E_RESTART_PROCESS'
+            assert db_path.stat().st_ino == db_inode, 'E_RESTART_DB'
+            result['restartProcessChanged'] = True
+            result['restartDbInodeUnchanged'] = True
+            result['restartPublishedVersion'] = published_snapshot(db_path, workflow, result['publishedVersion'])
+            after = ledger_evidence(ledger_path, bundle['manifest']['uploadId'])
+            assert before == after, 'E_LEDGER_PERSISTENCE'
+            result['ledgerAfterRestart'] = after
+            result['restartPublishedNodesExact'] = True
+            assert time.monotonic() - started < 300, 'E_REPLAY_BUDGET'
         replay = w.upload(bundle, grant, connection_factory=factory)
         assert receipt['commitSha'] == replay['commitSha'] == fixture.head and replay.get('replayed') is True, 'E_REPLAY'
         assert fixture.commit_writes == fixture.ref_writes == 1 and fixture.errors == 0, 'E_STUB_COUNTS'
@@ -328,5 +385,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--case', choices=['small', 'mass-100-30mb'], default='small')
+    parser.add_argument('--restart-before-replay', action='store_true')
     args = parser.parse_args()
-    run(args.root.resolve(), args.case)
+    run(args.root.resolve(), args.case, args.restart_before_replay)
+
