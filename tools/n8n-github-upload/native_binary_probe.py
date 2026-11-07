@@ -3,6 +3,7 @@
 Run with --root pointing at an isolated installation containing node_modules,
 source/{work_upload.py,upload-ledger.cjs,owner-repository-upload.workflow.json}.
 Only loopback HTTP is used by the test. Runtime data is private and temporary.
+--case mass-100-30mb selects exactly 100 synthetic files / 30,000,000 bytes.
 """
 import argparse
 import base64
@@ -31,8 +32,19 @@ def git_sha(kind, raw):
     return hashlib.sha1(kind.encode() + b' ' + str(len(raw)).encode() + b'\0' + raw).hexdigest()
 
 
+def fixture_payloads(case):
+    if case == 'mass-100-30mb':
+        return {('текст-000.bin' if i == 0 else f'binary-{i:03d}.bin'):
+                (bytes(range(256)) * 1172)[:300000 - 4] + i.to_bytes(4, 'big')
+                for i in range(100)}
+    if case == 'small':
+        return {'binary.bin': b'\x00\xff\x80' + bytes(range(256)), 'текст.txt': 'Тест native binary\n'.encode()}
+    raise ValueError('unknown fixture case')
+
+
 class Fixture:
-    def __init__(self):
+    def __init__(self, payloads=None):
+        self.payloads = fixture_payloads('small') if payloads is None else payloads
         self.blobs, self.tree = {}, []
         self.head, self.tree_sha = 'a' * 40, 'b' * 40
         self.commit_writes = self.ref_writes = self.errors = 0
@@ -69,15 +81,15 @@ class Fixture:
                         elif self.command == 'POST' and suffix == '/git/blobs':
                             assert body['encoding'] == 'base64'
                             raw = base64.b64decode(body['content'], validate=True)
-                            assert len(raw) <= 16384
+                            assert raw in fixture.payloads.values()
                             sha = git_sha('blob', raw)
                             fixture.blobs[sha] = raw
                             result = dict(sha=sha)
                         elif self.command == 'POST' and suffix == '/git/trees':
                             assert body['base_tree'] == 'b' * 40
                             tree = body['tree']
-                            assert len(tree) == 2
-                            assert {x['path'] for x in tree} == {'fixtures/текст.txt', 'fixtures/binary.bin'}
+                            assert len(tree) == len(fixture.payloads)
+                            assert {x['path'] for x in tree} == {'fixtures/' + name for name in fixture.payloads}
                             assert all(x['mode'] == '100644' and x['type'] == 'blob' and x['sha'] in fixture.blobs for x in tree)
                             fixture.tree = tree
                             # Stub object IDs for tree/commit; only blob IDs reproduce real Git objects.
@@ -111,7 +123,9 @@ class Fixture:
         return Handler
 
 
-def run(root):
+def run(root, case='small'):
+    started = time.monotonic()
+    payloads = fixture_payloads(case)
     source, runtime = root / 'source', root / 'runtime'
     runtime.mkdir(mode=0o700)
     sys.path.insert(0, str(source))
@@ -129,7 +143,7 @@ def run(root):
                N8N_RUNNERS_MODE='internal', N8N_SECURE_COOKIE='false', N8N_LOG_LEVEL='warn',
                UPLOAD_LEDGER_DIR=str(runtime / 'ledger'))
     proc = log = server = thread = fixture = None
-    result = dict(outcome='UNAVAILABLE', phase='setup')
+    result = dict(outcome='UNAVAILABLE', phase='setup', fixtureCase=case, fileCount=len(payloads), totalBytes=sum(map(len, payloads.values())))
     def local_http(method, path, body=None):
         conn = http.client.HTTPConnection('127.0.0.1', port, timeout=5)
         try:
@@ -184,7 +198,7 @@ def run(root):
         status, _ = local_http('POST', '/rest/owner/setup', dict(email='fixture@example.invalid', firstName='Native', lastName='Fixture', password='Native-fixture-' + secrets.token_hex(12)))
         assert status == 200, 'E_OWNER_SETUP'
         stop()
-        fixture = Fixture()
+        fixture = Fixture(payloads)
         server = ThreadingHTTPServer(('127.0.0.1', 0), fixture.handler())
         thread = threading.Thread(target=server.serve_forever, daemon=True)
         thread.start()
@@ -227,7 +241,6 @@ def run(root):
         else:
             raise RuntimeError('E_PUBLISHED_SNAPSHOT')
         result['phase'] = 'native-binary'
-        payloads = {'binary.bin': b'\x00\xff\x80' + bytes(range(256)), 'текст.txt': 'Тест native binary\n'.encode()}
         mappings = []
         for name, payload in payloads.items():
             path = runtime / name
@@ -239,8 +252,11 @@ def run(root):
         grant = json.loads(c.stdout)
         def factory(host, **options):
             assert host == w.HOST
-            return http.client.HTTPConnection('127.0.0.1', port, timeout=40)
+            return http.client.HTTPConnection('127.0.0.1', port, timeout=300 if case == 'mass-100-30mb' else 40)
+        request_started = time.monotonic()
         receipt = w.upload(bundle, grant, connection_factory=factory)
+        result['firstRequestSeconds'] = round(time.monotonic() - request_started, 3)
+        assert time.monotonic() - started < 300, 'E_REPLAY_BUDGET'
         replay = w.upload(bundle, grant, connection_factory=factory)
         assert receipt['commitSha'] == replay['commitSha'] == fixture.head and replay.get('replayed') is True, 'E_REPLAY'
         assert fixture.commit_writes == fixture.ref_writes == 1 and fixture.errors == 0, 'E_STUB_COUNTS'
@@ -250,7 +266,7 @@ def run(root):
             manifest = next(x for x in bundle['manifest']['files'] if x['path'] == name)
             assert raw == payload and git_sha('blob', raw) == entry['sha'], 'E_REMOTE_BLOB'
             assert len(raw) == manifest['bytes'] and hashlib.sha256(raw).hexdigest() == manifest['sha256'], 'E_REMOTE_BYTES'
-        result.update(outcome='PASS', filesVerified=2, commitWrites=1, refWrites=1, replayed=True)
+        result.update(outcome='PASS', filesVerified=len(payloads), commitWrites=1, refWrites=1, replayed=True)
     except Exception as exc:
         import traceback
         (runtime / 'probe-exception.log').write_text(traceback.format_exc())
@@ -302,6 +318,7 @@ def run(root):
             server.server_close()
         if thread:
             thread.join(5)
+        result['wallSeconds'] = round(time.monotonic() - started, 3)
         result['processesStopped'] = proc is None and (thread is None or not thread.is_alive())
         (root / 'result.json').write_text(json.dumps(result, indent=2))
         print(json.dumps(result))
@@ -310,4 +327,6 @@ def run(root):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, required=True)
-    run(parser.parse_args().root.resolve())
+    parser.add_argument('--case', choices=['small', 'mass-100-30mb'], default='small')
+    args = parser.parse_args()
+    run(args.root.resolve(), args.case)
