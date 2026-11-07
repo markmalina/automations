@@ -79,6 +79,35 @@ server пометил commit как записанный, но он ещё не 
 100файлов/30МБ. Это проверка клиента, не живая приёмка n8n/GitHub или включение
 постоянного сервиса.
 
+### Сеть Work: inherited proxy и CA
+
+Клиент использует `ssl.create_default_context()` с проверкой цепочки и hostname;
+штатные `SSL_CERT_FILE`/`SSL_CERT_DIR` сохраняются. Отдельный CA, токен или
+отключение TLS для Work не нужны. `REQUESTS_CA_BUNDLE` сам по себе не является
+настройкой Python stdlib: среда должна передавать свой CA штатным SSL способом.
+
+Для фиксированного HTTPS origin выбирается inherited `https_proxy`/`HTTPS_PROXY`,
+затем `all_proxy`/`ALL_PROXY`, если HTTPS proxy отсутствует. Приоритет регистра
+и пустых переменных — стандартный `urllib.request.getproxies_environment`:
+lowercase имеет преимущество. Один `HTTP_PROXY` не применяется к HTTPS.
+`no_proxy`/`NO_PROXY` учитывается по stdlib DNS suffix/host/host:port/`*` правилам,
+без CIDR. Это явное исключение среды; после ошибки proxy прямого fallback нет.
+
+Поддержан только proxy URL `http://host[:port]` (порт по умолчанию80), включая
+IPv6 authority и inherited Basic userinfo. Proxy получает CONNECT к прежнему
+n8n host:443; TLS внутри туннеля проверяет сертификат именно n8n. Basic auth
+передаётся только в CONNECT и не копируется в origin request. TLS-inspecting
+штатный proxy, которому доверяет CA среды, может видеть origin traffic согласно
+сетевой модели Work. Proxy URL/auth/headers не выводить и не передавать в argv.
+`https://` proxy (двойной TLS), SOCKS и URL без scheme не поддержаны:
+`E_PROXY_SCHEME`, без прямой попытки. Некорректный URL — `E_PROXY_CONFIG`,
+непригодный CA context — `E_TLS_CONFIG`; ошибки не содержат исходную конфигурацию.
+Grant, multipart bytes, fixed URL, запрет redirects и прежний UUID сохраняются.
+
+Проверка transport: `python -m unittest -v test_work_transport.py`.
+Офлайн CONNECT/TLS socket substitutes не являются настоящей загрузкой.
+В №15 отдельно записан read-only CONNECT+TLS smoke без origin HTTP request.
+
 
 ## Независимая проверка после upload (S2.A)
 

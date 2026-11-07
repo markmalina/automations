@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Work-side binary transport. No credentials, HTTP server, Git, archive or base64."""
+"""Work-side binary transport. No persistent credentials, HTTP server, Git or archive."""
 import argparse
+import base64
 import contextlib
 import datetime as dt
 import hashlib
@@ -16,6 +17,8 @@ import sys
 import time
 import unicodedata
 import uuid
+from urllib.parse import unquote, urlsplit
+from urllib.request import getproxies_environment, proxy_bypass_environment
 
 URL = "https://n8n-upload-pilot.up.railway.app/webhook/work-owner-repository-upload-v1"
 HOST = "n8n-upload-pilot.up.railway.app"
@@ -39,6 +42,47 @@ class UploadError(Exception):
 
 def fail(code):
     raise UploadError(code)
+
+
+def upload_connection(host, *, timeout, context):
+    """Fixed origin over inherited HTTP CONNECT; never fall back after failure."""
+    if host != HOST or not context.check_hostname or context.verify_mode != ssl.CERT_REQUIRED:
+        fail("E_TLS_CONFIG")
+    proxies = getproxies_environment()
+    if proxy_bypass_environment(HOST + ":443", proxies):
+        return http.client.HTTPSConnection(HOST, timeout=timeout, context=context)
+    proxy = proxies.get("https", proxies.get("all"))
+    if not proxy:
+        return http.client.HTTPSConnection(HOST, timeout=timeout, context=context)
+    try:
+        # urlsplit strips some controls: reject them before parsing.
+        if len(proxy) > 8192 or any(ord(c) <= 32 or ord(c) == 127 for c in proxy):
+            fail("E_PROXY_CONFIG")
+        parsed = urlsplit(proxy)
+        if parsed.scheme.lower() != "http":
+            fail("E_PROXY_SCHEME")
+        if not parsed.hostname or parsed.path not in ("", "/") or parsed.query or parsed.fragment:
+            fail("E_PROXY_CONFIG")
+        port = parsed.port if parsed.port is not None else 80
+        if not 1 <= port <= 65535 or parsed.netloc.endswith(":"):
+            fail("E_PROXY_CONFIG")
+        headers = {}
+        if parsed.username is not None:
+            user = unquote(parsed.username, errors="strict")
+            password = unquote(parsed.password or "", errors="strict")
+            if ":" in user or any(ord(c) < 32 or ord(c) == 127 for c in user + password):
+                fail("E_PROXY_CONFIG")
+            auth = base64.b64encode((user + ":" + password).encode("utf-8")).decode("ascii")
+            headers["Proxy-Authorization"] = "Basic " + auth
+        connection = http.client.HTTPSConnection(parsed.hostname, port, timeout=timeout, context=context)
+        # HTTPSConnection wraps the tunnel with origin SNI and validates its cert.
+        # CONNECT-only headers are never copied into the encrypted origin request.
+        connection.set_tunnel(HOST, 443, headers=headers)
+        return connection
+    except UploadError:
+        raise
+    except (ValueError, UnicodeError, http.client.HTTPException):
+        fail("E_PROXY_CONFIG")
 
 
 def exact(obj, keys, code="E_INPUT"):
@@ -330,8 +374,12 @@ def upload(bundle, grant, connection_factory=None, now=None):
         length = len(lead) + sum(len(header) + f["bytes"] + 2 for f, header in prefixes) + len(end)
         connection = None
         try:
-            factory = connection_factory or http.client.HTTPSConnection
-            connection = factory(HOST, timeout=SOCKET_TIMEOUT_SECONDS, context=ssl.create_default_context())
+            factory = connection_factory or upload_connection
+            try:
+                context = ssl.create_default_context()
+            except (OSError, ValueError):
+                fail("E_TLS_CONFIG")
+            connection = factory(HOST, timeout=SOCKET_TIMEOUT_SECONDS, context=context)
             connection.putrequest("POST", ENDPOINT)
             connection.putheader("Content-Type", "multipart/form-data; boundary=" + boundary)
             connection.putheader("Content-Length", str(length))
