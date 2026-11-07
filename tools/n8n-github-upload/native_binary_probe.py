@@ -128,7 +128,7 @@ def run(root):
                N8N_COMMUNITY_PACKAGES_ENABLED='false', NODES_EXCLUDE='[]', N8N_RUNNERS_ENABLED='true',
                N8N_RUNNERS_MODE='internal', N8N_SECURE_COOKIE='false', N8N_LOG_LEVEL='warn',
                UPLOAD_LEDGER_DIR=str(runtime / 'ledger'))
-    proc = log = server = thread = None
+    proc = log = server = thread = fixture = None
     result = dict(outcome='UNAVAILABLE', phase='setup')
     def local_http(method, path, body=None):
         conn = http.client.HTTPConnection('127.0.0.1', port, timeout=5)
@@ -260,7 +260,11 @@ def run(root):
         elif isinstance(exc, (AssertionError, RuntimeError)) and str(exc).startswith('E_'):
             result['errorCode'] = str(exc)
     finally:
-        stop()
+        if fixture is not None:
+            result['stubCounters'] = dict(commitWrites=fixture.commit_writes, refWrites=fixture.ref_writes, protocolErrors=fixture.errors)
+        # Read execution/version evidence while the DB writer is still alive;
+        # stopped-DB reads were inconsistent in #21/R1. Never relax PASS checks.
+        result['executionMetadataPhase'] = 'before-stop'
         db_files = list(runtime.rglob('database.sqlite'))
         if db_files:
             try:
@@ -292,6 +296,7 @@ def run(root):
                 result['executionMetadataError'] = type(exc).__name__
                 if result['outcome'] == 'PASS':
                     result.update(outcome='UNAVAILABLE', errorCode='E_EXECUTION_METADATA')
+        stop()
         if server:
             server.shutdown()
             server.server_close()

@@ -104,6 +104,15 @@ test('installation token request is restricted to exactly chosen repository and 
  assert.ok(body.includes('repository_ids:'));assert.ok(body.includes('.target.repositoryId'));assert.ok(body.includes("permissions:{contents:'write'}"));
  assert.equal(byName['Issue installation token'].parameters.url,'https://api.github.com/app/installations/179245428/access_tokens');
 });
+test('installation request expression evaluates to exact selected repository and permissions',()=>{
+ const expression=byName['Issue installation token'].parameters.jsonBody;
+ assert.ok(expression.startsWith('={{')&&expression.endsWith('}}'));
+ for(const repositoryId of [91717001,1448151721]){
+  const lookup=name=>{assert.equal(name,'Prepare upload');return {first:()=>({json:{target:{repositoryId}}})};};
+  const body=new Function('$','return ('+expression.slice(3,-2)+');')(lookup);
+  assert.deepEqual(JSON.parse(body),{repository_ids:[repositoryId],permissions:{contents:'write'}});
+ }
+});
 test('foreign/multi-repo/broad-permission token responses and foreign owner are rejected',async()=>{
  const f=await prepared(),target=f.manifest.target;
  const token={token:'test-fixture-token-not-a-secret',permissions:{contents:'write',metadata:'read'},repositories:[{id:target.repositoryId,full_name:target.repository}]};
