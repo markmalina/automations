@@ -81,6 +81,22 @@ def negative_evidence_valid(metadata, version, counters, before, after, native_c
             and isinstance(client_code, str) and re.fullmatch(r'E_UPLOAD_HTTP_[45][0-9]{2}', client_code) is not None)
 
 
+class DropFirstResponseConnection(http.client.HTTPConnection):
+    """Synthetic receive fault: never consumes the first successful body."""
+    def __init__(self, *args, fault_state, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fault_state = fault_state
+
+    def getresponse(self):
+        response = super().getresponse()
+        if response.status == 200 and self.fault_state['dropCount'] == 0:
+            self.fault_state.update(dropCount=1, headersStatus=200, bodyNotRead=True)
+            response.close()
+            self.close()
+            raise ConnectionResetError('synthetic response loss before receipt body')
+        return response
+
+
 class Fixture:
     def __init__(self, payloads=None):
         self.payloads = fixture_payloads('small') if payloads is None else payloads
@@ -163,7 +179,8 @@ class Fixture:
         return Handler
 
 
-def run(root, case='small', restart_before_replay=False, invalid_grant=False):
+def run(root, case='small', restart_before_replay=False, invalid_grant=False, lose_first_response=False):
+    assert not lose_first_response or case == 'small' and not restart_before_replay and not invalid_grant, 'E_RESPONSE_LOSS_CASE'
     assert not invalid_grant or case == 'small' and not restart_before_replay, 'E_NEGATIVE_CASE'
     assert not restart_before_replay or case == 'small', 'E_RESTART_CASE'
     started = time.monotonic()
@@ -281,8 +298,14 @@ def run(root, case='small', restart_before_replay=False, invalid_grant=False):
         c = subprocess.run(['node', str(source / 'upload-ledger.cjs'), 'grant', json.dumps(bundle['grantRequest'])], env=env, capture_output=True, timeout=10)
         assert c.returncode == 0, 'E_FIXTURE_GRANT'
         grant = json.loads(c.stdout)
+        fault_state = dict(dropCount=0, headersStatus=None, bodyNotRead=False)
+        connections = 0
         def factory(host, **options):
+            nonlocal connections
             assert host == w.HOST
+            connections += 1
+            if lose_first_response and connections == 1:
+                return DropFirstResponseConnection('127.0.0.1', port, timeout=40, fault_state=fault_state)
             return http.client.HTTPConnection('127.0.0.1', port, timeout=300 if case == 'mass-100-30mb' else 40)
         if invalid_grant:
             result['phase'] = 'negative-grant'
@@ -305,7 +328,39 @@ def run(root, case='small', restart_before_replay=False, invalid_grant=False):
             result['outcome'] = 'EXPECTED_DENIAL_PENDING'
             return
         request_started = time.monotonic()
-        receipt = w.upload(bundle, grant, connection_factory=factory)
+        if lose_first_response:
+            result['phase'] = 'response-loss'
+            try:
+                w.upload(bundle, grant, connection_factory=factory)
+            except w.UploadError as exc:
+                result['firstClientErrorCode'] = exc.code
+                assert exc.code == 'E_UPLOAD_OUTCOME_UNKNOWN', 'E_EXPECTED_UNKNOWN'
+            else:
+                raise AssertionError('E_EXPECTED_UNKNOWN')
+            result['responseFault'] = dict(fault_state)
+            assert fault_state == dict(dropCount=1, headersStatus=200, bodyNotRead=True), 'E_RESPONSE_FAULT'
+            terminal_deadline = time.monotonic() + 5
+            while True:
+                with sqlite3.connect(db_path) as db:
+                    first = db.execute('SELECT status,workflowVersionId FROM execution_entity WHERE workflowId=?', ('workOwnerRepositoryUploadV1',)).fetchall()
+                if first == [('success', result['publishedVersion'])] or time.monotonic() >= terminal_deadline:
+                    break
+                time.sleep(0.2)
+            assert first == [('success', result['publishedVersion'])], 'E_FIRST_EXECUTION'
+            assert fixture.commit_writes == fixture.ref_writes == 1 and fixture.errors == 0, 'E_FIRST_COUNTS'
+            for name, payload in payloads.items():
+                entry = next(x for x in fixture.tree if x['path'] == 'fixtures/' + name)
+                raw = fixture.blobs[entry['sha']]
+                manifest = next(x for x in bundle['manifest']['files'] if x['path'] == name)
+                assert raw == payload and git_sha('blob', raw) == entry['sha'], 'E_REMOTE_BLOB'
+                assert len(raw) == manifest['bytes'] and hashlib.sha256(raw).hexdigest() == manifest['sha256'], 'E_REMOTE_BYTES'
+            authoritative = ledger_evidence(runtime / 'ledger' / 'uploads.sqlite', bundle['manifest']['uploadId'])
+            assert authoritative['commitSha'] == fixture.head, 'E_LEDGER_COMMIT'
+            result['authoritativeBeforeReplay'] = dict(status=first[0][0], versionId=first[0][1],
+                filesVerified=len(payloads), commitWrites=1, refWrites=1, **authoritative)
+            result['replayAuthorizedAfterTerminal'] = True
+        else:
+            receipt = w.upload(bundle, grant, connection_factory=factory)
         result['firstRequestSeconds'] = round(time.monotonic() - request_started, 3)
         assert time.monotonic() - started < 300, 'E_REPLAY_BUDGET'
         if restart_before_replay:
@@ -354,7 +409,13 @@ def run(root, case='small', restart_before_replay=False, invalid_grant=False):
             result['restartPublishedNodesExact'] = True
             assert time.monotonic() - started < 300, 'E_REPLAY_BUDGET'
         replay = w.upload(bundle, grant, connection_factory=factory)
-        assert receipt['commitSha'] == replay['commitSha'] == fixture.head and replay.get('replayed') is True, 'E_REPLAY'
+        expected_commit = authoritative['commitSha'] if lose_first_response else receipt['commitSha']
+        assert expected_commit == replay['commitSha'] == fixture.head and replay.get('replayed') is True, 'E_REPLAY'
+        if lose_first_response:
+            after = ledger_evidence(runtime / 'ledger' / 'uploads.sqlite', bundle['manifest']['uploadId'])
+            assert after == authoritative, 'E_LEDGER_PERSISTENCE'
+            assert fault_state['dropCount'] == 1 and connections == 2, 'E_RESPONSE_FAULT_COUNT'
+            result['ledgerAfterRecovery'] = after
         assert fixture.commit_writes == fixture.ref_writes == 1 and fixture.errors == 0, 'E_STUB_COUNTS'
         for name, payload in payloads.items():
             entry = next(x for x in fixture.tree if x['path'] == 'fixtures/' + name)
@@ -442,7 +503,8 @@ if __name__ == '__main__':
     parser.add_argument('--case', choices=['small', 'mass-100-30mb'], default='small')
     parser.add_argument('--restart-before-replay', action='store_true')
     parser.add_argument('--invalid-grant', action='store_true')
+    parser.add_argument('--lose-first-response', action='store_true')
     args = parser.parse_args()
-    run(args.root.resolve(), args.case, args.restart_before_replay, args.invalid_grant)
+    run(args.root.resolve(), args.case, args.restart_before_replay, args.invalid_grant, args.lose_first_response)
 
 
