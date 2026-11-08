@@ -12,6 +12,7 @@ import http.client
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import os
+import re
 from pathlib import Path
 import secrets
 import signal
@@ -64,12 +65,28 @@ def ledger_evidence(path, upload_id):
                 commitSha=row[1], inode=path.stat().st_ino)
 
 
+def ledger_counts(path):
+    with sqlite3.connect(path.as_uri() + '?mode=ro', uri=True) as db:
+        counts = db.execute('SELECT COUNT(*),COUNT(commit_sha),COUNT(receipt) FROM uploads').fetchone()
+        states = dict(db.execute('SELECT state,COUNT(*) FROM uploads GROUP BY state').fetchall())
+    return dict(uploadRows=counts[0], commits=counts[1], receipts=counts[2], states=states)
+
+
+def negative_evidence_valid(metadata, version, counters, before, after, native_code, client_code):
+    return (len(metadata) == 1 and metadata[0]['status'] == 'error'
+            and metadata[0]['versionId'] == version
+            and counters == dict(requests=0, commitWrites=0, refWrites=0, protocolErrors=0)
+            and before == after and before['uploadRows'] == before['commits'] == before['receipts'] == 0
+            and native_code == 'GRANT_DENIED'
+            and isinstance(client_code, str) and re.fullmatch(r'E_UPLOAD_HTTP_[45][0-9]{2}', client_code) is not None)
+
+
 class Fixture:
     def __init__(self, payloads=None):
         self.payloads = fixture_payloads('small') if payloads is None else payloads
         self.blobs, self.tree = {}, []
         self.head, self.tree_sha = 'a' * 40, 'b' * 40
-        self.commit_writes = self.ref_writes = self.errors = 0
+        self.requests = self.commit_writes = self.ref_writes = self.errors = 0
 
     def handler(self):
         fixture = self
@@ -77,6 +94,7 @@ class Fixture:
             def log_message(self, *args):
                 pass
             def run_request(self):
+                fixture.requests += 1
                 try:
                     from urllib.parse import unquote
                     path = unquote(self.path)
@@ -145,7 +163,8 @@ class Fixture:
         return Handler
 
 
-def run(root, case='small', restart_before_replay=False):
+def run(root, case='small', restart_before_replay=False, invalid_grant=False):
+    assert not invalid_grant or case == 'small' and not restart_before_replay, 'E_NEGATIVE_CASE'
     assert not restart_before_replay or case == 'small', 'E_RESTART_CASE'
     started = time.monotonic()
     payloads = fixture_payloads(case)
@@ -265,6 +284,26 @@ def run(root, case='small', restart_before_replay=False):
         def factory(host, **options):
             assert host == w.HOST
             return http.client.HTTPConnection('127.0.0.1', port, timeout=300 if case == 'mass-100-30mb' else 40)
+        if invalid_grant:
+            result['phase'] = 'negative-grant'
+            result['ledgerBeforeDenial'] = ledger_counts(runtime / 'ledger' / 'uploads.sqlite')
+            grant = dict(grant, token=('0' if grant['token'][0] != '0' else '1') + grant['token'][1:])
+            # grant_valid is still run by the real uploader; only one POST follows.
+            try:
+                w.upload(bundle, grant, connection_factory=factory)
+            except w.UploadError as exc:
+                result['clientErrorCode'] = exc.code
+            else:
+                raise AssertionError('E_EXPECTED_DENIAL')
+            metadata_deadline = time.monotonic() + 5
+            while True:
+                with sqlite3.connect(db_path) as db:
+                    rows = db.execute('SELECT status FROM execution_entity WHERE workflowId=?', ('workOwnerRepositoryUploadV1',)).fetchall()
+                if rows == [('error',)] or time.monotonic() >= metadata_deadline:
+                    break
+                time.sleep(0.2)
+            result['outcome'] = 'EXPECTED_DENIAL_PENDING'
+            return
         request_started = time.monotonic()
         receipt = w.upload(bundle, grant, connection_factory=factory)
         result['firstRequestSeconds'] = round(time.monotonic() - request_started, 3)
@@ -334,7 +373,7 @@ def run(root, case='small', restart_before_replay=False):
             result['errorCode'] = str(exc)
     finally:
         if fixture is not None:
-            result['stubCounters'] = dict(commitWrites=fixture.commit_writes, refWrites=fixture.ref_writes, protocolErrors=fixture.errors)
+            result['stubCounters'] = dict(requests=fixture.requests, commitWrites=fixture.commit_writes, refWrites=fixture.ref_writes, protocolErrors=fixture.errors)
         # Read execution/version evidence while the DB writer is still alive;
         # stopped-DB reads were inconsistent in #21/R1. Never relax PASS checks.
         result['executionMetadataPhase'] = 'before-stop'
@@ -369,6 +408,22 @@ def run(root, case='small', restart_before_replay=False):
                 result['executionMetadataError'] = type(exc).__name__
                 if result['outcome'] == 'PASS':
                     result.update(outcome='UNAVAILABLE', errorCode='E_EXECUTION_METADATA')
+        if invalid_grant and result['outcome'] == 'EXPECTED_DENIAL_PENDING':
+            import re
+            try:
+                after = ledger_counts(runtime / 'ledger' / 'uploads.sqlite')
+                result['ledgerAfterDenial'] = after
+                codes = [e.get('errorCode') for e in result.get('executions', [])]
+                log_text = (runtime / 'n8n.log').read_text(errors='replace')
+                code = 'GRANT_DENIED' if 'GRANT_DENIED' in codes or re.search(r'\bGRANT_DENIED\b', log_text) else None
+                result['nativeErrorCode'] = code
+                valid = negative_evidence_valid(result.get('executions', []), result['publishedVersion'],
+                    result['stubCounters'], result['ledgerBeforeDenial'], after, code, result.get('clientErrorCode'))
+                result.update(outcome='PASS_NEGATIVE' if valid else 'FAIL', expectedDenial=valid)
+                if not valid:
+                    result['errorCode'] = 'E_NEGATIVE_EVIDENCE'
+            except Exception as exc:
+                result.update(outcome='UNAVAILABLE', errorCode='E_NEGATIVE_EVIDENCE', evidenceError=type(exc).__name__)
         stop()
         if server:
             server.shutdown()
@@ -386,6 +441,8 @@ if __name__ == '__main__':
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--case', choices=['small', 'mass-100-30mb'], default='small')
     parser.add_argument('--restart-before-replay', action='store_true')
+    parser.add_argument('--invalid-grant', action='store_true')
     args = parser.parse_args()
-    run(args.root.resolve(), args.case, args.restart_before_replay)
+    run(args.root.resolve(), args.case, args.restart_before_replay, args.invalid_grant)
+
 
